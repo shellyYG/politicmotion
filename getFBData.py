@@ -5,11 +5,21 @@ import re, time, requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
+from dotenv import load_dotenv
+load_dotenv()
+import os
+
 # connect to amazon RDS mysql server
 import mysql.connector
 import sqlalchemy
 
-engine = sqlalchemy.create_engine('mysql+pymysql://admin:mysql2020@stylish-rds.chrntoztzsyd.us-east-2.rds.amazonaws.com:3306/politicmotion')
+DBHOST= os.getenv("DBHOST")
+DBUSER= os.getenv("DBUSER")
+DBPASS= os.getenv("DBPASS")
+DBDATABASE= os.getenv("DBDATABASE")
+
+engine = sqlalchemy.create_engine(f'mysql+pymysql://{DBUSER}:{DBPASS}@{DBHOST}:3306/{DBDATABASE}')
+
 if(engine):
     print("Connect to mysql successfully!")
 else:
@@ -117,4 +127,4 @@ Facebookdf.to_sql(
 )
 
 
-# # driver.close() # close the browser
+driver.close() # close the browser
