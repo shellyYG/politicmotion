@@ -1,15 +1,26 @@
-print("Hello World")
-
-
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import time
 import re, time, requests
 from bs4 import BeautifulSoup
 import pandas as pd
-# browser = webdriver.Chrome('/usr/local/bin/chromedriver')
-# browser.get('https://www.facebook.com/nytimes')
-print("Here I am")
+
+# connect to amazon RDS mysql server
+import mysql.connector
+import sqlalchemy
+
+engine = sqlalchemy.create_engine('mysql+pymysql://admin:mysql2020@stylish-rds.chrntoztzsyd.us-east-2.rds.amazonaws.com:3306/politicmotion')
+if(engine):
+    print("Connect to mysql successfully!")
+else:
+    print("Oops, connect to mysql unsuccessfully.")
+
+
+def listToString(s):
+    joined_string = "|".join(s)
+    return joined_string
+
+
 #Find Post Link
 driver = webdriver.Chrome()
 def FindLinks(url, n):
@@ -71,7 +82,8 @@ def PostContent(soup):
     FullPost['Link'] = driver.current_url
     FullPost['Time'] = Time
     FullPost['Content'] = Content
-    FullPost['Reaction'] = AllReaction
+    FullPost['Reaction'] = listToString(AllReaction)
+    
     AllPost.append(FullPost)
     return AllPost
 
@@ -84,7 +96,25 @@ for Link in Links:
     PostContent(soup)
     # print(PostContent(soup))
     
-    
-print("AllPost is: ")
-print(AllPost)
-# driver.close() # close the browser
+
+# transform list of dict to dataframe
+Facebookdf = pd.DataFrame(AllPost)
+Facebookdf["Source"] = 'nytimes'
+print("Facebookdf DataFrame is:")
+print(Facebookdf)
+
+Facebookdf.columns = ['post_link','post_time','content','reaction','post_source']
+
+print("renamed Facebookdf:")
+print(Facebookdf)
+
+
+Facebookdf.to_sql(
+    'fb_rawdata',
+    con=engine,
+    index=False,
+    if_exists = 'append'  #if table exist, then append the rows rather than fail (default is fail)
+)
+
+
+# # driver.close() # close the browser
