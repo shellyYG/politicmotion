@@ -19,6 +19,7 @@
   "homepage": "https://github.com/shellyYG/politicmotion#readme",
   "dependencies": {
     "axios": "^0.21.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "nodemon": "^2.0.6",
     "vader-sentiment": "^1.1.3"

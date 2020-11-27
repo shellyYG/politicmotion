@@ -42,11 +42,19 @@ def FindLinks(url, n):
     driver.execute_script('window.scrollTo(0, document.body.scrollHeight);')  #scroll down
     for i in range(n): #make it sleep a few secs so you can see the next block box
         print(i)
-        driver.execute_script('window.scrollTo(0, document.body.scrollHeight);')
-        time.sleep(3)
+        try:
+            print("blockbox shown again")
+            driver.find_element_by_class_name('layerCancel').click() ##byPass we got error message box
+            driver.execute_script('window.scrollTo(0, document.body.scrollHeight);')
+            time.sleep(3)
+        except:
+            print("no blockbox")
+            driver.execute_script('window.scrollTo(0, document.body.scrollHeight);')
+            time.sleep(3)
    
+    
     driver.find_element_by_xpath('//a[@id="expanding_cta_close_button"]').click() #byPass register user box
-
+    
     soup = BeautifulSoup(driver.page_source, "html.parser")
     posts = soup.findAll('div',{'class':'clearfix y_c3pyo2ta3'})
     for i in posts:
@@ -95,7 +103,7 @@ def PostContent(soup, source):
 
 
 #===========================================================================================================================Get New York Time Post
-NYTimeLinks = FindLinks(url='https://www.facebook.com/nytimes/', n = 2)
+NYTimeLinks = FindLinks(url='https://www.facebook.com/nytimes/', n = 10)
 for Link in NYTimeLinks:
     print("At Link: "+Link)
     driver.get(Link) #expand link for soup below to catch
@@ -117,7 +125,7 @@ driver.close()
 #===========================================================================================================================Get Fox News Post
 driver = webdriver.Chrome()
 AllPost =[]
-FoxNewsLinks = FindLinks(url='https://www.facebook.com/FoxNews/', n =2)
+FoxNewsLinks = FindLinks(url='https://www.facebook.com/FoxNews/', n =10)
 for Link in FoxNewsLinks:
     print("At Link: "+Link)
     driver.get(Link) #expand link for soup below to catch
