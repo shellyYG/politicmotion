@@ -1,2 +1,3 @@
 chromedriver
 .env
+node_modules

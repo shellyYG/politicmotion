@@ -19,13 +19,13 @@ app.get('/', (req, res)=> {
     
 })
 
-// function getEmotion(input) {
-//     const score = vader.SentimentIntensityAnalyzer.polarity_scores(input);
-//     console.log("'",input, "':", score);
-// }
+function getEmotion(input) {
+    const score = vader.SentimentIntensityAnalyzer.polarity_scores(input);
+    console.log("'",input, "':", score);
+}
 
-// const input = 'The movie was awesome.';
-// getEmotion(input);
+const input = 'Appeals Court Rejects Trump Election Challenge in Pennsylvania';
+getEmotion(input);
 
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}...`);
