@@ -39,7 +39,6 @@ router.get('/', (req, res)=> {
                     // build allNews array
                     allNews.push(singleNews);
                 }
-            
 
                 sql = 'INSERT INTO news_rawdata (news_id, post_link, news_source, published_date, title, abstract, topics, saved_date) VALUES ?'
                 let sqlquery = await query(sql, [allNews]);

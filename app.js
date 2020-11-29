@@ -7,11 +7,13 @@ const vader = require('vader-sentiment');
 
 
 const NYTWebDataRoutes = require('./routes/getNYTData');
+const segmentTopicRoutes = require('./routes/segmentTopic');
 
 app.use(express.static('public'));
 
 app.use(bodyParser.urlencoded({ extended: false}));
 app.use('/NYTimesWeb', NYTWebDataRoutes);
+app.use('/segmentTopic', segmentTopicRoutes)
 
 
 app.get('/', (req, res)=> {

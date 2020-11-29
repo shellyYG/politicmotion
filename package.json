@@ -23,6 +23,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "mysql": "^2.18.1",
+    "natural": "^2.1.5",
     "node-nlp": "^4.16.0",
     "nodemon": "^2.0.6",
     "vader-sentiment": "^1.1.3"
