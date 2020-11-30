@@ -136,8 +136,14 @@ def getLatestNews(n):
     for i in posts:
         postLinks.append(i.find('a').attrs['href'])
         postTimes.append(i.find('span',{'class':'time'}).string)
-        postTitles.append(i.find('h4',{'class':'title'}).string)
-        postContent.append(i.find('p',{'class':'dek'}).find('a').string)
+        try:
+            postTitles.append(i.find('h4',{'class':'title'}).string)
+        except:
+            postTitles.append('No Title Found')
+        try:
+            postContent.append(i.find('p',{'class':'dek'}).find('a').string)
+        except:
+            postContent.append('No Content Found')
 
     Foxdf = pd.DataFrame({'postlink': postLinks,
                           'published_time':postTimes,

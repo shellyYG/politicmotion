@@ -48,6 +48,7 @@ router.get('/', (req, res)=> {
             saveData()
             
             res.send("Successfully got NYTData & saved!");
+            console.log("Data successfully saved.")
             return NYTimeResponse.data;
         }catch(err){
             console.log("Can't get NYT Web data!");
