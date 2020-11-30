@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { query } = require('../models/query');
+const { query } = require('../../models/query');
 const { NlpManager } = require('node-nlp');
 const natural = require('natural');
 

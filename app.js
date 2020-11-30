@@ -4,16 +4,20 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 const vader = require('vader-sentiment');
+app.use(bodyParser.urlencoded({ extended: false}));
+app.use(bodyParser.json());
 
 
-const NYTWebDataRoutes = require('./routes/getNYTData');
-const segmentTopicRoutes = require('./routes/segmentTopic');
+const NYTWebDataRoutes = require('./routes/getNews/getNYTData');
+const segmentTopicRoutes = require('./routes/getNews/segmentTopic');
+const searchRoutes = require('./routes/searchNews/searchBack');
 
 app.use(express.static('public'));
 
 app.use(bodyParser.urlencoded({ extended: false}));
 app.use('/NYTimesWeb', NYTWebDataRoutes);
-app.use('/segmentTopic', segmentTopicRoutes)
+app.use('/segmentTopic', segmentTopicRoutes);
+app.use('/searchNews', searchRoutes);
 
 
 app.get('/', (req, res)=> {

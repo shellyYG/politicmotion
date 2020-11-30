@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { query } = require('../models/query');
+const { query } = require('../../models/query');
 const axios = require('axios');
 const NYTimesToken = process.env.NYTimeToken
 
