@@ -6,6 +6,7 @@ from datetime import date
 from bs4 import BeautifulSoup
 import pandas as pd
 
+# read .env file element
 from dotenv import load_dotenv
 load_dotenv()
 import os
@@ -13,6 +14,7 @@ import os
 # connect to amazon RDS mysql server
 import mysql.connector
 import sqlalchemy
+
 
 DBHOST= os.getenv("DBHOST")
 DBUSER= os.getenv("DBUSER")
@@ -105,7 +107,7 @@ def PostContent(soup, source):
 
 
 #===========================================================================================================================Get New York Time Post
-NYTimeLinks = FindLinks(url='https://www.facebook.com/nytimes/', n = 2)
+NYTimeLinks = FindLinks(url='https://www.facebook.com/nytimes/', n = 10)
 for Link in NYTimeLinks:
     print("At Link: "+Link)
     driver.get(Link) #expand link for soup below to catch
@@ -127,7 +129,7 @@ driver.close()
 #===========================================================================================================================Get Fox News Post
 driver = webdriver.Chrome()
 AllPost =[]
-FoxNewsLinks = FindLinks(url='https://www.facebook.com/FoxNews/', n = 2)
+FoxNewsLinks = FindLinks(url='https://www.facebook.com/FoxNews/', n = 10)
 for Link in FoxNewsLinks:
     print("At Link: "+Link)
     driver.get(Link) #expand link for soup below to catch
