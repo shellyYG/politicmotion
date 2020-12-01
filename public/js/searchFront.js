@@ -8,8 +8,8 @@ searchButton.addEventListener('click',()=>{
         'searchTopic1': searchTopic1,
         'searchTopic2': searchTopic2
     }).then(res=>{
-        console.log("back to front-end!");
-        console.log("I am res from Back: ", res.data);
+        
+        console.log("Back to Front. I am res.data from Back: ", res.data);
         document.querySelector("#FBNYTContent").innerHTML = res.data.FBNYNewsContent;
         document.querySelector("#FBNYTTime").innerHTML = res.data.FBNYNewsPostDate;
         document.querySelector("#FBNYTLink").innerHTML = res.data.FBNYNewsPostLink;
@@ -24,16 +24,20 @@ searchButton.addEventListener('click',()=>{
         const fbFoxMagnitudeScore = res.data.FBFoxNewsMagnitude;
         // -----------------------------------------------------------------Score of avg news for the same topic
         const fbNYAvgSentimentScore = res.data.FBNYAvgSentiment;
-        console.log("f fbNYAvgSentimentScore: ", fbNYAvgSentimentScore);
         const fbNYAvgTMagnitudeScore = res.data.FBNYAvgMag;
         const fbFoxAvgSentimentScore = res.data.FBFoxAvgSentiment;
         const fbFoxAvgTMagnitudeScore = res.data.FBFoxAvgMag;
+        // -----------------------------------------------------------------Score of all dots
+        const NYSentimentArray = res.data.NYSentimentArray;
+        const NYMagnitudeArray = res.data.NYMagnitudeArray;
+        const FoxSentimentArray = res.data.FoxSentimentArray;
+        const FoxMagnitudeArray = res.data.FoxMagnitudeArray;
 
         // -----------------------------------------------------------------Show Sentiment Scatter Plot
         sentimentShow = document.getElementById('sentimentShow');
         var traceNYT = {
-            x : [fbNYTSentimentScore, fbNYAvgSentimentScore],
-            y : [fbNYTMagnitudeScore, fbNYAvgTMagnitudeScore],
+            x : NYSentimentArray,
+            y : NYMagnitudeArray,
             mode: 'markers+text',
             name: "New York Times",
             text: ['Single Score', 'Avg Score'],
@@ -42,13 +46,12 @@ searchButton.addEventListener('click',()=>{
                 family:  'Raleway, sans-serif'
               },
               marker: { size: 12 },
-            mode: 'markers',
             type: 'scatter'
         }
 
         var traceFox = {
-            x : [fbFoxSentimentScore, fbFoxAvgSentimentScore],
-            y : [fbFoxMagnitudeScore, fbFoxAvgTMagnitudeScore],
+            x : FoxSentimentArray,
+            y : FoxMagnitudeArray,
             mode: 'markers+text',
             name: "Fox News",
             text: ['Single Score', 'Avg Score'],
@@ -57,7 +60,6 @@ searchButton.addEventListener('click',()=>{
                 family:  'Raleway, sans-serif'
               },
               marker: { size: 12 },
-            mode: 'markers',
             type: 'scatter'
         }
         
