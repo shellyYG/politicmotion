@@ -44,7 +44,7 @@ router.post('/', (req, res, next)=>{
     async function getFBNewsDots(){
         const FBNYNewsDots = await searchFBNYNewsDots();
         const FBFoxNewsDots = await searchFBFoxNewsDots();
-        const finalNYTDotDict = FBNYNewsDots.map(getDotList);
+        const finalNYTDotDict = FBNYNewsDots.map(getDotList); //actually finalNYDotDict is an array
         const finalFoxDotDict = FBFoxNewsDots.map(getDotList);
 
         function getDotList(dots){
@@ -54,6 +54,7 @@ router.post('/', (req, res, next)=>{
             dotDict.magScore = dots.magnitude_score
             return dotDict;
         }
+        
         return [finalNYTDotDict, finalFoxDotDict]
     }
 
@@ -75,7 +76,7 @@ router.post('/', (req, res, next)=>{
     async function makeMagArray(){
         var allDots = await getFBNewsDots();
         const NYmagScoreArray = allDots[0].map(getMagScore);
-        const FoxmagScoreArray = allDots[0].map(getMagScore);
+        const FoxmagScoreArray = allDots[1].map(getMagScore);
         return [NYmagScoreArray,FoxmagScoreArray];
     }
     
@@ -158,7 +159,6 @@ router.post('/', (req, res, next)=>{
         finalRes.FoxSentimentArray = FoxSentimentArray;
         finalRes.FoxMagnitudeArray = FoxMagnitudeArray;
        
-        
         res.json(finalRes);
     }
     pushDataToFront()

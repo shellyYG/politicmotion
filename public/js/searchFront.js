@@ -73,10 +73,38 @@ searchButton.addEventListener('click',()=>{
             yaxis: {
                 title: 'Magnitude Score'
             },
-            title: 'News Sentiment & Magnitude Score'
+            title: 'News Sentiment & Magnitude Score',
+            hovermode: 'closest'
         }
 
         Plotly.newPlot(sentimentShow, data, layout);
+
+        // -------------------------------------------------- Build click event & saved it to localStorage     
+        sentimentShow.on('plotly_click', function(data){
+            for(var i=0; i < data.points.length; i++){
+                Xaxis = data.points[i].x;
+                Yaxis = data.points[i].y;
+                var clickedPoints = localStorage.getItem("clickedPoints");
+                var pointArray = [];
+                if(clickedPoints){
+                    pointArray = JSON.parse(clickedPoints);
+                }
+                pointArray.push({"Xaxis": Xaxis, "Yaxis": Yaxis});
+                localStorage.setItem("clickedPoints",JSON.stringify(pointArray));
+                const finalPointsClicked = localStorage.getItem("clickedPoints");
+                console.log(finalPointsClicked);
+                axios.post(`showNews`,{
+                    'finalPointsClicked': finalPointsClicked,
+                    'searchTopic1': searchTopic1,
+                    'searchTopic2': searchTopic2
+                    })
+                     .then(res => {
+                         console.log("back to front end after sending finalPointsClicked")
+                         console.log(res);
+                     })
+            }
+            
+        })
 
     }).catch(err=>{
         console.log(err);

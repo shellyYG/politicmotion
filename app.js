@@ -11,6 +11,7 @@ app.use(bodyParser.json());
 const NYTWebDataRoutes = require('./routes/getNews/getNYTData');
 const segmentTopicRoutes = require('./routes/getNews/segmentTopic');
 const searchRoutes = require('./routes/searchNews/searchBack');
+const showNewsRoutes = require('./routes/getNews/showNews');
 
 app.use(express.static('public'));
 
@@ -18,6 +19,7 @@ app.use(bodyParser.urlencoded({ extended: false}));
 app.use('/NYTimesWeb', NYTWebDataRoutes);
 app.use('/segmentTopic', segmentTopicRoutes);
 app.use('/searchNews', searchRoutes);
+app.use('/showNews', showNewsRoutes);
 
 
 app.get('/', (req, res)=> {
