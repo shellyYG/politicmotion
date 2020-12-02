@@ -113,6 +113,7 @@ router.get('/',(req, res) => {
             console.log("DONE FB post_date id = ", FBnewsUniqueId);
             sqlquery;
         }
+        console.log("Done inserting post dates!");
 
         return "success!";
     }
