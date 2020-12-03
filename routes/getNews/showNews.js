@@ -60,6 +60,7 @@ router.post('/', (req, res)=> {
     async function pushToFrontEnd(){
         const newsToPush = await getAllNews();
         console.log(newsToPush);
+        res.send(newsToPush);
     }
     pushToFrontEnd()
     

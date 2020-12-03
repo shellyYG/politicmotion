@@ -1,10 +1,65 @@
+const { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } = require('constants');
 const express = require('express');
 const router = express.Router();
+const { query } = require('../../models/query');
 
-router.get('/', (req, res)=> {
-    res.send('In tfidf Routes');
- //------------------------------------------------------------------------------------------ Define the algo part
-    let tokenize = (text)=>text.toLowerCase().split(/[.,?!\s]+/g); 
+router.post('/', (req, res)=> {
+    
+    const searchTopic1 = req.body.searchTopic1;
+    const searchTopic2 = req.body.searchTopic2;
+    let allStopWords = [];
+    //------------------------------------------------------------------------------------------ Get String Part
+    async function searchRelevantNews(){
+        sql = `SELECT id, content, post_date, post_link, reaction,  sentiment_score, magnitude_score 
+                FROM fb_rawdata 
+                WHERE content LIKE '%${searchTopic1}%' 
+                    AND content LIKE '%${searchTopic2}%' 
+                ORDER BY id ASC
+                LIMIT 4;` // here need to change to not limited
+        var sqlquery = await query(sql);
+        return sqlquery;
+    }
+    async function getStopWords(){
+        sql = `SELECT words FROM words_stopwords;` 
+        var sqlquery = await query(sql);
+        return sqlquery;
+    }
+    async function getAllRelevantNews(){
+        const relevantNews = await searchRelevantNews();
+        const stopWords = await getStopWords();
+
+        let allNewsIds = [];
+        let allNewsStrings = [];
+        let allNewsDetails=[];
+        
+        for (i=0; i<stopWords.length; i++){
+            allStopWords.push(stopWords[i].words);
+        }
+        
+        
+        for (i=0; i<relevantNews.length; i++){
+            allNewsIds.push(relevantNews[i].id);
+            allNewsStrings.push(relevantNews[i].content);
+            let singleData = {};
+            singleData.NewsId = relevantNews[i].id;
+            singleData.content = relevantNews[i].content
+            
+            allNewsDetails.push(singleData);
+    }
+    
+    console.log("allStopWords: ", allStopWords);
+    //------------------------------------------------------------------------- Define the algo part
+    let tokenize = (text)=>text.toLowerCase().split(/[.,?!\s’]+/g);
+
+    function ignoreStopTokens(token){
+        if(!allStopWords.includes(token)){
+            let filteredTokenList = [];
+            filteredTokenList.push(token);
+            return filteredTokenList;
+        }
+    }
+    
+
     let makeDictionary = (tokens, array)=>{
         tokens.forEach((token)=>{
             if(!array.includes(token)){
@@ -78,22 +133,23 @@ router.get('/', (req, res)=> {
         }
         return finalcousine;
     }
- 
-    //------------------------------------------------------------------------------------------ Get String Part
-    let string1 = "Happy Shelly is smiling";
-    let string2 = "Sad Shelly is to cry";
-    let string3 = "Happy Markus does not like to cry.";
-    let allStrings = [string1,string2,string3];
+
     //------------------------------------------------------------------------------------------ Calculation Part
     let newsWords = [];
-    newsWords = allStrings.map(tokenize);
+    newsWords = allNewsStrings.map(tokenize);
+    let filterednewsWords = ignoreStopTokens(newsWords);
+    console.log("filterednewsWords: ", filterednewsWords);
     
     let bagOfWords = [];
     let finalArray = [];
 
+    console.log("newsWords: ",newsWords)
+
     for (i=0; i<newsWords.length;i++){
         finalArray = makeDictionary(newsWords[i],bagOfWords);
     }
+    console.log("bagOfWords: ", bagOfWords);
+    
     
     let newsVsms = [];
     for (i=0; i<newsWords.length;i++){
@@ -105,7 +161,7 @@ router.get('/', (req, res)=> {
         tfs.push(termFrequency(newsVsms[i],newsWords[i].length));
     }
 
-    let newsIdf = idf(allStrings.length,newsWords,bagOfWords);
+    let newsIdf = idf(allNewsStrings.length,newsWords,bagOfWords);
 
     let tfidfs = [];
     for(i=0; i<tfs.length; i++){
@@ -124,22 +180,36 @@ router.get('/', (req, res)=> {
             secondIndex.push(j);
             allCosines.push(cosine(tfidfs[i],tfidfs[j]));
             let singleCombination = {};
-            singleCombination.firstString = i+1; //need to be id of the article
-            singleCombination.secondString= j+1; //need to be id of the article
+            singleCombination.firstString = allNewsIds[i]; 
+            singleCombination.secondString= allNewsIds[j]; 
             singleCombination.cosineValue = cosine(tfidfs[i],tfidfs[j]);
             stringCosineCombination.push(singleCombination);
         }
     }
 
-    console.log("stringCosineCombination: ", stringCosineCombination);
+    
+    var thresholdCosine = 0.9;
+    var maxNonEqualCosine = Math.max.apply(Math,allCosines.filter(function(x){return x <= thresholdCosine}));
+    console.log("maxNonEqualCosine: ", maxNonEqualCosine);
 
-    let cosine12 = cosine(tfidfs[0], tfidfs[1]);
-    let cosine13 = cosine(tfidfs[0], tfidfs[2]);
-    let cosine23 = cosine(tfidfs[1], tfidfs[2]);
+    function getIndex(value){
+        return value == maxNonEqualCosine;
+    }
 
-    console.log("Shelly cosine12: ", cosine12, "cosine13: ", cosine13,"cosine23: ", cosine23);
+    var indexOfMaxNonEqualCosine = allCosines.findIndex(getIndex);
+    var firstStringId = stringCosineCombination[indexOfMaxNonEqualCosine].firstString;
+    var secondStringId = stringCosineCombination[indexOfMaxNonEqualCosine].secondString;
+
+    console.log("firstStringId: ", firstStringId, "secondStringId: ", secondStringId);
+    
+    console.log("allNewsDetails: ", allNewsDetails);
     
     //------------------------------------------------------------------------------------------ Export final output Part
+    res.send(allNewsDetails);
+        
+    }
+    getAllRelevantNews();
+    
 })
 
 
