@@ -45,173 +45,171 @@ router.post('/', (req, res)=> {
             
             allNewsDetails.push(singleData);
     }
-    
-    console.log("allStopWords: ", allStopWords);
-    //------------------------------------------------------------------------- Define the algo part
-    let tokenize = (text)=>text.toLowerCase().split(/[.,?!\s’]+/g);
+    function getAllCosine(allNewsStrings){
+        //------------------------------------------------------------------------- Define the algo part
+        let tokenize = (text)=>text.toLowerCase().split(/[.,?!\s’]+/g);
 
-    function ignoreStopTokens(acc,curr){
-        if(!allStopWords.includes(curr)){
-            acc.push(curr);
-        }else{
-            acc;
-        }
-        return acc;
-    }
-   
-
-    let makeDictionary = (tokens, array)=>{
-        tokens.forEach((token)=>{
-            if(!array.includes(token)){
-                array.push(token);
+        function ignoreStopTokens(acc,curr){
+            if(!allStopWords.includes(curr)){
+                acc.push(curr);
+            }else{
+                acc;
             }
-        })
-        return array;
-    }
-
-    function vsm(eachWord, endArray){
-        return endArray.map(getEachWordCount);
-        function getEachWordCount(singleWord){
-            const wordCount = eachWord.reduce(reducer,0) //starting value = 0
-            function reducer(acc, curr){
-                if(curr==singleWord){
-                    acc = acc +1;
-                }else{
-                    acc;
-                }
-                return acc;
-            }
-            return wordCount;
-        }  
-    }
-
-    function termFrequency(vsm,numberofWords){
-        return vsm.map(getEachTermFreq);
-        function getEachTermFreq(item){
-            return item/numberofWords;
-        }
-    }
-
-    function logBase10(val){
-        return Math.log(val)/Math.log(10);
-    }
-
-    function idf(n,newsWords,wordBags){
-        return wordBags.map(calIdfforEachWord);
-        function calIdfforEachWord(items){
-            const idfcal= logBase10(n/(newsWords.reduce(reducer,0))); //n is number of articles to compare
-            function reducer(acc,curr){
-                if(curr.includes(items)){
-                    acc += 1;
-                }else{
-                    acc = acc;
-                }
-                return acc;
-            }
-            return idfcal;
-        }
-    }
-
-    function tfidf(tf, idf){
-        return tf.map(combinedCal)
-        function combinedCal(element,index){
-            return element*idf[index];
-        }
-    }
-
-    function cosine(tfIdf1,tfIdf2){
-        let nominator = tfIdf1.reduce(calNominator,0);
-        let deNominator1 = Math.sqrt(tfIdf1.reduce(sumSquares,0));
-        let deNominator2 = Math.sqrt(tfIdf2.reduce(sumSquares,0));
-        let finalcousine = nominator/(deNominator1*deNominator2);
-        function calNominator(acc, curr, index){
-            return acc = acc+curr*tfIdf2[index];  // each element in tfIdf1 * each element in efIdf2
-        }
-        function sumSquares(acc, curr){
-            acc = acc+curr*curr;
             return acc;
         }
-        return finalcousine;
-    }
+    
 
-    //------------------------------------------------------------------------------------------ Calculation Part
-    let newsWords = [];
-    newsWords = allNewsStrings.map(tokenize);
-    console.log("newsWords: ", newsWords);
-    
-    const AllFilteredNewsWords = [];
-    
-    for (i=0;i<newsWords.length;i++){
-        var singleFilteredNewsWords = newsWords[i].reduce(ignoreStopTokens,[]);
-        AllFilteredNewsWords.push(singleFilteredNewsWords);
-    }
-    console.log("AllFilteredNewsWords: ", AllFilteredNewsWords);
-    
-    let bagOfWords = [];
-    let finalArray = [];
-
-    for (i=0; i<AllFilteredNewsWords.length;i++){
-        finalArray = makeDictionary(AllFilteredNewsWords[i],bagOfWords);
-    }
-    console.log("bagOfWords: ", bagOfWords);
-    
-    
-    let newsVsms = [];
-    for (i=0; i<AllFilteredNewsWords.length;i++){
-        newsVsms.push(vsm(AllFilteredNewsWords[i],finalArray));
-    }
-
-    let tfs = [];
-    for (i=0; i<AllFilteredNewsWords.length;i++){
-        tfs.push(termFrequency(newsVsms[i],AllFilteredNewsWords[i].length));
-    }
-
-    let newsIdf = idf(allNewsStrings.length,AllFilteredNewsWords,bagOfWords);
-
-    let tfidfs = [];
-    for(i=0; i<tfs.length; i++){
-        tfidfs.push(tfidf(tfs[i], newsIdf));
-    }
-
-    
-    let firstIndex = [];
-    let secondIndex = [];
-    let allCosines = [];
-    
-    let stringCosineCombination = [];
-    for (i=0;i<tfidfs.length;i++){
-        for (j=0;j<tfidfs.length;j++){
-            firstIndex.push(i);
-            secondIndex.push(j);
-            allCosines.push(cosine(tfidfs[i],tfidfs[j]));
-            let singleCombination = {};
-            singleCombination.firstString = allNewsIds[i]; 
-            singleCombination.secondString= allNewsIds[j]; 
-            singleCombination.cosineValue = cosine(tfidfs[i],tfidfs[j]);
-            stringCosineCombination.push(singleCombination);
+        let makeDictionary = (tokens, array)=>{
+            tokens.forEach((token)=>{
+                if(!array.includes(token)){
+                    array.push(token);
+                }
+            })
+            return array;
         }
+
+        function vsm(eachWord, endArray){
+            return endArray.map(getEachWordCount);
+            function getEachWordCount(singleWord){
+                const wordCount = eachWord.reduce(reducer,0) //starting value = 0
+                function reducer(acc, curr){
+                    if(curr==singleWord){
+                        acc = acc +1;
+                    }else{
+                        acc;
+                    }
+                    return acc;
+                }
+                return wordCount;
+            }  
+        }
+
+        function termFrequency(vsm,numberofWords){
+            return vsm.map(getEachTermFreq);
+            function getEachTermFreq(item){
+                return item/numberofWords;
+            }
+        }
+
+        function logBase10(val){
+            return Math.log(val)/Math.log(10);
+        }
+
+        function idf(n,newsWords,wordBags){
+            return wordBags.map(calIdfforEachWord);
+            function calIdfforEachWord(items){
+                const idfcal= logBase10(n/(newsWords.reduce(reducer,0))); //n is number of articles to compare
+                function reducer(acc,curr){
+                    if(curr.includes(items)){
+                        acc += 1;
+                    }else{
+                        acc = acc;
+                    }
+                    return acc;
+                }
+                return idfcal;
+            }
+        }
+
+        function tfidf(tf, idf){
+            return tf.map(combinedCal)
+            function combinedCal(element,index){
+                return element*idf[index];
+            }
+        }
+
+        function cosine(tfIdf1,tfIdf2){
+            let nominator = tfIdf1.reduce(calNominator,0);
+            let deNominator1 = Math.sqrt(tfIdf1.reduce(sumSquares,0));
+            let deNominator2 = Math.sqrt(tfIdf2.reduce(sumSquares,0));
+            let finalcousine = nominator/(deNominator1*deNominator2);
+            function calNominator(acc, curr, index){
+                return acc = acc+curr*tfIdf2[index];  // each element in tfIdf1 * each element in efIdf2
+            }
+            function sumSquares(acc, curr){
+                acc = acc+curr*curr;
+                return acc;
+            }
+            return finalcousine;
+        }
+
+        //------------------------------------------------------------------------------------------ Calculation Part
+        let newsWords = [];
+        newsWords = allNewsStrings.map(tokenize);
+        
+        const AllFilteredNewsWords = [];
+        
+        for (i=0;i<newsWords.length;i++){
+            var singleFilteredNewsWords = newsWords[i].reduce(ignoreStopTokens,[]);
+            AllFilteredNewsWords.push(singleFilteredNewsWords);
+        }
+        
+        let bagOfWords = [];
+        let finalArray = [];
+
+        for (i=0; i<AllFilteredNewsWords.length;i++){
+            finalArray = makeDictionary(AllFilteredNewsWords[i],bagOfWords);
+        }
+        
+        let newsVsms = [];
+        for (i=0; i<AllFilteredNewsWords.length;i++){
+            newsVsms.push(vsm(AllFilteredNewsWords[i],finalArray));
+        }
+
+        let tfs = [];
+        for (i=0; i<AllFilteredNewsWords.length;i++){
+            tfs.push(termFrequency(newsVsms[i],AllFilteredNewsWords[i].length));
+        }
+
+        let newsIdf = idf(allNewsStrings.length,AllFilteredNewsWords,bagOfWords);
+
+        let tfidfs = [];
+        for(i=0; i<tfs.length; i++){
+            tfidfs.push(tfidf(tfs[i], newsIdf));
+        }
+
+        
+        let firstIndex = [];
+        let secondIndex = [];
+        let allCosines = [];
+        
+        let stringCosineCombination = [];
+        for (i=0;i<tfidfs.length;i++){
+            for (j=0;j<tfidfs.length;j++){
+                firstIndex.push(i);
+                secondIndex.push(j);
+                allCosines.push(cosine(tfidfs[i],tfidfs[j]));
+                let singleCombination = {};
+                singleCombination.firstString = allNewsIds[i]; 
+                singleCombination.secondString= allNewsIds[j]; 
+                singleCombination.cosineValue = cosine(tfidfs[i],tfidfs[j]);
+                stringCosineCombination.push(singleCombination);
+            }
+        }
+        
+        var thresholdCosine = 0.9;
+        var maxNonEqualCosine = Math.max.apply(Math,allCosines.filter(function(x){return x <= thresholdCosine}));
+
+        function getIndex(value){
+            return value == maxNonEqualCosine;
+        }
+
+        var indexOfMaxNonEqualCosine = allCosines.findIndex(getIndex);
+        var firstStringId = stringCosineCombination[indexOfMaxNonEqualCosine].firstString;
+        var secondStringId = stringCosineCombination[indexOfMaxNonEqualCosine].secondString;
+
+        return {firstStringId,secondStringId}
+
     }
 
-    
-    var thresholdCosine = 0.9;
-    var maxNonEqualCosine = Math.max.apply(Math,allCosines.filter(function(x){return x <= thresholdCosine}));
-    console.log("maxNonEqualCosine: ", maxNonEqualCosine);
+    let lowestStringIds = getAllCosine(allNewsStrings);
+    console.log("lowestStringIds: ",lowestStringIds);
 
-    function getIndex(value){
-        return value == maxNonEqualCosine;
-    }
-
-    var indexOfMaxNonEqualCosine = allCosines.findIndex(getIndex);
-    var firstStringId = stringCosineCombination[indexOfMaxNonEqualCosine].firstString;
-    var secondStringId = stringCosineCombination[indexOfMaxNonEqualCosine].secondString;
-
-    console.log("firstStringId: ", firstStringId, "secondStringId: ", secondStringId);
-    
+    //------------------------------------------------------------------------------------------ Select the two relevant news
     // console.log("allNewsDetails: ", allNewsDetails);
     
     //------------------------------------------------------------------------------------------ Export final output Part
-    res.send(allNewsDetails);
-        
+    res.send("Jo");
     }
     getAllRelevantNews();
     
