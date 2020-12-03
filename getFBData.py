@@ -28,7 +28,6 @@ if(engine):
 else:
     print("Oops, connect to mysql unsuccessfully.")
 
-
 def listToString(s):
     joined_string = "|".join(s)
     return joined_string

@@ -1,13 +1,10 @@
-const e = require('express');
 const express = require('express');
 const router = express.Router();
 
 router.get('/', (req, res)=> {
     res.send('In tfidf Routes');
-
- //---------------------------------------------------------- Define the algo
+ //------------------------------------------------------------------------------------------ Define the algo part
     let tokenize = (text)=>text.toLowerCase().split(/[.,?!\s]+/g); 
-
     let makeDictionary = (tokens, array)=>{
         tokens.forEach((token)=>{
             if(!array.includes(token)){
@@ -31,7 +28,6 @@ router.get('/', (req, res)=> {
             }
             return wordCount;
         }  
-        
     }
 
     function termFrequency(vsm,numberofWords){
@@ -45,10 +41,10 @@ router.get('/', (req, res)=> {
         return Math.log(val)/Math.log(10);
     }
 
-    function idf(n,allDocArray,wordBags){
+    function idf(n,newsWords,wordBags){
         return wordBags.map(calIdfforEachWord);
         function calIdfforEachWord(items){
-            const idfcal= logBase10(n/(allDocArray.reduce(reducer,0))); //n is number of articles to compare
+            const idfcal= logBase10(n/(newsWords.reduce(reducer,0))); //n is number of articles to compare
             function reducer(acc,curr){
                 if(curr.includes(items)){
                     acc += 1;
@@ -60,7 +56,6 @@ router.get('/', (req, res)=> {
             return idfcal;
         }
     }
-    
 
     function tfidf(tf, idf){
         return tf.map(combinedCal)
@@ -69,69 +64,82 @@ router.get('/', (req, res)=> {
         }
     }
 
-    let cosine = (tfIdf1,tfIdf2)=>tfIdf1.reduce((acc,curr,index)=>acc+curr*tfIdf2[index],0) / (Math.sqrt(tfIdf1.reduce((acc,curr)=>acc+curr*curr,0))*Math.sqrt(tfIdf2.reduce((acc,curr)=>acc+curr*curr,0)));
-
-    // ------------------------------------------------------------------ calculation part
+    function cosine(tfIdf1,tfIdf2){
+        let nominator = tfIdf1.reduce(calNominator,0);
+        let deNominator1 = Math.sqrt(tfIdf1.reduce(sumSquares,0));
+        let deNominator2 = Math.sqrt(tfIdf2.reduce(sumSquares,0));
+        let finalcousine = nominator/(deNominator1*deNominator2);
+        function calNominator(acc, curr, index){
+            return acc = acc+curr*tfIdf2[index];  // each element in tfIdf1 * each element in efIdf2
+        }
+        function sumSquares(acc, curr){
+            acc = acc+curr*curr;
+            return acc;
+        }
+        return finalcousine;
+    }
+ 
+    //------------------------------------------------------------------------------------------ Get String Part
     let string1 = "Happy Shelly is smiling";
-    let string2 = "Sad Shelly is crying";
-    let string3 = "Markus does not like to cry.";
-    // console.log("string: ", string1, string2, string3);
-    
-
-    let newsWords1 = tokenize(string1);
-    let newsWords2 = tokenize(string2);
-    let newsWords3 = tokenize(string3);
-    // console.log("newsWords: ", newsWords1,newsWords2,newsWords3)
-    let allDocArray = [];
-    allDocArray.push(newsWords1);
-    allDocArray.push(newsWords2);
-    allDocArray.push(newsWords3);
-    // console.log("allDocArray: ",allDocArray);
+    let string2 = "Sad Shelly is to cry";
+    let string3 = "Happy Markus does not like to cry.";
+    let allStrings = [string1,string2,string3];
+    //------------------------------------------------------------------------------------------ Calculation Part
+    let newsWords = [];
+    newsWords = allStrings.map(tokenize);
     
     let bagOfWords = [];
-   
+    let finalArray = [];
 
-    let finalArray1 = makeDictionary(newsWords1, bagOfWords);
-    let finalArray2 = makeDictionary(newsWords2, bagOfWords);
-    let finalArray3 = makeDictionary(newsWords3, bagOfWords);
-    // console.log("finalArray: ", finalArray1,finalArray2,finalArray3);
-    // console.log("bagOfWords: ",bagOfWords)
-
-    let newsVsm1 = vsm(newsWords1,finalArray1);
-    let newsVsm2 = vsm(newsWords2,finalArray2);
-    let newsVsm3 = vsm(newsWords3,finalArray3);
-    // console.log("newsVsm: ", newsVsm1,newsVsm2,newsVsm3)
+    for (i=0; i<newsWords.length;i++){
+        finalArray = makeDictionary(newsWords[i],bagOfWords);
+    }
     
-    let tf1 = termFrequency(newsVsm1,newsWords1.length); 
-    let tf2 = termFrequency(newsVsm2,newsWords2.length); 
-    let tf3 = termFrequency(newsVsm3,newsWords3.length);
-    // console.log("singleArray length: ", newsWords1.length, newsWords2.length, newsWords3.length);
+    let newsVsms = [];
+    for (i=0; i<newsWords.length;i++){
+        newsVsms.push(vsm(newsWords[i],finalArray));
+    }
 
-    let newsIdf = idf(3,allDocArray,bagOfWords);
-  
-    console.log("newsIdf: ",newsIdf);
+    let tfs = [];
+    for (i=0; i<newsWords.length;i++){
+        tfs.push(termFrequency(newsVsms[i],newsWords[i].length));
+    }
 
+    let newsIdf = idf(allStrings.length,newsWords,bagOfWords);
 
-    let tfidf1 = tfidf(tf1,newsIdf);
-    let tfidf2 = tfidf(tf2,newsIdf);
-    let tfidf3 = tfidf(tf3,newsIdf);
-    console.log("tfidf1: ", tfidf1);
-    console.log("tfidf2: ", tfidf2);
-    console.log("tfidf3: ", tfidf3);
+    let tfidfs = [];
+    for(i=0; i<tfs.length; i++){
+        tfidfs.push(tfidf(tfs[i], newsIdf));
+    }
 
     
-    let cosineSim12 = cosine(tfidf(tf1,newsIdf), tfidf(tf2,newsIdf));
-    console.log("cosineSim12: ", cosineSim12);
+    let firstIndex = [];
+    let secondIndex = [];
+    let allCosines = [];
     
-    let cosineSim13 = cosine(tfidf(tf1,newsIdf), tfidf(tf3,newsIdf));
-    console.log("cosineSim13: ",cosineSim13);
-    // let cosineSim23 = cosine(tfidf(tf2,newsIdf2), tfidf(tf3,newsIdf3));
+    let stringCosineCombination = [];
+    for (i=0;i<tfidfs.length;i++){
+        for (j=0;j<tfidfs.length;j++){
+            firstIndex.push(i);
+            secondIndex.push(j);
+            allCosines.push(cosine(tfidfs[i],tfidfs[j]));
+            let singleCombination = {};
+            singleCombination.firstString = i+1; //need to be id of the article
+            singleCombination.secondString= j+1; //need to be id of the article
+            singleCombination.cosineValue = cosine(tfidfs[i],tfidfs[j]);
+            stringCosineCombination.push(singleCombination);
+        }
+    }
 
-    // // console.log("cosineSim13: ", cosineSim13);
-    // // console.log("cosineSim23: ", cosineSim23);
-  
+    console.log("stringCosineCombination: ", stringCosineCombination);
+
+    let cosine12 = cosine(tfidfs[0], tfidfs[1]);
+    let cosine13 = cosine(tfidfs[0], tfidfs[2]);
+    let cosine23 = cosine(tfidfs[1], tfidfs[2]);
+
+    console.log("Shelly cosine12: ", cosine12, "cosine13: ", cosine13,"cosine23: ", cosine23);
     
-
+    //------------------------------------------------------------------------------------------ Export final output Part
 })
 
 
