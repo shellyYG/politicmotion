@@ -36,7 +36,6 @@ router.post('/', (req, res)=> {
             allStopWords.push(stopWords[i].words);
         }
         
-        
         for (i=0; i<relevantNews.length; i++){
             allNewsIds.push(relevantNews[i].id);
             allNewsStrings.push(relevantNews[i].content);
@@ -51,14 +50,15 @@ router.post('/', (req, res)=> {
     //------------------------------------------------------------------------- Define the algo part
     let tokenize = (text)=>text.toLowerCase().split(/[.,?!\s’]+/g);
 
-    function ignoreStopTokens(token){
-        if(!allStopWords.includes(token)){
-            let filteredTokenList = [];
-            filteredTokenList.push(token);
-            return filteredTokenList;
+    function ignoreStopTokens(acc,curr){
+        if(!allStopWords.includes(curr)){
+            acc.push(curr);
+        }else{
+            acc;
         }
+        return acc;
     }
-    
+   
 
     let makeDictionary = (tokens, array)=>{
         tokens.forEach((token)=>{
@@ -66,7 +66,7 @@ router.post('/', (req, res)=> {
                 array.push(token);
             }
         })
-        return array
+        return array;
     }
 
     function vsm(eachWord, endArray){
@@ -137,31 +137,36 @@ router.post('/', (req, res)=> {
     //------------------------------------------------------------------------------------------ Calculation Part
     let newsWords = [];
     newsWords = allNewsStrings.map(tokenize);
-    let filterednewsWords = ignoreStopTokens(newsWords);
-    console.log("filterednewsWords: ", filterednewsWords);
+    console.log("newsWords: ", newsWords);
+    
+    const AllFilteredNewsWords = [];
+    
+    for (i=0;i<newsWords.length;i++){
+        var singleFilteredNewsWords = newsWords[i].reduce(ignoreStopTokens,[]);
+        AllFilteredNewsWords.push(singleFilteredNewsWords);
+    }
+    console.log("AllFilteredNewsWords: ", AllFilteredNewsWords);
     
     let bagOfWords = [];
     let finalArray = [];
 
-    console.log("newsWords: ",newsWords)
-
-    for (i=0; i<newsWords.length;i++){
-        finalArray = makeDictionary(newsWords[i],bagOfWords);
+    for (i=0; i<AllFilteredNewsWords.length;i++){
+        finalArray = makeDictionary(AllFilteredNewsWords[i],bagOfWords);
     }
     console.log("bagOfWords: ", bagOfWords);
     
     
     let newsVsms = [];
-    for (i=0; i<newsWords.length;i++){
-        newsVsms.push(vsm(newsWords[i],finalArray));
+    for (i=0; i<AllFilteredNewsWords.length;i++){
+        newsVsms.push(vsm(AllFilteredNewsWords[i],finalArray));
     }
 
     let tfs = [];
-    for (i=0; i<newsWords.length;i++){
-        tfs.push(termFrequency(newsVsms[i],newsWords[i].length));
+    for (i=0; i<AllFilteredNewsWords.length;i++){
+        tfs.push(termFrequency(newsVsms[i],AllFilteredNewsWords[i].length));
     }
 
-    let newsIdf = idf(allNewsStrings.length,newsWords,bagOfWords);
+    let newsIdf = idf(allNewsStrings.length,AllFilteredNewsWords,bagOfWords);
 
     let tfidfs = [];
     for(i=0; i<tfs.length; i++){
@@ -202,7 +207,7 @@ router.post('/', (req, res)=> {
 
     console.log("firstStringId: ", firstStringId, "secondStringId: ", secondStringId);
     
-    console.log("allNewsDetails: ", allNewsDetails);
+    // console.log("allNewsDetails: ", allNewsDetails);
     
     //------------------------------------------------------------------------------------------ Export final output Part
     res.send(allNewsDetails);
