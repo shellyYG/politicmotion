@@ -72,9 +72,9 @@ router.get('/', (req, res)=> {
     let cosine = (tfIdf1,tfIdf2)=>tfIdf1.reduce((acc,curr,index)=>acc+curr*tfIdf2[index],0) / (Math.sqrt(tfIdf1.reduce((acc,curr)=>acc+curr*curr,0))*Math.sqrt(tfIdf2.reduce((acc,curr)=>acc+curr*curr,0)));
 
     // ------------------------------------------------------------------ calculation part
-    let string1 = "How are you? Have you eaten yet?";
-    let string2 = "where do you live? Is it in the U.S.?";
-    let string3 = "I am in Taiwan yes";
+    let string1 = "Happy Shelly is smiling";
+    let string2 = "Sad Shelly is crying";
+    let string3 = "Markus does not like to cry.";
     // console.log("string: ", string1, string2, string3);
     
 
@@ -114,7 +114,7 @@ router.get('/', (req, res)=> {
 
     let tfidf1 = tfidf(tf1,newsIdf);
     let tfidf2 = tfidf(tf2,newsIdf);
-    let tfidf3 = tfidf(tf2,newsIdf);
+    let tfidf3 = tfidf(tf3,newsIdf);
     console.log("tfidf1: ", tfidf1);
     console.log("tfidf2: ", tfidf2);
     console.log("tfidf3: ", tfidf3);
@@ -123,7 +123,8 @@ router.get('/', (req, res)=> {
     let cosineSim12 = cosine(tfidf(tf1,newsIdf), tfidf(tf2,newsIdf));
     console.log("cosineSim12: ", cosineSim12);
     
-    // let cosineSim13 = cosine(tfidf(tf1,newsIdf1), tfidf(tf3,newsIdf3));
+    let cosineSim13 = cosine(tfidf(tf1,newsIdf), tfidf(tf3,newsIdf));
+    console.log("cosineSim13: ",cosineSim13);
     // let cosineSim23 = cosine(tfidf(tf2,newsIdf2), tfidf(tf3,newsIdf3));
 
     // // console.log("cosineSim13: ", cosineSim13);
