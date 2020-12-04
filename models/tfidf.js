@@ -1,5 +1,7 @@
 const express = require('express');
 
+let tokenize = (text)=>text.toLowerCase().split(/[.,?!\s’]+/g);
+
 let makeDictionary = (tokens, array)=>{
     tokens.forEach((token)=>{
         if(!array.includes(token)){
@@ -74,4 +76,4 @@ function cosine(tfIdf1,tfIdf2){
     return finalcousine;
 }
 
-module.exports = { makeDictionary, vsm, termFrequency, logBase10, idf, tfidf, cosine};
+module.exports = { tokenize, makeDictionary, vsm, termFrequency, logBase10, idf, tfidf, cosine};

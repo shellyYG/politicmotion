@@ -4,16 +4,6 @@ searchButton.addEventListener('click',()=>{
     console.log("clicked!!");
     const searchTopic1 = document.querySelector("#userInput1").value;
     const searchTopic2 = document.querySelector("#userInput2").value;
-    axios.post(`tfidf`,{
-        'searchTopic1': searchTopic1,
-        'searchTopic2': searchTopic2
-    }).then(res=>{
-        console.log("posted to tfidf Back and is Now at Front");
-        console.log("res.data: ", res.data);
-    }).catch(err => {
-        console.log("err from tfidf: ",err);
-    })
-
     
     axios.post(`/searchNews`,{
         'searchTopic1': searchTopic1,
@@ -104,18 +94,31 @@ searchButton.addEventListener('click',()=>{
                 localStorage.setItem("clickedPoints",JSON.stringify(pointArray));
                 const finalPointsClicked = localStorage.getItem("clickedPoints");
                 console.log(finalPointsClicked);
-                axios.post(`showNews`,{
-                    'finalPointsClicked': finalPointsClicked,
+
+                axios.post(`tfidf`,{
                     'searchTopic1': searchTopic1,
-                    'searchTopic2': searchTopic2
-                    })
-                     .then(res => {
-                         console.log("back to front end after sending finalPointsClicked")
-                         console.log(res);
-                     })
+                    'searchTopic2': searchTopic2,
+                    'clickedIds': finalPointsClicked
+                }).then(res=>{
+                    console.log("posted to tfidf Back and is Now at Front");
+                    console.log("res.data: ", res.data);
+                }).catch(err => {
+                    console.log("err from tfidf: ",err);
+                })
+
+                // axios.post(`showNews`,{
+                //     'finalPointsClicked': finalPointsClicked,
+                //     'searchTopic1': searchTopic1,
+                //     'searchTopic2': searchTopic2
+                //     })
+                //      .then(res => {
+                //          console.log("back to front end after sending finalPointsClicked")
+                //          console.log(res);
+                //      })
+                // 
             }
-            
         })
+
 
     }).catch(err=>{
         console.log(err);
