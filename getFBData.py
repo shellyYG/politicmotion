@@ -40,8 +40,12 @@ def FindLinks(url, n):
     driver.get(url)
 
     time.sleep(3) #wait for a few secs for the element to show
-    driver.find_element_by_class_name('layerCancel').click() ##byPass we got error message box
-    driver.execute_script('window.scrollTo(0, document.body.scrollHeight);')  #scroll down
+    try:
+        driver.find_element_by_class_name('layerCancel').click() ##byPass we got error message box
+        driver.execute_script('window.scrollTo(0, document.body.scrollHeight);')  #scroll down
+    except:
+        driver.execute_script('window.scrollTo(0, document.body.scrollHeight);')  #scroll down
+
     for i in range(n): #make it sleep a few secs so you can see the next block box
         print(i)
         try:
@@ -54,13 +58,20 @@ def FindLinks(url, n):
             time.sleep(3)
             print("no blockbox")
    
-    
+    print("一")
     driver.find_element_by_xpath('//a[@id="expanding_cta_close_button"]').click() #byPass register user box
-    
+    print("二")
     soup = BeautifulSoup(driver.page_source, "html.parser")
+    print("三")
     posts = soup.findAll('div',{'class':'clearfix y_c3pyo2ta3'})
+    print("四")
     for i in posts:
-        Links.append('https://www.facebook.com'+i.find('a',{'class':'_5pcq'}).attrs['href'].split('?',2)[0]) #get each post link
+        print("五")
+        try: 
+            driver.find_element_by_class_name('layerCancel').click()
+            Links.append('https://www.facebook.com'+i.find('a',{'class':'_5pcq'}).attrs['href'].split('?',2)[0]) #get each post link
+        except:
+            Links.append('https://www.facebook.com'+i.find('a',{'class':'_5pcq'}).attrs['href'].split('?',2)[0]) #get each post link
     return Links
 
 

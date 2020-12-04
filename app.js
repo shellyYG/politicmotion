@@ -12,7 +12,7 @@ const NYTWebDataRoutes = require('./routes/getNews/getNYTData');
 const segmentTopicRoutes = require('./routes/getNews/segmentTopic');
 const searchRoutes = require('./routes/searchNews/searchBack');
 const showNewsRoutes = require('./routes/getNews/showNews');
-const textSimilarRoutes = require('./routes/analyzeNews/tfidf');
+const textSimilarRoutes = require('./routes/analyzeNews/findSimilarNews');
 
 app.use(express.static('public'));
 
