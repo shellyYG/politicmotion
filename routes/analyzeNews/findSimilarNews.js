@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { query } = require('../../models/query');
-const { tokenize, makeDictionary, vsm, termFrequency, idf, tfidf, cosine } = require('../../models/tfidf');
+const { tokenize, makeDictionary, vsm, termFrequency, idf, tfidf, cosine, unique } = require('../../models/tfidf');
 
 router.post('/', (req, res)=> {
     //------------------------------------------------------------------------------------------ Finish Algo Part
@@ -135,8 +135,6 @@ router.post('/', (req, res)=> {
                 stringCosineCombination.push(singleCombination);
             }
         }
-        
-        var maxNonEqualCosine = Math.max.apply(Math,allCosines.filter(function(x){return x <= thresholdCosine}));
 
         // console.log("stringCosineCombination: ", stringCosineCombination);
         let allMatched = [];
@@ -190,15 +188,14 @@ router.post('/', (req, res)=> {
             newsIdtoShow.push(allMatched[i].firstArticle);
             newsIdtoShow.push(allMatched[i].secondString);
         }
-
-        console.log("newsIdtoShow: ", newsIdtoShow);
+        let uniqueNewsIdtoShow = newsIdtoShow.filter(unique);
         
-
-        // -- here I am
+        console.log("uniqueNewsIdtoShow: ", uniqueNewsIdtoShow);
+        
         async function getRelevantNews(){
             sql = `SELECT id, content, post_date, post_link, reaction, sentiment_score, magnitude_score
             FROM politicmotion.fb_rawdata
-            WHERE id IN (${newsIdtoShow});`
+            WHERE id IN (${uniqueNewsIdtoShow});`
             var sqlquery = await query(sql);
             return sqlquery; 
         }
@@ -221,20 +218,7 @@ router.post('/', (req, res)=> {
             res.json(finalNewsPackage);
             
         }
-        showRelevantNews()
-        
-        // // -----------------------------------------------------------end get clicked news
-
-        // function getIndex(value){
-        //     return value == maxNonEqualCosine;
-        // }
-        
-        // var indexOfMaxNonEqualCosine = allCosines.findIndex(getIndex);
-        // var firstStringId = stringCosineCombination[indexOfMaxNonEqualCosine].firstString;
-        // var secondStringId = stringCosineCombination[indexOfMaxNonEqualCosine].secondString;
-
-        // return {firstStringId,secondStringId}
-        
+        showRelevantNews();
 
     }
 

@@ -76,4 +76,8 @@ function cosine(tfIdf1,tfIdf2){
     return finalcousine;
 }
 
-module.exports = { tokenize, makeDictionary, vsm, termFrequency, logBase10, idf, tfidf, cosine};
+function unique(value, index, self){
+    return self.indexOf(value) === index;
+}
+
+module.exports = { tokenize, makeDictionary, vsm, termFrequency, logBase10, idf, tfidf, cosine, unique};
