@@ -62,6 +62,7 @@ searchButton.addEventListener('click',()=>{
         Plotly.newPlot(sentimentShow, data, layout);
 
         // -------------------------------------------------- Build click event & saved it to localStorage     
+        var finalPointsClicked;
         sentimentShow.on('plotly_click', function(data){
             for(var i=0; i < data.points.length; i++){
                 Xaxis = data.points[i].x;
@@ -73,69 +74,69 @@ searchButton.addEventListener('click',()=>{
                 }
                 pointArray.push({"Xaxis": Xaxis, "Yaxis": Yaxis});
                 localStorage.setItem("clickedPoints",JSON.stringify(pointArray));
-                const finalPointsClicked = localStorage.getItem("clickedPoints");
+                finalPointsClicked = localStorage.getItem("clickedPoints");
                 console.log(finalPointsClicked);
-
-                chooseSentimentButton.addEventListener('click',()=>{
-                    let articles = document.querySelector('#articles');
-                    let articleElements = document.querySelectorAll('#article');
-                    if (articleElements.length == 0){
-                        console.log("No articles yet.");
-                    }else{
-                        console.log("articleElements: ", articleElements);
-                        for (i=0; i<articleElements.length;i++){
-                            articles.removeChild(articleElements[i]);
-                        }
-                        console.log("Removed old articles!");
-                    }
-                    
-                    axios.post(`tfidf`,{
-                        'searchTopic1': searchTopic1,
-                        'searchTopic2': searchTopic2,
-                        'clickedIds': finalPointsClicked
-                    }).then(res=>{
-                            for (i=0; i<res.data.length; i++){
-                                const allNewsIdShown = [];
-                                allNewsIdShown.push(res.data[i].id);
-                                console.log("res.data.length: ", res.data.length);
-                                console.log("allNewsIdShown: ", allNewsIdShown);
-
-                                var article = document.createElement('article');
-                                article.setAttribute("id", "article");
-
-                                var articleId = document.createElement('articleId');
-                                articleId.setAttribute("id", "articleId");
-        
-                                var articleDate = document.createElement('articleDate');
-                                articleDate.setAttribute("id", "articleDate");
-        
-                                var articleContent = document.createElement('articleContent');
-                                articleContent.setAttribute("id", "articleContent");
-        
-                                var articleLink = document.createElement('articleLink');
-                                articleLink.setAttribute("id", "articleLink");
-
-                                articleId.textContent = res.data[i].id;
-                                articleDate.textContent = res.data[i].post_date;
-                                articleContent.textContent = res.data[i].content;
-                                articleLink.textContent = res.data[i].post_link;
-        
-                                // append single article
-                                article.appendChild(articleId);
-                                article.appendChild(articleDate);
-                                article.appendChild(articleContent);
-                                article.appendChild(articleLink);
-        
-                                // append to all articles list
-                                articles.appendChild(article);
-                                localStorage.removeItem("clickedPoints");
-                            }
-                        
-                    }).catch(err => {
-                        console.log("err from tfidf: ",err);
-                    })  
-                })
             }
+        })
+        
+        chooseSentimentButton.addEventListener('click',()=>{
+            let articles = document.querySelector('#articles');
+            let articleElements = document.querySelectorAll('#article');
+            if (articleElements.length == 0){
+                console.log("No articles yet.");
+            }else{
+                console.log("articleElements: ", articleElements);
+                for (i=0; i<articleElements.length;i++){
+                    articles.removeChild(articleElements[i]);
+                }
+                console.log("Removed old articles!");
+            }
+            
+            axios.post(`tfidf`,{
+                'searchTopic1': searchTopic1,
+                'searchTopic2': searchTopic2,
+                'clickedIds': finalPointsClicked
+            }).then(res=>{
+                    for (i=0; i<res.data.length; i++){
+                        const allNewsIdShown = [];
+                        allNewsIdShown.push(res.data[i].id);
+                        console.log("res.data.length: ", res.data.length);
+                        console.log("allNewsIdShown: ", allNewsIdShown);
+
+                        var article = document.createElement('article');
+                        article.setAttribute("id", "article");
+
+                        var articleId = document.createElement('articleId');
+                        articleId.setAttribute("id", "articleId");
+
+                        var articleDate = document.createElement('articleDate');
+                        articleDate.setAttribute("id", "articleDate");
+
+                        var articleContent = document.createElement('articleContent');
+                        articleContent.setAttribute("id", "articleContent");
+
+                        var articleLink = document.createElement('articleLink');
+                        articleLink.setAttribute("id", "articleLink");
+
+                        articleId.textContent = res.data[i].id;
+                        articleDate.textContent = res.data[i].post_date;
+                        articleContent.textContent = res.data[i].content;
+                        articleLink.textContent = res.data[i].post_link;
+
+                        // append single article
+                        article.appendChild(articleId);
+                        article.appendChild(articleDate);
+                        article.appendChild(articleContent);
+                        article.appendChild(articleLink);
+
+                        // append to all articles list
+                        articles.appendChild(article);
+                        localStorage.removeItem("clickedPoints");
+                    }
+                
+            }).catch(err => {
+                console.log("err from tfidf: ",err);
+            })  
         })
     }).catch(err=>{
         console.log(err);
