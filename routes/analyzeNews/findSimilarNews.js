@@ -9,7 +9,7 @@ router.post('/', (req, res)=> {
     const searchTopic2 = req.body.searchTopic2;
     let clickedIds = req.body.clickedIds;
     clickedIds = JSON.parse(clickedIds);
-    // console.log("clickedIds: ", clickedIds);
+    
     //--------------------------------------------------------------------------Get clicked news
     let allNewsIdClicked= [];
     for (i=0; i<clickedIds.length; i++){
@@ -76,6 +76,7 @@ router.post('/', (req, res)=> {
     let finalArray = [];
     let stringCosineCombination = [];
     const AllFilteredNewsWords = [];
+    const finalNewsPackage = [];
 
     async function getAllRelevantNews(){
         const relevantNews = await searchRelevantNews();
@@ -137,7 +138,7 @@ router.post('/', (req, res)=> {
         
         var maxNonEqualCosine = Math.max.apply(Math,allCosines.filter(function(x){return x <= thresholdCosine}));
 
-        console.log("stringCosineCombination: ", stringCosineCombination);
+        // console.log("stringCosineCombination: ", stringCosineCombination);
         let allMatched = [];
         for (i=0; i<allNewsIdClicked.length; i++){
             console.log("i is: ", i);
@@ -173,9 +174,7 @@ router.post('/', (req, res)=> {
                 }
             }
             let matchedArticle = stringCosineCombination.reduce(findMatchArticleId,0);
-            // console.log("matchedArticle: ", matchedArticle);
             let twoMatched = {};
-            // console.log("singleMatch: ",singleMatch);
             
             twoMatched.firstArticle = singleMatch[0].firstString;
             twoMatched.secondString = matchedArticle;
@@ -186,28 +185,63 @@ router.post('/', (req, res)=> {
 
         console.log("allMatched: ", allMatched);
 
-        
-        
-        
-
-        
-        // -----------------------------------------------------------end get clicked news
-
-        function getIndex(value){
-            return value == maxNonEqualCosine;
+        const newsIdtoShow = [];
+        for (i=0; i<allMatched.length; i++){
+            newsIdtoShow.push(allMatched[i].firstArticle);
+            newsIdtoShow.push(allMatched[i].secondString);
         }
-        
-        var indexOfMaxNonEqualCosine = allCosines.findIndex(getIndex);
-        var firstStringId = stringCosineCombination[indexOfMaxNonEqualCosine].firstString;
-        var secondStringId = stringCosineCombination[indexOfMaxNonEqualCosine].secondString;
 
-        return {firstStringId,secondStringId}
+        console.log("newsIdtoShow: ", newsIdtoShow);
+        
+
+        // -- here I am
+        async function getRelevantNews(){
+            sql = `SELECT id, content, post_date, post_link, reaction, sentiment_score, magnitude_score
+            FROM politicmotion.fb_rawdata
+            WHERE id IN (${newsIdtoShow});`
+            var sqlquery = await query(sql);
+            return sqlquery; 
+        }
+
+        
+        async function showRelevantNews(){
+            let allNews = await getRelevantNews();
+            for (i=0; i<allNews.length;i++){
+                let singleNews = {};
+                singleNews.id = allNews[i].id;
+                singleNews.content = allNews[i].content;
+                singleNews.post_date = allNews[i].post_date;
+                singleNews.post_link = allNews[i].post_link;
+                singleNews.reaction = allNews[i].reaction;
+                singleNews.sentiment_score = allNews[i].sentiment_score;
+                singleNews.magnitude_score = allNews[i].magnitude_score;
+                finalNewsPackage.push(singleNews);
+            }
+            console.log("finalNewsPackage: ", finalNewsPackage);
+            res.json(finalNewsPackage);
+            
+        }
+        showRelevantNews()
+        
+        // // -----------------------------------------------------------end get clicked news
+
+        // function getIndex(value){
+        //     return value == maxNonEqualCosine;
+        // }
+        
+        // var indexOfMaxNonEqualCosine = allCosines.findIndex(getIndex);
+        // var firstStringId = stringCosineCombination[indexOfMaxNonEqualCosine].firstString;
+        // var secondStringId = stringCosineCombination[indexOfMaxNonEqualCosine].secondString;
+
+        // return {firstStringId,secondStringId}
+        
 
     }
 
     getAllCosine(allNewsStrings);
+    
     //------------------------------------------------------------------------------------------ Export final output Part
-    res.send("Jo");
+    
     
 })
 

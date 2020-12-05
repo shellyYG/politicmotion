@@ -100,22 +100,17 @@ searchButton.addEventListener('click',()=>{
                     'searchTopic2': searchTopic2,
                     'clickedIds': finalPointsClicked
                 }).then(res=>{
-                    console.log("posted to tfidf Back and is Now at Front");
-                    console.log("res.data: ", res.data);
+                    // console.log("res.data after tfidf: ", res.data);
+                    let article = document.createElement('article');
+                    let articles = document.querySelector('#articles');
+                    article.textContent = res.data[0].content;
+                    articles.appendChild(article);
+
                 }).catch(err => {
                     console.log("err from tfidf: ",err);
                 })
 
-                // axios.post(`showNews`,{
-                //     'finalPointsClicked': finalPointsClicked,
-                //     'searchTopic1': searchTopic1,
-                //     'searchTopic2': searchTopic2
-                //     })
-                //      .then(res => {
-                //          console.log("back to front end after sending finalPointsClicked")
-                //          console.log(res);
-                //      })
-                // 
+                
             }
         })
 
