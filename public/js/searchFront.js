@@ -84,8 +84,12 @@ searchButton.addEventListener('click',()=>{
                     let articles = document.querySelector('#articles');
                     chooseSentimentButton.addEventListener('click',()=>{
                         for (i=0; i<res.data.length; i++){
+
                             var article = document.createElement('article');
                             article.setAttribute("id", "article");
+
+                            var articleId = document.createElement('articleId');
+                            articleId.setAttribute("id", "articleId");
     
                             var articleDate = document.createElement('articleDate');
                             articleDate.setAttribute("id", "articleDate");
@@ -95,12 +99,14 @@ searchButton.addEventListener('click',()=>{
     
                             var articleLink = document.createElement('articleLink');
                             articleLink.setAttribute("id", "articleLink");
-    
+
+                            articleId.textContent = res.data[i].id;
                             articleDate.textContent = res.data[i].post_date;
                             articleContent.textContent = res.data[i].content;
                             articleLink.textContent = res.data[i].post_link;
     
                             // append single article
+                            article.appendChild(articleId);
                             article.appendChild(articleDate);
                             article.appendChild(articleContent);
                             article.appendChild(articleLink);
