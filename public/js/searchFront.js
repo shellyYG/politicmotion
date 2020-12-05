@@ -4,6 +4,7 @@ searchButton.addEventListener('click',()=>{
     console.log("clicked!!");
     const searchTopic1 = document.querySelector("#userInput1").value;
     const searchTopic2 = document.querySelector("#userInput2").value;
+    const allUserEmotions = [];
     
     axios.post(`/searchNews`,{
         'searchTopic1': searchTopic1,
@@ -100,8 +101,6 @@ searchButton.addEventListener('click',()=>{
                     for (i=0; i<res.data.length; i++){
                         const allNewsIdShown = [];
                         allNewsIdShown.push(res.data[i].id);
-                        console.log("res.data.length: ", res.data.length);
-                        console.log("allNewsIdShown: ", allNewsIdShown);
 
                         var article = document.createElement('article');
                         article.setAttribute("id", "article");
@@ -118,6 +117,37 @@ searchButton.addEventListener('click',()=>{
                         var articleLink = document.createElement('articleLink');
                         articleLink.setAttribute("id", "articleLink");
 
+                        var br = document.createElement("br");
+                        var articleDBId = res.data[i].id;
+
+                        var loveBtn = document.createElement("button");
+                        loveBtn.innerHTML = "Love";
+                        loveBtn.setAttribute("id", `user_loveBtn_${articleDBId}`);
+                        var BigLoveBtn = document.createElement("button");
+                        BigLoveBtn.innerHTML = "Big Love";
+                        BigLoveBtn.setAttribute("id", `user_BigLoveBtn_${articleDBId}`);
+
+                        var angryBtn = document.createElement("button");
+                        angryBtn.innerHTML = "Angry";
+                        angryBtn.setAttribute("id", `user_angryBtn_${articleDBId}`);
+                        var BigAngryBtn = document.createElement("button");
+                        BigAngryBtn.innerHTML = "Big Angry";
+                        BigAngryBtn.setAttribute("id", `user_BigAngryBtn_${articleDBId}`);
+
+                        var cryBtn = document.createElement("button");
+                        cryBtn.innerHTML = "Cry";
+                        cryBtn.setAttribute("id", `user_cryBtn_${articleDBId}`);
+                        var BigCryBtn = document.createElement("button");
+                        BigCryBtn.innerHTML = "Big Cry";
+                        BigCryBtn.setAttribute("id", `user_BigCryBtn_${articleDBId}`);
+
+                        var hahaBtn = document.createElement("button");
+                        hahaBtn.innerHTML = "Haha";
+                        hahaBtn.setAttribute("id", `user_hahaBtn_${articleDBId}`);
+                        var BighahaBtn = document.createElement("button");
+                        BighahaBtn.innerHTML = "Big Haha";
+                        BighahaBtn.setAttribute("id", `user_BighahaBtn_${articleDBId}`);
+
                         articleId.textContent = res.data[i].id;
                         articleDate.textContent = res.data[i].post_date;
                         articleContent.textContent = res.data[i].content;
@@ -128,10 +158,30 @@ searchButton.addEventListener('click',()=>{
                         article.appendChild(articleDate);
                         article.appendChild(articleContent);
                         article.appendChild(articleLink);
+                        article.appendChild(br); //not readable, why?? here
+                        article.appendChild(loveBtn);
+                        article.appendChild(angryBtn);
+                        article.appendChild(cryBtn);
+                        article.appendChild(hahaBtn);
+                        article.appendChild(br);
+                        article.appendChild(BigLoveBtn);
+                        article.appendChild(BigAngryBtn);
+                        article.appendChild(BigCryBtn);
+                        article.appendChild(BighahaBtn);
 
-                        // append to all articles list
-                        articles.appendChild(article);
-                        localStorage.removeItem("clickedPoints");
+                        
+                        articles.appendChild(article); // append to all articles list
+                        localStorage.removeItem("clickedPoints"); // remove local storage items
+
+                        var userEmotionButtons = document.querySelectorAll('[id^="user_"]');
+                        
+                        for (let i = 0; i < userEmotionButtons.length; i++) {
+                            let userEmotionButton = userEmotionButtons[i];
+                            let userEmotionId = userEmotionButton.getAttribute('id');
+                            console.log("userEmotionId: ", userEmotionId);
+                            allUserEmotions.push(userEmotionButton);
+                            
+                        }
                     }
                 
             }).catch(err => {
@@ -141,4 +191,6 @@ searchButton.addEventListener('click',()=>{
     }).catch(err=>{
         console.log(err);
     })
+    console.log("allUserEmotions: ", allUserEmotions);
+    
 })
