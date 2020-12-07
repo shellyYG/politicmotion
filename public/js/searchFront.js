@@ -1,10 +1,17 @@
 const searchButton = document.getElementById('btn-search');
-const chooseSentimentButton = document.getElementById('btn-chooseSentiment')
+const chooseSentimentButton = document.getElementById('btn-chooseSentiment');
+const analyzeUserEmotionButton = document.getElementById('btn-analyzeUser');
 searchButton.addEventListener('click',()=>{
-    console.log("clicked!!");
+    console.log("search button clicked!!");
     const searchTopic1 = document.querySelector("#userInput1").value;
     const searchTopic2 = document.querySelector("#userInput2").value;
     const allUserEmotions = [];
+    var finalPointsClicked;
+    var finalEmotionClicked;
+    let avgPostSentiment = 0;
+    let avgPostMagnitude = 0;
+    let avgFBReactSentiment = 0;
+    let avgFBReactMagnitude = 0;
 
     async function searchNews(){
         axios.post(`/searchNews`,{
@@ -64,7 +71,7 @@ searchButton.addEventListener('click',()=>{
             Plotly.newPlot(sentimentShow, data, layout);
     
             // -------------------------------------------------- Build click event & saved it to localStorage     
-            var finalPointsClicked;
+            
             sentimentShow.on('plotly_click', function(data){
                 for(var i=0; i < data.points.length; i++){
                     Xaxis = data.points[i].x;
@@ -77,30 +84,29 @@ searchButton.addEventListener('click',()=>{
                     pointArray.push({"Xaxis": Xaxis, "Yaxis": Yaxis});
                     localStorage.setItem("clickedPoints",JSON.stringify(pointArray));
                     finalPointsClicked = localStorage.getItem("clickedPoints");
-                    console.log(finalPointsClicked);
+                    console.log("finalPointsClicked: ", finalPointsClicked);
                 }
             })
             
             chooseSentimentButton.addEventListener('click',()=>{
                 let articles = document.querySelector('#articles');
-                let articleElements = document.querySelectorAll('#article');
+                let articleElements = document.querySelectorAll('article');
                 if (articleElements.length == 0){
-                    console.log("No articles yet.");
+                    console.log(articleElements.length);
+                    console.log("Give-me-those-news clicked. No articles yet.");
                 }else{
-                    console.log("articleElements: ", articleElements);
                     for (i=0; i<articleElements.length;i++){
                         articles.removeChild(articleElements[i]);
                     }
                     console.log("Removed old articles!");
                 }
                 
-                axios.post(`tfidf`,{
+                axios.post(`findSimilarNews`,{
                     'searchTopic1': searchTopic1,
                     'searchTopic2': searchTopic2,
                     'clickedIds': finalPointsClicked
                 }).then(res=>{
                         for (i=0; i<res.data.length; i++){
-                            console.log("i of res.data: ", i);
                             const allNewsIdShown = [];
                             allNewsIdShown.push(res.data[i].id);
                             var articleDBId = res.data[i].id;
@@ -121,40 +127,31 @@ searchButton.addEventListener('click',()=>{
                             articleLink.setAttribute("id", `articleLink_${articleDBId}`);
     
                             var br = document.createElement("br");
-                            
     
                             var loveBtn = document.createElement("button");
                             loveBtn.innerHTML = "Love";
                             loveBtn.setAttribute("id", `user_loveBtn_${articleDBId}`);
-                            var BigLoveBtn = document.createElement("button");
-                            BigLoveBtn.innerHTML = "Big Love";
-                            BigLoveBtn.setAttribute("id", `user_BigLoveBtn_${articleDBId}`);
     
                             var angryBtn = document.createElement("button");
                             angryBtn.innerHTML = "Angry";
                             angryBtn.setAttribute("id", `user_angryBtn_${articleDBId}`);
-                            var BigAngryBtn = document.createElement("button");
-                            BigAngryBtn.innerHTML = "Big Angry";
-                            BigAngryBtn.setAttribute("id", `user_BigAngryBtn_${articleDBId}`);
     
                             var cryBtn = document.createElement("button");
                             cryBtn.innerHTML = "Cry";
                             cryBtn.setAttribute("id", `user_cryBtn_${articleDBId}`);
-                            var BigCryBtn = document.createElement("button");
-                            BigCryBtn.innerHTML = "Big Cry";
-                            BigCryBtn.setAttribute("id", `user_BigCryBtn_${articleDBId}`);
     
                             var hahaBtn = document.createElement("button");
                             hahaBtn.innerHTML = "Haha";
                             hahaBtn.setAttribute("id", `user_hahaBtn_${articleDBId}`);
-                            var BighahaBtn = document.createElement("button");
-                            BighahaBtn.innerHTML = "Big Haha";
-                            BighahaBtn.setAttribute("id", `user_BighahaBtn_${articleDBId}`);
     
                             articleId.textContent = res.data[i].id;
                             articleDate.textContent = res.data[i].post_date;
                             articleContent.textContent = res.data[i].content;
                             articleLink.textContent = res.data[i].post_link;
+
+                            // calculate average post emotion
+                            avgPostSentiment += res.data[i].sentiment_score;
+                            avgPostMagnitude += res.data[i].magnitude_score;
     
                             // append single article
                             article.appendChild(articleId);
@@ -166,55 +163,70 @@ searchButton.addEventListener('click',()=>{
                             article.appendChild(angryBtn);
                             article.appendChild(cryBtn);
                             article.appendChild(hahaBtn);
-                            article.appendChild(br);
-                            article.appendChild(BigLoveBtn);
-                            article.appendChild(BigAngryBtn);
-                            article.appendChild(BigCryBtn);
-                            article.appendChild(BighahaBtn);
     
-                            
                             articles.appendChild(article); // append to all articles list
                             localStorage.removeItem("clickedPoints"); // remove local storage items
-    
-                            var userEmotionButtons = document.querySelectorAll('[id^="user_"]');
-                            
-                            for (let j = 0; j < userEmotionButtons.length; j++) {
-                                console.log("j of userEmotionButtons: ", j);
-                                let userEmotionButton = userEmotionButtons[j];
-                                let userEmotionId = userEmotionButton.getAttribute('id');
-                                allUserEmotions.push(userEmotionId);
-                            }
                         }
+                        var userEmotionButtons = document.querySelectorAll('[id^="user_"]');
+                            
+                        for (let j = 0; j < userEmotionButtons.length; j++) {
+                            let userEmotionButton = userEmotionButtons[j];
+                            let userEmotionId = userEmotionButton.getAttribute('id');
+
+                            userEmotionButton.addEventListener('click',()=>{
+                                var emotionClicked = localStorage.getItem("clickedEmotions");
+                                var emotionArray = [];
+                                if(emotionClicked){
+                                    emotionArray = JSON.parse(emotionClicked);
+                                }
+                                emotionArray.push(userEmotionId);
+                                localStorage.setItem('clickedEmotions',JSON.stringify(emotionArray));  
+                                finalEmotionClicked = localStorage.getItem("clickedEmotions");
+                            })
+                        }
+                        avgPostSentiment = avgPostSentiment/res.data.length;
+                        avgPostMagnitude = avgPostMagnitude/res.data.length;
+                        avgPostSentiment = avgPostSentiment.toFixed(2);
+                        avgPostMagnitude = avgPostMagnitude.toFixed(2);
+                        localStorage.setItem("avgPostSentiment",avgPostSentiment);
+                        localStorage.setItem("avgPostMagnitude",avgPostMagnitude);
+                        
                     
                 }).catch(err => {
                     console.log("err from tfidf: ",err);
-                })  
+                }) 
             })
         }).catch(err=>{
             console.log(err);
         })
+        return allUserEmotions; 
     }
 
     async function afterUserClick(){
         let searchNewsResult = await searchNews();
         searchNewsResult;
-        console.log("allUserEmotions outside: ", allUserEmotions);
-        // let DOMids = allUserEmotions.map(splitById);
-        // console.log("DOMids: ", DOMids);
-        // function splitById(str){
-        //     pureId = str.split("#");
-        //     return pureId[1];
-        // }
+        analyzeUserEmotionButton.addEventListener('click',()=>{
+            axios.post(`calUserEmotion`,{
+                'finalEmotionClicked': finalEmotionClicked
+            }).then(res=>{
+                const userAvgSentEmotion = document.getElementById('user-AvgSent');
+                userAvgSentEmotion.textContent = res.data.avgUserSentiment;
+                const userAvgMagEmotion = document.getElementById('user-AvgMag');
+                userAvgMagEmotion.textContent = res.data.avgUserMagnitude;
+
+                const postAvgSentEmotion = document.getElementById('post-AvgSent');
+                postAvgSentEmotion.textContent = localStorage.getItem('avgPostSentiment');
+                const postAvgMagEmotion = document.getElementById('post-AvgMag');
+                postAvgMagEmotion.textContent = localStorage.getItem('avgPostMagnitude');
+
+            })
+
+            localStorage.removeItem("clickedEmotions");
+            
+        })
+        
+        
     }
     afterUserClick()
-    
-    
-
-    
-    // var childNodeArray = document.getElementById('article').childNodes;
-    // console.log("childNodeArray: ", childNodeArray);
-    // for(var node in childNodeArray){
-    //     node.onclick = function () { alert(`clicked on ${node}`); };
-    // }
     
 })
