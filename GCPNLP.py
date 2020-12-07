@@ -49,51 +49,7 @@ with engine.begin() as conn:
 
     print('Done inserting sentiment scores.')    
 
-# cal emotion of user
-with engine.begin() as conn:
-    results = conn.execute('SELECT reaction FROM fb_rawdata WHERE user_sentiment_score IS NULL OR user_magnitude_score IS NULL LIMIT 2;')
-    rows = results.fetchall()
-    for i in rows:
-        FBreaction = i['reaction']
-        allReactions = FBreaction.split(sep="|")
-        user_sent = 0
-        user_mag = 0
 
-        for j in allReactions:
-            if (j[-1] == "讚"):
-                print(j)
-                reactionDigit = re.findall(r"\d",j)
-                combinedReaction = ''.join(str(k) for k in reactionDigit)
-                combinedReaction = int(combinedReaction)
-            elif(j[-1] == "心"):
-                print(j)
-                reactionDigit = re.findall(r"\d",j)
-                combinedReaction = ''.join(str(k) for k in reactionDigit)
-                combinedReaction = int(combinedReaction)
-                user_sent += combinedReaction*0.9
-                user_mag += combinedReaction*0.9
-                print(f"user_sent after love is {user_sent}")
-                print(f"user_mag after love is {user_mag}")
-            elif(j[-1] == "哈"):
-                print(j)
-                reactionDigit = re.findall(r"\d",j)
-                combinedReaction = ''.join(str(k) for k in reactionDigit)
-                combinedReaction = int(combinedReaction)
-            elif(j[-1] == "怒"):
-                print(j)
-                reactionDigit = re.findall(r"\d",j)
-                combinedReaction = ''.join(str(k) for k in reactionDigit)
-                combinedReaction = int(combinedReaction)
-            elif(j[-1] == "哇"):
-                print(j)
-                reactionDigit = re.findall(r"\d",j)
-                combinedReaction = ''.join(str(k) for k in reactionDigit)
-                combinedReaction = int(combinedReaction)
-            elif(j[-1] == "嗚"):
-                print(j)
-                reactionDigit = re.findall(r"\d",j)
-                combinedReaction = ''.join(str(k) for k in reactionDigit)
-                combinedReaction = int(combinedReaction)
             
 
 
