@@ -193,7 +193,7 @@ router.post('/', (req, res)=> {
         console.log("uniqueNewsIdtoShow: ", uniqueNewsIdtoShow);
         
         async function getRelevantNews(){
-            sql = `SELECT id, content, post_date, post_link, reaction, sentiment_score, magnitude_score
+            sql = `SELECT id, content, post_date, post_link, reaction, sentiment_score, magnitude_score, user_sentiment_score, user_magnitude_score
             FROM politicmotion.fb_rawdata
             WHERE id IN (${uniqueNewsIdtoShow});`
             var sqlquery = await query(sql);
@@ -212,6 +212,8 @@ router.post('/', (req, res)=> {
                 singleNews.reaction = allNews[i].reaction;
                 singleNews.sentiment_score = allNews[i].sentiment_score;
                 singleNews.magnitude_score = allNews[i].magnitude_score;
+                singleNews.user_sentiment_score = allNews[i].user_sentiment_score;
+                singleNews.user_magnitude_score = allNews[i].user_magnitude_score;
                 finalNewsPackage.push(singleNews);
             }
             console.log("finalNewsPackage: ", finalNewsPackage);

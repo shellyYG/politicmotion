@@ -10,8 +10,8 @@ searchButton.addEventListener('click',()=>{
     var finalEmotionClicked;
     let avgPostSentiment = 0;
     let avgPostMagnitude = 0;
-    let avgFBReactSentiment = 0;
-    let avgFBReactMagnitude = 0;
+    let avgReactionSentiment = 0;
+    let avgReactionMagnitude = 0;
 
     async function searchNews(){
         axios.post(`/searchNews`,{
@@ -152,7 +152,11 @@ searchButton.addEventListener('click',()=>{
                             // calculate average post emotion
                             avgPostSentiment += res.data[i].sentiment_score;
                             avgPostMagnitude += res.data[i].magnitude_score;
-    
+
+                            // calculate average FB user reaction 
+                            avgReactionSentiment += res.data[i].user_sentiment_score;
+                            avgReactionMagnitude += res.data[i].user_magnitude_score;
+
                             // append single article
                             article.appendChild(articleId);
                             article.appendChild(articleDate);
@@ -188,8 +192,16 @@ searchButton.addEventListener('click',()=>{
                         avgPostMagnitude = avgPostMagnitude/res.data.length;
                         avgPostSentiment = avgPostSentiment.toFixed(2);
                         avgPostMagnitude = avgPostMagnitude.toFixed(2);
+
+                        avgReactionSentiment = avgReactionSentiment/res.data.length;
+                        avgReactionMagnitude = avgReactionMagnitude/res.data.length;
+                        avgReactionSentiment = avgReactionSentiment.toFixed(2);
+                        avgReactionMagnitude = avgReactionMagnitude.toFixed(2);
+
                         localStorage.setItem("avgPostSentiment",avgPostSentiment);
                         localStorage.setItem("avgPostMagnitude",avgPostMagnitude);
+                        localStorage.setItem("avgReactionSentiment", avgReactionSentiment);
+                        localStorage.setItem("avgReactionMagnitude", avgReactionMagnitude);
                         
                     
                 }).catch(err => {
@@ -216,8 +228,15 @@ searchButton.addEventListener('click',()=>{
 
                 const postAvgSentEmotion = document.getElementById('post-AvgSent');
                 postAvgSentEmotion.textContent = localStorage.getItem('avgPostSentiment');
+                
                 const postAvgMagEmotion = document.getElementById('post-AvgMag');
                 postAvgMagEmotion.textContent = localStorage.getItem('avgPostMagnitude');
+
+                const reactionAvgSentEmotion = document.getElementById('reaction-AvgSent');
+                reactionAvgSentEmotion.textContent = localStorage.getItem('avgReactionSentiment');
+
+                const reactionAvgMagEmotion = document.getElementById('reaction-AvgMag');
+                reactionAvgMagEmotion.textContent = localStorage.getItem('avgReactionMagnitude');
 
             })
 
