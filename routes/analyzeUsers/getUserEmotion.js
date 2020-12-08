@@ -3,8 +3,6 @@ const router = express.Router();
 
 
 router.post('/',(req, res)=>{
-    console.log("At calUserEmotion path!");
-    console.log("req.body.finalEmotionClicked: ", req.body.finalEmotionClicked);
     let userEmotion = req.body.finalEmotionClicked;
     userEmotion = JSON.parse(userEmotion);
     const cleanEmotion = [];

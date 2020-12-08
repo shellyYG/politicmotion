@@ -8,14 +8,28 @@ let avgPostMagnitude = 0;
 let avgReactionSentiment = 0;
 let avgReactionMagnitude = 0;
 
+// NYTimes Emotions
+let avgNYTPostSentiment = 0;
+let avgNYTPostMagnitude = 0;
+let avgNYTReactionSentiment = 0;
+let avgNYTReactionMagnitude = 0;
+let NYTlength = 0;
+
+// Fox Emotions
+let avgFoxPostSentiment = 0;
+let avgFoxPostMagnitude = 0;
+let avgFoxReactionSentiment = 0;
+let avgFoxReactionMagnitude = 0;
+let FoxLength = 0;
+
 if (articleElements.length == 0){
-    console.log(articleElements.length);
+    // console.log(articleElements.length);
     console.log("Give-me-those-news clicked. No articles yet.");
 }else{
     for (i=0; i<articleElements.length;i++){
         articles.removeChild(articleElements[i]);
     }
-    console.log("Removed old articles!");
+    console.log("Give-me-those-news clicked. Removed old articles!");
 }
 
 axios.post(`findSimilarNews`,{
@@ -66,13 +80,29 @@ axios.post(`findSimilarNews`,{
             articleContent.textContent = res.data[i].content;
             articleLink.textContent = res.data[i].post_link;
 
-            // calculate average post emotion
+            // ===================================calculate average post emotion
             avgPostSentiment += res.data[i].sentiment_score;
             avgPostMagnitude += res.data[i].magnitude_score;
-
-            // calculate average FB user reaction 
+            // ===================================calculate average FB user reaction 
             avgReactionSentiment += res.data[i].user_sentiment_score;
             avgReactionMagnitude += res.data[i].user_magnitude_score;
+  
+            // -------cal average New York Time post emotion
+            if(res.data[i].post_source=="nytimes"){
+                avgNYTPostSentiment += res.data[i].sentiment_score;
+                avgNYTPostMagnitude += res.data[i].magnitude_score;
+                avgNYTReactionSentiment += res.data[i].user_sentiment_score;
+                avgNYTReactionMagnitude += res.data[i].user_magnitude_score;
+                NYTlength += 1;
+            }
+            // -------cal average Fox post emotion
+            if(res.data[i].post_source=="foxnews"){
+                avgFoxPostSentiment += res.data[i].sentiment_score;
+                avgFoxPostMagnitude += res.data[i].magnitude_score;
+                avgFoxReactionSentiment += res.data[i].user_sentiment_score;
+                avgFoxReactionMagnitude += res.data[i].user_magnitude_score;
+                FoxLength += 1;
+            }
 
             // append single article
             article.appendChild(articleId);
@@ -95,6 +125,24 @@ axios.post(`findSimilarNews`,{
             let userEmotionId = userEmotionButton.getAttribute('id');
 
             userEmotionButton.addEventListener('click',()=>{
+                if (j%4 == 0){
+                    userEmotionButtons[j+1].setAttribute('disabled','disabled');
+                    userEmotionButtons[j+2].setAttribute('disabled','disabled');
+                    userEmotionButtons[j+3].setAttribute('disabled','disabled');
+                }else if(j%4 == 1){
+                    userEmotionButtons[j-1].setAttribute('disabled','disabled');
+                    userEmotionButtons[j+1].setAttribute('disabled','disabled');
+                    userEmotionButtons[j+2].setAttribute('disabled','disabled');
+                }else if(j%4 == 2){
+                    userEmotionButtons[j-2].setAttribute('disabled','disabled');
+                    userEmotionButtons[j-1].setAttribute('disabled','disabled');
+                    userEmotionButtons[j+1].setAttribute('disabled','disabled');
+                }else if(j%4 == 3){
+                    userEmotionButtons[j-3].setAttribute('disabled','disabled');
+                    userEmotionButtons[j-2].setAttribute('disabled','disabled');
+                    userEmotionButtons[j-1].setAttribute('disabled','disabled');
+                }
+
                 var emotionClicked = localStorage.getItem("clickedEmotions");
                 var emotionArray = [];
                 if(emotionClicked){
@@ -115,13 +163,42 @@ axios.post(`findSimilarNews`,{
         avgReactionSentiment = avgReactionSentiment.toFixed(2);
         avgReactionMagnitude = avgReactionMagnitude.toFixed(2);
 
+        // by news source
+        avgNYTPostSentiment = avgNYTPostSentiment/NYTlength;
+        avgNYTPostMagnitude = avgNYTPostMagnitude/NYTlength;
+        avgNYTReactionSentiment = avgNYTReactionSentiment/NYTlength;
+        avgNYTReactionMagnitude = avgNYTReactionMagnitude/NYTlength;
+        avgFoxPostSentiment = avgFoxPostSentiment/FoxLength;
+        avgFoxPostMagnitude = avgFoxPostMagnitude/FoxLength;
+        avgFoxReactionSentiment = avgFoxReactionSentiment/FoxLength;
+        avgFoxReactionMagnitude = avgFoxReactionMagnitude/FoxLength;
+
+        avgNYTPostSentiment = avgNYTPostSentiment.toFixed(2);
+        avgNYTPostMagnitude = avgNYTPostMagnitude.toFixed(2);
+        avgNYTReactionSentiment = avgNYTReactionSentiment.toFixed(2);
+        avgNYTReactionMagnitude = avgNYTReactionMagnitude.toFixed(2);
+        avgFoxPostSentiment = avgFoxPostSentiment.toFixed(2);
+        avgFoxPostMagnitude = avgFoxPostMagnitude.toFixed(2);
+        avgFoxReactionSentiment = avgFoxReactionSentiment.toFixed(2);
+        avgFoxReactionMagnitude = avgFoxReactionMagnitude.toFixed(2);
+
         localStorage.setItem("avgPostSentiment",avgPostSentiment);
         localStorage.setItem("avgPostMagnitude",avgPostMagnitude);
         localStorage.setItem("avgReactionSentiment", avgReactionSentiment);
         localStorage.setItem("avgReactionMagnitude", avgReactionMagnitude);
+
+        localStorage.setItem("avgNYTPostSentiment", avgNYTPostSentiment);
+        localStorage.setItem("avgNYTPostMagnitude", avgNYTPostMagnitude);
+        localStorage.setItem("avgNYTReactionSentiment", avgNYTReactionSentiment);
+        localStorage.setItem("avgNYTReactionMagnitude", avgNYTReactionMagnitude);
+        localStorage.setItem("avgFoxPostSentiment", avgFoxPostSentiment);
+        localStorage.setItem("avgFoxPostMagnitude", avgFoxPostMagnitude);
+        localStorage.setItem("avgFoxReactionSentiment", avgFoxReactionSentiment);
+        localStorage.setItem("avgFoxReactionMagnitude", avgFoxReactionMagnitude);
+        
         const analyzeUserEmotionButton = document.getElementById('btn-analyzeUser');
         analyzeUserEmotionButton.addEventListener('click',()=>{
-            window.location.href = '/userEmotion.html';
+            window.location.href = '/allEmotion.html';
         })
 }).catch(err => {
     console.log("err from tfidf: ",err);

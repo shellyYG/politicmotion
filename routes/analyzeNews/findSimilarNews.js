@@ -44,7 +44,7 @@ router.post('/', (req, res)=> {
 
     //------------------------------------------------------------------------------------------ Get String Part
     async function searchRelevantNews(){
-        sql = `SELECT id, content, post_date, post_link, reaction,  sentiment_score, magnitude_score 
+        sql = `SELECT id, content, post_date, post_link, post_source, reaction,  sentiment_score, magnitude_score 
                 FROM fb_rawdata 
                 WHERE content LIKE '%${searchTopic1}%' 
                     AND content LIKE '%${searchTopic2}%' 
@@ -63,6 +63,7 @@ router.post('/', (req, res)=> {
     //------------------------------------------------------------------------------------------ Start Similar Score Calculation
     let thresholdCosine = 0.9; //threshold to ignore (because same sentence will be almost 100%)
     let allNewsIds = [];
+    let allNewsSources = [];
     let allNewsStrings = [];
     let allNewsDetails=[];
     let firstIndex = [];
@@ -88,6 +89,7 @@ router.post('/', (req, res)=> {
         
         for (i=0; i<relevantNews.length; i++){
             allNewsIds.push(relevantNews[i].id);
+            allNewsSources.push(relevantNews[i].post_source);
             allNewsStrings.push(relevantNews[i].content);
             let singleData = {};
             singleData.NewsId = relevantNews[i].id;
@@ -129,19 +131,20 @@ router.post('/', (req, res)=> {
                 secondIndex.push(j);
                 allCosines.push(cosine(tfidfs[i],tfidfs[j]));
                 let singleCombination = {};
-                singleCombination.firstString = allNewsIds[i]; 
-                singleCombination.secondString= allNewsIds[j]; 
+                singleCombination.firstString = allNewsIds[i];
+                singleCombination.firstStringSource = allNewsSources[i];
+                singleCombination.secondString= allNewsIds[j];
+                singleCombination.secondStringSource = allNewsSources[j];
                 singleCombination.cosineValue = cosine(tfidfs[i],tfidfs[j]);
                 stringCosineCombination.push(singleCombination);
             }
         }
-
-        // console.log("stringCosineCombination: ", stringCosineCombination);
+        console.log("stringCosineCombination: ", stringCosineCombination);
         let allMatched = [];
         for (i=0; i<allNewsIdClicked.length; i++){
             console.log("i is: ", i);
             function findSingleMatch(acc,curr){
-                if(curr.firstString == allNewsIdClicked[i]){  //here
+                if(curr.firstString == allNewsIdClicked[i]){ 
                     let clickedP = {};   
                     clickedP.firstString = curr.firstString;
                     clickedP.score = curr.cosineValue;
@@ -162,7 +165,7 @@ router.post('/', (req, res)=> {
             var maxSingleScore = Math.max.apply(Math,matchedScores.filter(function(x){return x <= thresholdCosine}));
 
             function findMatchArticleId(acc,curr){
-                if(curr.firstString == allNewsIdClicked[i] && curr.cosineValue == maxSingleScore){  
+                if(curr.firstString == allNewsIdClicked[i] && curr.cosineValue == maxSingleScore && curr.firstStringSource !== curr.secondStringSource){  
                     acc = curr.secondString;
                     return acc;
                 }else{
@@ -192,7 +195,7 @@ router.post('/', (req, res)=> {
         console.log("uniqueNewsIdtoShow: ", uniqueNewsIdtoShow);
         
         async function getRelevantNews(){
-            sql = `SELECT id, content, post_date, post_link, reaction, sentiment_score, magnitude_score, user_sentiment_score, user_magnitude_score
+            sql = `SELECT id, content, post_date, post_link, reaction, post_source, sentiment_score, magnitude_score, user_sentiment_score, user_magnitude_score
             FROM politicmotion.fb_rawdata
             WHERE id IN (${uniqueNewsIdtoShow});`
             var sqlquery = await query(sql);
@@ -213,6 +216,7 @@ router.post('/', (req, res)=> {
                 singleNews.magnitude_score = allNews[i].magnitude_score;
                 singleNews.user_sentiment_score = allNews[i].user_sentiment_score;
                 singleNews.user_magnitude_score = allNews[i].user_magnitude_score;
+                singleNews.post_source = allNews[i].post_source;
                 finalNewsPackage.push(singleNews);
             }
             console.log("finalNewsPackage: ", finalNewsPackage);
