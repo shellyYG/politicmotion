@@ -156,7 +156,6 @@ router.post('/', (req, res)=> {
             let singleMatch = stringCosineCombination.reduce(findSingleMatch,[]);
             let matchedScores = [];
             for (j=0; j<singleMatch.length; j++){
-                // console.log("j is: ", j);
                 matchedScores.push(singleMatch[j].score);
             }
             

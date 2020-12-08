@@ -123,8 +123,6 @@ axios.post(`findSimilarNews`,{
         analyzeUserEmotionButton.addEventListener('click',()=>{
             window.location.href = '/userEmotion.html';
         })
-
-        
 }).catch(err => {
     console.log("err from tfidf: ",err);
 }) 

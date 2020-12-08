@@ -7,7 +7,8 @@ router.post('/', (req, res, next)=>{
     const searchTopic2 = req.body.searchTopic2;
     // ------------------------------------------------------------------------------------------------------ New York Times
     async function searchNYNewsFromFB(){
-        sql = `SELECT content, post_date, post_link, reaction,  sentiment_score, magnitude_score FROM fb_rawdata WHERE post_source = 'nytimes' AND content LIKE '%${searchTopic1}%' AND content LIKE '%${searchTopic2}%' LIMIT 1;`
+        sql = `SELECT content, post_date, post_link, reaction,  sentiment_score, magnitude_score FROM fb_rawdata 
+        WHERE post_source = 'nytimes' AND content LIKE '%${searchTopic1}%' AND content LIKE '%${searchTopic2}%' LIMIT 1;`
         var sqlquery = await query(sql);
         return sqlquery;
     }
@@ -21,8 +22,19 @@ router.post('/', (req, res, next)=>{
     }
     async function getNYNewsFromFB(){
         const NYNewsFromFB = await searchNYNewsFromFB();
-        const NYAvgScoreFB = await getNYNewsAvgScoreFB();
-        return [NYNewsFromFB[0].content, NYNewsFromFB[0].post_date, NYNewsFromFB[0].post_link, NYNewsFromFB[0].reaction, NYNewsFromFB[0].sentiment_score, NYNewsFromFB[0].magnitude_score, NYAvgScoreFB[0].avgSentimentScore, NYAvgScoreFB[0].avgMgtScore];
+        console.log("NYNewsFromFB: ", NYNewsFromFB);
+        if (NYNewsFromFB.length==0){
+            console.log("No result found");
+            return ['NA','NA','NA','NA','NA','NA','NA','NA'];
+        }else{
+            console.log("Has results");
+            const NYAvgScoreFB = await getNYNewsAvgScoreFB();
+            return [NYNewsFromFB[0].content, NYNewsFromFB[0].post_date, 
+            NYNewsFromFB[0].post_link, NYNewsFromFB[0].reaction, NYNewsFromFB[0].sentiment_score, 
+            NYNewsFromFB[0].magnitude_score, NYAvgScoreFB[0].avgSentimentScore, NYAvgScoreFB[0].avgMgtScore];
+        }
+        
+        
     }
     // ------------------------------------------------ Get NY News Dots
     async function searchFBNYNewsDots(){
@@ -113,6 +125,10 @@ router.post('/', (req, res, next)=>{
 
 
         const FBNYNews = await getNYNewsFromFB();
+
+        // handle no-news error
+        console.log("FBNYNews: ", FBNYNews);
+
         const FBNYNewsContent = FBNYNews[0];
         const FBNYNewsPostDate = FBNYNews[1];
         const FBNYNewsPostLink = FBNYNews[2];
@@ -158,6 +174,7 @@ router.post('/', (req, res, next)=>{
         finalRes.NYMagnitudeArray = NYMagnitudeArray;
         finalRes.FoxSentimentArray = FoxSentimentArray;
         finalRes.FoxMagnitudeArray = FoxMagnitudeArray;
+
        
         res.json(finalRes);
     }
