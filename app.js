@@ -14,6 +14,8 @@ const searchRoutes = require('./routes/searchNews/searchBack');
 const showNewsRoutes = require('./routes/getNews/showNews');
 const findSimilarNewsRoutes = require('./routes/analyzeNews/findSimilarNews');
 const analyzeUserEmotion = require('./routes/analyzeUsers/getUserEmotion');
+const signUpRoutes = require('./routes/user/signUp');
+const signInRoutes = require('./routes/user/signIn');
 
 app.use(express.static('public'));
 
@@ -24,6 +26,8 @@ app.use('/searchNews', searchRoutes);
 app.use('/showNews', showNewsRoutes);
 app.use('/findSimilarNews', findSimilarNewsRoutes);
 app.use('/calUserEmotion', analyzeUserEmotion);
+app.use('/user/signup', signUpRoutes);
+app.use('/user/signin', signInRoutes);
 
 
 app.get('/', (req, res)=> {
