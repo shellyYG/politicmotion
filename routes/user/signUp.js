@@ -27,19 +27,9 @@ router.post('/',(req, res, next)=> {
     crypto.randomBytes(16, (err, buf)=> {});
     let iv = crypto.randomBytes(16); //it will be different everytime you refresh your GET request
   
-    
     //-----get the ivString
-    console.log("iv is:", iv);
     let ivString = iv.toString('base64');
-    console.log("ivString is:", ivString);
     
-    // //-----create hash 
-    // let hash = crypto
-    //     .createHash('sha256') //algo you wanna use
-    //     .update('your message') //the msg you wanna hash later
-    //     .digest('hex'); //digest into hex form for you to use
-    
-      
     let password = data.password;
     let key = process.env.ACCESS_TOKEN_KEY; 
     let cipher = crypto.createCipheriv('aes-256-cbc', key, iv);//first argument is the encryption type, aka ('aes-256-cbc')
@@ -54,7 +44,6 @@ router.post('/',(req, res, next)=> {
     let decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
     let decryptedpass = decipher.update(encryptedpass, 'hex', 'utf-8');
     decryptedpass += decipher.final('utf-8');
-    console.log('dncrypted password is: ', decryptedpass);
     
     //-------------------------------------------------------------------------------Create new user in DB
     async function insertUser(){

@@ -1,8 +1,18 @@
 const express = require('express');
 const router = express.Router();
+const jwt = require('jsonwebtoken');
+const { query } = require('../../models/query');
 
+router.post('/', verifyToken, (req, res)=>{
 
-router.post('/',(req, res)=>{
+    jwt.verify(req.token, process.env.ACCESS_TOKEN_SECRET, (err, payload) => {
+        if (err) {
+            console.log("You are too long away. Please sign in again.")
+        }else {
+            console.log("Payload is",payload);
+        }
+    })
+
     let userEmotion = req.body.finalEmotionClicked;
     userEmotion = JSON.parse(userEmotion);
     const cleanEmotion = [];
@@ -34,7 +44,37 @@ router.post('/',(req, res)=>{
     combinedUserEmotion = {};
     combinedUserEmotion.avgUserSentiment = avgUserSentiment.toFixed(2);
     combinedUserEmotion.avgUserMagnitude = avgUserMagnitude.toFixed(2);
+    
+    // insert user emotion to database
+    async function insertUserEmotion(){
+        let insertedData = {
+            provider: "native",
+            username: data.name,
+            email: data.email,
+            encryptpass: encryptedpass,
+            ivString: ivString
+            };
+        let sql = 'INSERT INTO user_basic SET ?';
+        let sqlquery = await query(sql, insertedData);
+        return sqlquery;
+    }
+
+
     res.json(combinedUserEmotion);
 })
+
+function verifyToken(req, res, next){
+    const bearerHeader=req.headers['authorization'];
+    console.log('bearerHeader is: ',bearerHeader);
+    
+    if(typeof bearerHeader !== 'undefined'){
+        const bearer = bearerHeader.split(' ');
+        const bearerToken = bearer[1];
+        req.token = bearerToken;
+        next()
+    }else{
+        res.sendStatus(403); //forbidden status
+    }
+}
 
 module.exports = router;

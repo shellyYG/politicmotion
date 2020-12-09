@@ -32,7 +32,7 @@ if (articleElements.length == 0){
     console.log("Give-me-those-news clicked. Removed old articles!");
 }
 
-axios.post(`findSimilarNews`,{
+axios.post(`showNewsContent`,{
     'searchTopic1': searchTopic1,
     'searchTopic2': searchTopic2,
     'clickedIds': finalPointsClicked
@@ -233,25 +233,6 @@ axios.post(`findSimilarNews`,{
                 emotionArray.push(userEmotionId);
                 localStorage.setItem('clickedEmotions',JSON.stringify(emotionArray));  
                 finalEmotionClicked = localStorage.getItem("clickedEmotions");
-
-                // if (j%4 == 0){
-                //     userEmotionButtons[j+1].setAttribute('disabled','disabled');
-                //     userEmotionButtons[j+2].setAttribute('disabled','disabled');
-                //     userEmotionButtons[j+3].setAttribute('disabled','disabled');
-                // }else if(j%4 == 1){
-                //     userEmotionButtons[j-1].setAttribute('disabled','disabled');
-                //     userEmotionButtons[j+1].setAttribute('disabled','disabled');
-                //     userEmotionButtons[j+2].setAttribute('disabled','disabled');
-                // }else if(j%4 == 2){
-                //     userEmotionButtons[j-2].setAttribute('disabled','disabled');
-                //     userEmotionButtons[j-1].setAttribute('disabled','disabled');
-                //     userEmotionButtons[j+1].setAttribute('disabled','disabled');
-                // }else if(j%4 == 3){
-                //     userEmotionButtons[j-3].setAttribute('disabled','disabled');
-                //     userEmotionButtons[j-2].setAttribute('disabled','disabled');
-                //     userEmotionButtons[j-1].setAttribute('disabled','disabled');
-                // }
-
                 
             })
         }
@@ -300,7 +281,7 @@ axios.post(`findSimilarNews`,{
         
         const analyzeUserEmotionButton = document.getElementById('btn-analyzeUser');
         analyzeUserEmotionButton.addEventListener('click',()=>{
-            window.location.href = '/allEmotion.html';
+            window.location.href = '/userEmotion.html';
         })
 }).catch(err => {
     console.log("err from tfidf: ",err);
