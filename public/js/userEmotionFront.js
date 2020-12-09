@@ -1,13 +1,21 @@
 
 finalEmotionClicked = localStorage.getItem("clickedEmotions");
 let generalToken = localStorage.getItem("generalToken");
+let searchTopic1 = localStorage.getItem("searchTopic1");
+let searchTopic2 = localStorage.getItem("searchTopic2");
+
 const headers = {
     "Content-Type": "application/json",
     Authorization: "Bearer"+" "+generalToken
 }
 
-axios.post(`calUserEmotion`,{'finalEmotionClicked': finalEmotionClicked},{headers: headers})
-     .then(res=>{
+axios.post(`calUserEmotion`,{
+    'finalEmotionClicked': finalEmotionClicked,
+    'firstSearchTopic': searchTopic1,
+    'secondSearchTopic': searchTopic2
+
+    },{headers: headers})
+    .then(res=>{
         const userAvgSentEmotionArray = [];
         userAvgSentEmotionArray.push(res.data.avgUserSentiment);
 
@@ -152,7 +160,7 @@ axios.post(`calUserEmotion`,{'finalEmotionClicked': finalEmotionClicked},{header
         GoToChat.appendChild(ChatWithOpposite);
 
     }).catch(err=>{
-        // console.log("err from getting emotion is:", err)
+        console.log("err from getting emotion is:", err)
         alert("Sorry, you need to sign in to see your score!");
         window.location.href = '/signIn.html'
     })

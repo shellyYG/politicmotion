@@ -7,60 +7,66 @@ router.post('/', verifyToken, (req, res)=>{
 
     jwt.verify(req.token, process.env.ACCESS_TOKEN_SECRET, (err, payload) => {
         if (err) {
-            console.log("You are too long away. Please sign in again.")
+            console.log("You are too long away. Please sign in again.");
+            // res.send(err);
+            res.status(403).send({message: 'User does not have permission'});
         }else {
             console.log("Payload is",payload);
+            let userEmotion = req.body.finalEmotionClicked;
+            userEmotion = JSON.parse(userEmotion);
+            const cleanEmotion = [];
+            let avgUserSentiment = 0;
+            let avgUserMagnitude = 0;
+            for (i=0; i<userEmotion.length; i++){
+                cleanEmotion.push(userEmotion[i].split("_")[1]);
+                console.log("cleanEmotion: ", cleanEmotion);
+
+                if(cleanEmotion[i] == "loveBtn"){
+                    avgUserSentiment += 0.9;
+                    avgUserMagnitude += 0.9;
+                }else if(cleanEmotion[i] =="hahaBtn"){
+                    avgUserSentiment += 0.5;
+                    avgUserMagnitude += 0.5;
+                }else if(cleanEmotion[i] == "cryBtn"){
+                    avgUserSentiment += -0.6;
+                    avgUserMagnitude += 0.6;
+                }else if(cleanEmotion[i] == "angryBtn"){
+                    avgUserSentiment += -0.9;
+                    avgUserMagnitude += 0.9;
+                }else{
+                    avgUserSentiment += 0;
+                    avgUserMagnitude += 0;
+                }
+            }
+            avgUserSentiment = avgUserSentiment/userEmotion.length;
+            avgUserMagnitude = avgUserMagnitude/userEmotion.length;
+            combinedUserEmotion = {};
+            combinedUserEmotion.avgUserSentiment = avgUserSentiment.toFixed(2);
+            combinedUserEmotion.avgUserMagnitude = avgUserMagnitude.toFixed(2);
+            
+            // insert user emotion to database
+            const firstSearchTopic = req.body.firstSearchTopic;
+            const secondSearchTopic = req.body.secondSearchTopic;
+            async function insertUserEmotion(){
+                let insertedData = {
+                    firstSearchTopic: firstSearchTopic,
+                    secondSearchTopic: secondSearchTopic,
+                    username: payload.data.name,
+                    email: payload.data.email,
+                    user_sentiment_score: avgUserSentiment.toFixed(2),
+                    user_magnitude_score: avgUserMagnitude.toFixed(2)
+                    };
+                let sql = 'INSERT INTO user_emotion SET ?';
+                let sqlquery = await query(sql, insertedData);
+                return sqlquery;
+            }
+            insertUserEmotion();
+
+            res.json(combinedUserEmotion);
         }
     })
 
-    let userEmotion = req.body.finalEmotionClicked;
-    userEmotion = JSON.parse(userEmotion);
-    const cleanEmotion = [];
-    let avgUserSentiment = 0;
-    let avgUserMagnitude = 0;
-    for (i=0; i<userEmotion.length; i++){
-        cleanEmotion.push(userEmotion[i].split("_")[1]);
-        console.log("cleanEmotion: ", cleanEmotion);
-
-        if(cleanEmotion[i] == "loveBtn"){
-            avgUserSentiment += 0.9;
-            avgUserMagnitude += 0.9;
-        }else if(cleanEmotion[i] =="hahaBtn"){
-            avgUserSentiment += 0.5;
-            avgUserMagnitude += 0.5;
-        }else if(cleanEmotion[i] == "cryBtn"){
-            avgUserSentiment += -0.6;
-            avgUserMagnitude += 0.6;
-        }else if(cleanEmotion[i] == "angryBtn"){
-            avgUserSentiment += -0.9;
-            avgUserMagnitude += 0.9;
-        }else{
-            avgUserSentiment += 0;
-            avgUserMagnitude += 0;
-        }
-    }
-    avgUserSentiment = avgUserSentiment/userEmotion.length;
-    avgUserMagnitude = avgUserMagnitude/userEmotion.length;
-    combinedUserEmotion = {};
-    combinedUserEmotion.avgUserSentiment = avgUserSentiment.toFixed(2);
-    combinedUserEmotion.avgUserMagnitude = avgUserMagnitude.toFixed(2);
     
-    // insert user emotion to database
-    async function insertUserEmotion(){
-        let insertedData = {
-            provider: "native",
-            username: data.name,
-            email: data.email,
-            encryptpass: encryptedpass,
-            ivString: ivString
-            };
-        let sql = 'INSERT INTO user_basic SET ?';
-        let sqlquery = await query(sql, insertedData);
-        return sqlquery;
-    }
-
-
-    res.json(combinedUserEmotion);
 })
 
 function verifyToken(req, res, next){

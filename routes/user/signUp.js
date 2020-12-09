@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({ extended: false}));
 //--------------------------------Define a function to generate user-----------------------------------//
 // create a token that will expire
 function generateAccessToken(user){
-    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '120s' }) //30 sec. 10m: 10min
+    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10800s' }) //3hr
 }
 //-------------------------------After frontend post form to backend server----------------------------//
 //api to store user sign up data
