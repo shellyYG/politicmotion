@@ -22,7 +22,7 @@ router.post('/',(req, res, next)=> {
     async function insertLoginUser(){
         let email = req.body.email;
         console.log('email is:', email);
-        let sql = `SELECT id, provider, username, email, encryptpass, ivString, substr(picture,7) AS picture FROM stylish.tbluser WHERE email = '${email}'`;
+        let sql = `SELECT id, provider, username, email, encryptpass, ivString FROM politicmotion.user_basic WHERE email = '${email}'`;
         let userLoginInput = await query(sql);
         console.log('insertLoginUser result is (aka userLoginInput):', userLoginInput)
         return userLoginInput; 
@@ -34,11 +34,11 @@ router.post('/',(req, res, next)=> {
         let LoginUserResultivString = LoginUserResult[0]["ivString"];
         
         let password = data.password;
-        let key = 'taiwannumberonenybullshitischina'; //need to be =32 length (required by aes 256)
+        let key = process.env.ACCESS_TOKEN_KEY;
         let ivBack = Buffer.from(LoginUserResultivString, 'base64');
-        let cipher = crypto.createCipheriv('aes-256-cbc', key, ivBack);//first argument is the encryption type, aka ('aes-256-cbc')
-        let encryptedLoginPass = cipher.update(password, 'utf-8','hex'); //I feed you utf-8, output should be hex
-        encryptedLoginPass += cipher.final('hex'); //append
+        let cipher = crypto.createCipheriv('aes-256-cbc', key, ivBack);
+        let encryptedLoginPass = cipher.update(password, 'utf-8','hex'); //Input: utf-8, Output: hex
+        encryptedLoginPass += cipher.final('hex');
         console.log('encrypted login password is: ', encryptedLoginPass);
 
         let decipher = crypto.createDecipheriv('aes-256-cbc', key, ivBack);
@@ -64,7 +64,7 @@ router.post('/',(req, res, next)=> {
             userObject['provider']= LoginUserResult[0]["provider"];
             userObject['name']= LoginUserResult[0]["username"];
             userObject['email']= LoginUserResult[0]["email"];
-            userObject['picture']= 'http://3.138.56.214'+LoginUserResult[0]["picture"];
+            // userObject['picture']= 'http://3.138.56.214'+LoginUserResult[0]["picture"];
             let finalObject = {};
             let dataObject = {};
             
@@ -82,7 +82,6 @@ router.post('/',(req, res, next)=> {
             dataObject["access_token"] = accessToken;
             dataObject["access_expired"] = 30;
 
-            // res.cookie('TokenForAccess',accessToken); //send token in the cookie
             res.send(finalObject);
 
         } else {
@@ -90,7 +89,6 @@ router.post('/',(req, res, next)=> {
         }
     }
     comparepass();
-    
 });
 
 

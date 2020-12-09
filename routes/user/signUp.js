@@ -21,9 +21,7 @@ function generateAccessToken(user){
 router.post('/',(req, res, next)=> {
     console.log("Start Posting on Sign up page");
     const data = req.body;
-    // const userImagepath=req.files[0]["path"];
-    const userImagepath='public/images/uploads/2020-10-26T02:50:01.346Zcart-remove-hover.png';
-    console.log("I am req.files:",userImagepath);
+    
     //-------------------------------------------------------------------------------Encrypt password
     //Generate the algo to create hashed password later
     crypto.randomBytes(16, (err, buf)=> {});
@@ -35,15 +33,15 @@ router.post('/',(req, res, next)=> {
     let ivString = iv.toString('base64');
     console.log("ivString is:", ivString);
     
-    //-----create hash 
-    let hash = crypto
-        .createHash('sha256') //algo you wanna use
-        .update('your message') //the msg you wanna hash later
-        .digest('hex'); //digest into hex form for you to use
+    // //-----create hash 
+    // let hash = crypto
+    //     .createHash('sha256') //algo you wanna use
+    //     .update('your message') //the msg you wanna hash later
+    //     .digest('hex'); //digest into hex form for you to use
     
       
     let password = data.password;
-    let key = 'taiwannumberonenybullshitischina'; //need to be =32 length (required by aes 256)
+    let key = process.env.ACCESS_TOKEN_KEY; 
     let cipher = crypto.createCipheriv('aes-256-cbc', key, iv);//first argument is the encryption type, aka ('aes-256-cbc')
     let encryptedpass = cipher.update(password, 'utf-8','hex'); //I feed you utf-8, output should be hex
     encryptedpass += cipher.final('hex'); //append
@@ -60,16 +58,16 @@ router.post('/',(req, res, next)=> {
     
     //-------------------------------------------------------------------------------Create new user in DB
     async function insertUser(){
-        let postu = {
+        let insertedData = {
             provider: "native",
             username: data.name,
             email: data.email,
             encryptpass: encryptedpass,
-            ivString: ivString,
-            picture: userImagepath};
-        let sqlu = 'INSERT INTO tbluser SET ?';
-        let userinput = await query(sqlu, postu);
-        return userinput; 
+            ivString: ivString
+            };
+        let sql = 'INSERT INTO user_basic SET ?';
+        let sqlquery = await query(sql, insertedData);
+        return sqlquery;
     }
 
     async function getLatestUserId(){
@@ -84,7 +82,7 @@ router.post('/',(req, res, next)=> {
         let userId = await getLatestUserId();
         console.log("Latest user ID is:", userId);
         let sqlUserAttri = 
-        `SELECT id, provider, username, email, encryptpass, substr(picture,7) AS picture FROM stylish.tbluser WHERE id =${userId}`;
+        `SELECT id, provider, username, email, encryptpass FROM politicmotion.user_basic WHERE id =${userId}`;
         let userAttribute = await query(sqlUserAttri);
         console.log("User attributes are:", userAttribute);
         return userAttribute;
@@ -98,7 +96,7 @@ router.post('/',(req, res, next)=> {
         userObject['provider']= userRawAttri[0]["provider"];
         userObject['name']= userRawAttri[0]["username"];
         userObject['email']= userRawAttri[0]["email"];
-        userObject['picture']= 'http://3.138.56.214'+userRawAttri[0]["picture"];
+        // userObject['picture']= 'http://3.138.56.214'+userRawAttri[0]["picture"];
         let finalObject = {};
         let dataObject = {};
         dataObject["user"] = userObject;
@@ -122,20 +120,13 @@ router.post('/',(req, res, next)=> {
             }
         })
         
-        // res.cookie('TokenForAccess',accessToken); //send token in the cookie
         console.log("finalObject from signUp api is:", finalObject);
-        // res.header(accessToken);
-        // res.send(finalObject);
+        
         res.json(finalObject);
         
-        // res.send(finalObject.data.access_token);
     }
 
     createUserObject();
 });
-
-router.get('/', (req, res, next)=> {
-    res.send("successfully post!");
-})
 
 module.exports = router; 
