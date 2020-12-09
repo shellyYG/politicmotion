@@ -12,7 +12,7 @@ const NYTWebDataRoutes = require('./routes/getNews/getNYTData');
 const segmentTopicRoutes = require('./routes/getNews/segmentTopic');
 const searchRoutes = require('./routes/searchNews/searchBack');
 const showNewsRoutes = require('./routes/getNews/showNews');
-const textSimilarRoutes = require('./routes/analyzeNews/findSimilarNews');
+const findSimilarNewsRoutes = require('./routes/analyzeNews/findSimilarNews');
 const analyzeUserEmotion = require('./routes/analyzeUsers/getUserEmotion');
 
 app.use(express.static('public'));
@@ -22,7 +22,7 @@ app.use('/NYTimesWeb', NYTWebDataRoutes);
 app.use('/segmentTopic', segmentTopicRoutes);
 app.use('/searchNews', searchRoutes);
 app.use('/showNews', showNewsRoutes);
-app.use('/findSimilarNews', textSimilarRoutes);
+app.use('/findSimilarNews', findSimilarNewsRoutes);
 app.use('/calUserEmotion', analyzeUserEmotion);
 
 

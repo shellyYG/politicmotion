@@ -37,86 +37,186 @@ axios.post(`findSimilarNews`,{
     'searchTopic2': searchTopic2,
     'clickedIds': finalPointsClicked
 }).then(res=>{
+        var articleBlock;
         for (i=0; i<res.data.length; i++){
-            const allNewsIdShown = [];
-            allNewsIdShown.push(res.data[i].id);
-            var articleDBId = res.data[i].id;
+            // ============================================================= Get clicked Articles and create a block
+            if (res.data[i].clickedId !== 0){
 
-            var article = document.createElement('article');
-            article.setAttribute("id", `article_${articleDBId}`);
+                var articleDBId = res.data[i].id;
+                articleBlock = document.createElement('articleBlock');
+                articleBlock.setAttribute("id", `articleBlock_${articleDBId}`);
+                console.log("i: ", i, "articleBlock: ", articleBlock);
 
-            var articleId = document.createElement('articleId');
-            articleId.setAttribute("id", `articleId_${articleDBId}`);
+                var article = document.createElement('article-clicked');
+                article.setAttribute("id", `article_${articleDBId}`);
 
-            var articleDate = document.createElement('articleDate');
-            articleDate.setAttribute("id", `articleDate_${articleDBId}`);
+                var articleId = document.createElement('articleId');
+                articleId.setAttribute("id", `articleId_${articleDBId}`);
 
-            var articleContent = document.createElement('articleContent');
-            articleContent.setAttribute("id", `articleContent_${articleDBId}`);
+                var articleDate = document.createElement('articleDate');
+                articleDate.setAttribute("id", `articleDate_${articleDBId}`);
 
-            var articleLink = document.createElement('articleLink');
-            articleLink.setAttribute("id", `articleLink_${articleDBId}`);
+                var articleContent = document.createElement('articleContent');
+                articleContent.setAttribute("id", `articleContent_${articleDBId}`);
 
-            var br = document.createElement("br");
+                var articleLink = document.createElement('articleLink');
+                articleLink.setAttribute("id", `articleLink_${articleDBId}`);
 
-            var loveBtn = document.createElement("button");
-            loveBtn.innerHTML = "Love";
-            loveBtn.setAttribute("id", `user_loveBtn_${articleDBId}`);
+                var br = document.createElement("br");
 
-            var angryBtn = document.createElement("button");
-            angryBtn.innerHTML = "Angry";
-            angryBtn.setAttribute("id", `user_angryBtn_${articleDBId}`);
+                var loveBtn = document.createElement("button");
+                loveBtn.innerHTML = "Love";
+                loveBtn.setAttribute("id", `user_loveBtn_${articleDBId}`);
 
-            var cryBtn = document.createElement("button");
-            cryBtn.innerHTML = "Cry";
-            cryBtn.setAttribute("id", `user_cryBtn_${articleDBId}`);
+                var angryBtn = document.createElement("button");
+                angryBtn.innerHTML = "Angry";
+                angryBtn.setAttribute("id", `user_angryBtn_${articleDBId}`);
 
-            var hahaBtn = document.createElement("button");
-            hahaBtn.innerHTML = "Haha";
-            hahaBtn.setAttribute("id", `user_hahaBtn_${articleDBId}`);
+                var cryBtn = document.createElement("button");
+                cryBtn.innerHTML = "Cry";
+                cryBtn.setAttribute("id", `user_cryBtn_${articleDBId}`);
 
-            articleId.textContent = res.data[i].id;
-            articleDate.textContent = res.data[i].post_date;
-            articleContent.textContent = res.data[i].content;
-            articleLink.textContent = res.data[i].post_link;
+                var hahaBtn = document.createElement("button");
+                hahaBtn.innerHTML = "Haha";
+                hahaBtn.setAttribute("id", `user_hahaBtn_${articleDBId}`);
 
-            // ===================================calculate average post emotion
-            avgPostSentiment += res.data[i].sentiment_score;
-            avgPostMagnitude += res.data[i].magnitude_score;
-            // ===================================calculate average FB user reaction 
-            avgReactionSentiment += res.data[i].user_sentiment_score;
-            avgReactionMagnitude += res.data[i].user_magnitude_score;
-  
-            // -------cal average New York Time post emotion
-            if(res.data[i].post_source=="nytimes"){
-                avgNYTPostSentiment += res.data[i].sentiment_score;
-                avgNYTPostMagnitude += res.data[i].magnitude_score;
-                avgNYTReactionSentiment += res.data[i].user_sentiment_score;
-                avgNYTReactionMagnitude += res.data[i].user_magnitude_score;
-                NYTlength += 1;
+                articleId.textContent = res.data[i].id;
+                articleDate.textContent = res.data[i].post_date;
+                articleContent.textContent = res.data[i].content;
+                articleLink.textContent = res.data[i].post_link;
+
+                // ===================================calculate average post emotion
+                avgPostSentiment += res.data[i].sentiment_score;
+                avgPostMagnitude += res.data[i].magnitude_score;
+                // ===================================calculate average FB user reaction 
+                avgReactionSentiment += res.data[i].user_sentiment_score;
+                avgReactionMagnitude += res.data[i].user_magnitude_score;
+    
+                // -------cal average New York Time post emotion
+                if(res.data[i].post_source=="nytimes"){
+                    avgNYTPostSentiment += res.data[i].sentiment_score;
+                    avgNYTPostMagnitude += res.data[i].magnitude_score;
+                    avgNYTReactionSentiment += res.data[i].user_sentiment_score;
+                    avgNYTReactionMagnitude += res.data[i].user_magnitude_score;
+                    NYTlength += 1;
+                }
+                // -------cal average Fox post emotion
+                if(res.data[i].post_source=="foxnews"){
+                    avgFoxPostSentiment += res.data[i].sentiment_score;
+                    avgFoxPostMagnitude += res.data[i].magnitude_score;
+                    avgFoxReactionSentiment += res.data[i].user_sentiment_score;
+                    avgFoxReactionMagnitude += res.data[i].user_magnitude_score;
+                    FoxLength += 1;
+                }
+
+                // append single article
+                article.appendChild(articleId);
+                article.appendChild(articleDate);
+                article.appendChild(articleContent);
+                article.appendChild(articleLink);
+                article.appendChild(br); //not readable, why?? here
+                article.appendChild(loveBtn);
+                article.appendChild(angryBtn);
+                article.appendChild(cryBtn);
+                article.appendChild(hahaBtn);
+
+                articleBlock.appendChild(article)
+
+                articles.appendChild(articleBlock); // append to all articles list
+                // localStorage.removeItem("clickedPoints"); // remove local storage items
+
             }
-            // -------cal average Fox post emotion
-            if(res.data[i].post_source=="foxnews"){
-                avgFoxPostSentiment += res.data[i].sentiment_score;
-                avgFoxPostMagnitude += res.data[i].magnitude_score;
-                avgFoxReactionSentiment += res.data[i].user_sentiment_score;
-                avgFoxReactionMagnitude += res.data[i].user_magnitude_score;
-                FoxLength += 1;
+        }
+
+        for (i=0; i<res.data.length; i++){
+            var matchedArticleBlock;
+            // ============================================================= Get matched Articles in same block
+            for (j=0;j<res.data.length;j++){
+                if (res.data[i].clickedId == 0){ //is a matched article
+                    if (res.data[j].matchedId == res.data[i].id){ // if a clickedArticle's matched Article == this matched article
+                        matchedArticleBlock = document.getElementById(`articleBlock_${res.data[j].id}`);
+                        articleDBId = res.data[i].id;
+                        var article = document.createElement('article-matched');
+                        article.setAttribute("id", `article_${articleDBId}`);
+
+                        var articleId = document.createElement('articleId');
+                        articleId.setAttribute("id", `articleId_${articleDBId}`);
+
+                        var articleDate = document.createElement('articleDate');
+                        articleDate.setAttribute("id", `articleDate_${articleDBId}`);
+
+                        var articleContent = document.createElement('articleContent');
+                        articleContent.setAttribute("id", `articleContent_${articleDBId}`);
+
+                        var articleLink = document.createElement('articleLink');
+                        articleLink.setAttribute("id", `articleLink_${articleDBId}`);
+
+                        var br = document.createElement("br");
+
+                        var loveBtn = document.createElement("button");
+                        loveBtn.innerHTML = "Love";
+                        loveBtn.setAttribute("id", `user_loveBtn_${articleDBId}`);
+
+                        var angryBtn = document.createElement("button");
+                        angryBtn.innerHTML = "Angry";
+                        angryBtn.setAttribute("id", `user_angryBtn_${articleDBId}`);
+
+                        var cryBtn = document.createElement("button");
+                        cryBtn.innerHTML = "Cry";
+                        cryBtn.setAttribute("id", `user_cryBtn_${articleDBId}`);
+
+                        var hahaBtn = document.createElement("button");
+                        hahaBtn.innerHTML = "Haha";
+                        hahaBtn.setAttribute("id", `user_hahaBtn_${articleDBId}`);
+
+                        articleId.textContent = res.data[i].id;
+                        articleDate.textContent = res.data[i].post_date;
+                        articleContent.textContent = res.data[i].content;
+                        articleLink.textContent = res.data[i].post_link;
+
+                        // ===================================calculate average post emotion
+                        avgPostSentiment += res.data[i].sentiment_score;
+                        avgPostMagnitude += res.data[i].magnitude_score;
+                        // ===================================calculate average FB user reaction 
+                        avgReactionSentiment += res.data[i].user_sentiment_score;
+                        avgReactionMagnitude += res.data[i].user_magnitude_score;
+            
+                        // -------cal average New York Time post emotion
+                        if(res.data[i].post_source=="nytimes"){
+                            avgNYTPostSentiment += res.data[i].sentiment_score;
+                            avgNYTPostMagnitude += res.data[i].magnitude_score;
+                            avgNYTReactionSentiment += res.data[i].user_sentiment_score;
+                            avgNYTReactionMagnitude += res.data[i].user_magnitude_score;
+                            NYTlength += 1;
+                        }
+                        // -------cal average Fox post emotion
+                        if(res.data[i].post_source=="foxnews"){
+                            avgFoxPostSentiment += res.data[i].sentiment_score;
+                            avgFoxPostMagnitude += res.data[i].magnitude_score;
+                            avgFoxReactionSentiment += res.data[i].user_sentiment_score;
+                            avgFoxReactionMagnitude += res.data[i].user_magnitude_score;
+                            FoxLength += 1;
+                        }
+
+                        // append single article
+                        article.appendChild(articleId);
+                        article.appendChild(articleDate);
+                        article.appendChild(articleContent);
+                        article.appendChild(articleLink);
+                        article.appendChild(br); //not readable, why?? here
+                        article.appendChild(loveBtn);
+                        article.appendChild(angryBtn);
+                        article.appendChild(cryBtn);
+                        article.appendChild(hahaBtn);
+
+                        matchedArticleBlock.appendChild(article)
+
+                        articles.appendChild(matchedArticleBlock); // append to all articles list
+                        localStorage.removeItem("clickedPoints"); // remove local storage items
+                    }
+
+                }
             }
-
-            // append single article
-            article.appendChild(articleId);
-            article.appendChild(articleDate);
-            article.appendChild(articleContent);
-            article.appendChild(articleLink);
-            article.appendChild(br); //not readable, why?? here
-            article.appendChild(loveBtn);
-            article.appendChild(angryBtn);
-            article.appendChild(cryBtn);
-            article.appendChild(hahaBtn);
-
-            articles.appendChild(article); // append to all articles list
-            localStorage.removeItem("clickedPoints"); // remove local storage items
         }
         var userEmotionButtons = document.querySelectorAll('[id^="user_"]');
             
@@ -125,24 +225,6 @@ axios.post(`findSimilarNews`,{
             let userEmotionId = userEmotionButton.getAttribute('id');
 
             userEmotionButton.addEventListener('click',()=>{
-                if (j%4 == 0){
-                    userEmotionButtons[j+1].setAttribute('disabled','disabled');
-                    userEmotionButtons[j+2].setAttribute('disabled','disabled');
-                    userEmotionButtons[j+3].setAttribute('disabled','disabled');
-                }else if(j%4 == 1){
-                    userEmotionButtons[j-1].setAttribute('disabled','disabled');
-                    userEmotionButtons[j+1].setAttribute('disabled','disabled');
-                    userEmotionButtons[j+2].setAttribute('disabled','disabled');
-                }else if(j%4 == 2){
-                    userEmotionButtons[j-2].setAttribute('disabled','disabled');
-                    userEmotionButtons[j-1].setAttribute('disabled','disabled');
-                    userEmotionButtons[j+1].setAttribute('disabled','disabled');
-                }else if(j%4 == 3){
-                    userEmotionButtons[j-3].setAttribute('disabled','disabled');
-                    userEmotionButtons[j-2].setAttribute('disabled','disabled');
-                    userEmotionButtons[j-1].setAttribute('disabled','disabled');
-                }
-
                 var emotionClicked = localStorage.getItem("clickedEmotions");
                 var emotionArray = [];
                 if(emotionClicked){
@@ -151,6 +233,26 @@ axios.post(`findSimilarNews`,{
                 emotionArray.push(userEmotionId);
                 localStorage.setItem('clickedEmotions',JSON.stringify(emotionArray));  
                 finalEmotionClicked = localStorage.getItem("clickedEmotions");
+
+                // if (j%4 == 0){
+                //     userEmotionButtons[j+1].setAttribute('disabled','disabled');
+                //     userEmotionButtons[j+2].setAttribute('disabled','disabled');
+                //     userEmotionButtons[j+3].setAttribute('disabled','disabled');
+                // }else if(j%4 == 1){
+                //     userEmotionButtons[j-1].setAttribute('disabled','disabled');
+                //     userEmotionButtons[j+1].setAttribute('disabled','disabled');
+                //     userEmotionButtons[j+2].setAttribute('disabled','disabled');
+                // }else if(j%4 == 2){
+                //     userEmotionButtons[j-2].setAttribute('disabled','disabled');
+                //     userEmotionButtons[j-1].setAttribute('disabled','disabled');
+                //     userEmotionButtons[j+1].setAttribute('disabled','disabled');
+                // }else if(j%4 == 3){
+                //     userEmotionButtons[j-3].setAttribute('disabled','disabled');
+                //     userEmotionButtons[j-2].setAttribute('disabled','disabled');
+                //     userEmotionButtons[j-1].setAttribute('disabled','disabled');
+                // }
+
+                
             })
         }
         avgPostSentiment = avgPostSentiment/res.data.length;
