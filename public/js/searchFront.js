@@ -36,6 +36,7 @@ async function searchNews(){
             const chooseDotsBtn = document.createElement('button');
             chooseDotsBtn.innerHTML = 'Give me those news & their similar news!'
             chooseDotsBtn.setAttribute("id","btn-chooseSentiment");
+            chooseDotsBtn.setAttribute("class","btn");
             graphBlock.appendChild(chooseDotsBtn);
             const chooseSentimentButton = document.getElementById('btn-chooseSentiment');
             // ----------------------------------------------------------------- Score of all dots
