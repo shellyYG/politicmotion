@@ -164,5 +164,5 @@ axios.post(`calUserEmotion`,{
         alert("Sorry, you need to sign in to see your score!");
         window.location.href = '/signIn.html'
     })
-
+localStorage.removeItem("clickedPoints");
 localStorage.removeItem("clickedEmotions");

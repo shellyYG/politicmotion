@@ -32,13 +32,21 @@ async function searchNews(){
             graph.setAttribute("id","sentimentShow");
             graph.setAttribute("style","width:400px;height:400px;");
             graphBlock.appendChild(graph);
-            // ----------------------------------------------------------- append button
+
+            // ----------------------------------------------------------- append send-button
             const chooseDotsBtn = document.createElement('button');
             chooseDotsBtn.innerHTML = 'Give me those news & their similar news!'
             chooseDotsBtn.setAttribute("id","btn-chooseSentiment");
             chooseDotsBtn.setAttribute("class","btn");
             graphBlock.appendChild(chooseDotsBtn);
-            const chooseSentimentButton = document.getElementById('btn-chooseSentiment');
+
+            // ----------------------------------------------------------- append remove-dots-button
+            const reselectNewsBtn = document.createElement('button');
+            reselectNewsBtn.innerHTML = 'Re-select News'
+            reselectNewsBtn.setAttribute("id","btn-reselect-news");
+            reselectNewsBtn.setAttribute("class","btn");
+            graphBlock.appendChild(reselectNewsBtn);
+
             // ----------------------------------------------------------------- Score of all dots
             const NYSentimentArray = res.data.NYSentimentArray;
             const NYMagnitudeArray = res.data.NYMagnitudeArray;
@@ -106,12 +114,18 @@ async function searchNews(){
                 }
             })
             
-            chooseSentimentButton.addEventListener('click',()=>{
+            chooseDotsBtn.addEventListener('click',()=>{
+                if(localStorage.getItem("clickedPoints))
                 window.location.href = "/showNewsContent.html";
+            })
+
+            reselectNewsBtn.addEventListener('click',()=>{
+                localStorage.removeItem("clickedPoints");
             })
         }
     }).catch(err=>{
-        console.log("Has err!");
+        alert("Please select at least one dot!");
+        console.log("Please select at least one dot!");
         console.log(err);
     })
     return allUserEmotions; 

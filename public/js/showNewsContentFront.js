@@ -41,28 +41,44 @@ axios.post(`showNewsContent`,{
         for (i=0; i<res.data.length; i++){
             // ============================================================= Get clicked Articles and create a block
             if (res.data[i].clickedId !== 0){
-
+                var rawDate = res.data[i].post_date;
+                var re = /([^T]+)/;
+                var pureDatePart = rawDate.split(re);
+                var datePart = pureDatePart[1];
+                var datePartArray = datePart.split("-");
+                
+                var beautifyDateYear = datePartArray[0];
+                var beautifyDateMonth = datePartArray[1];
+                var beautifyDateDate = datePartArray[2];
+                var finalBeutifiedDate = beautifyDateYear+"/"+beautifyDateMonth+"/"+beautifyDateDate;
+                
                 var articleDBId = res.data[i].id;
-                articleBlock = document.createElement('articleBlock');
+
+                articleBlock = document.createElement('div');
                 articleBlock.setAttribute("id", `articleBlock_${articleDBId}`);
                 articleBlock.setAttribute("class", "row container");
-                console.log("i: ", i, "articleBlock: ", articleBlock);
 
-                var article = document.createElement('article-clicked');
-                article.setAttribute("id", `article_${articleDBId}`);
+                var article = document.createElement('div');
+                article.setAttribute("id", `articleClicked_${articleDBId}`);
                 article.setAttribute("class", "col-md-6 item");
 
-                var articleId = document.createElement('articleId');
-                articleId.setAttribute("id", `articleId_${articleDBId}`);
+                var articleElementContainer = document.createElement('div');
+                articleElementContainer.setAttribute("class", "row");
 
-                var articleDate = document.createElement('articleDate');
+                var articleSource = document.createElement('div');
+                articleSource.setAttribute("id",`source_${res.data[i].post_source}`);
+
+                var articleDate = document.createElement('div');
                 articleDate.setAttribute("id", `articleDate_${articleDBId}`);
 
-                var articleContent = document.createElement('articleContent');
+                var articleContent = document.createElement('div');
                 articleContent.setAttribute("id", `articleContent_${articleDBId}`);
 
-                var articleLink = document.createElement('articleLink');
-                articleLink.setAttribute("id", `articleLink_${articleDBId}`);
+                var articleId = document.createElement('div');
+                articleId.setAttribute("id", `articleId_${articleDBId}`);
+
+                var articleLink = document.createElement('a');
+                articleLink.setAttribute("href", `${res.data[i].post_link}`);
 
                 var br = document.createElement("br");
 
@@ -82,10 +98,15 @@ axios.post(`showNewsContent`,{
                 hahaBtn.innerHTML = "Haha";
                 hahaBtn.setAttribute("id", `user_hahaBtn_${articleDBId}`);
 
-                articleId.textContent = res.data[i].id;
-                articleDate.textContent = res.data[i].post_date;
+                articleDate.textContent = finalBeutifiedDate;
                 articleContent.textContent = res.data[i].content;
-                articleLink.textContent = res.data[i].post_link;
+                articleId.textContent = res.data[i].id;
+                articleLink.textContent = "read more";
+                if (res.data[i].post_source == 'nytimes'){
+                    articleSource.textContent = "New York Times";
+                }else{
+                    articleSource.textContent = "Fox News";
+                }
 
                 // ===================================calculate average post emotion
                 avgPostSentiment += res.data[i].sentiment_score;
@@ -112,9 +133,10 @@ axios.post(`showNewsContent`,{
                 }
 
                 // append single article
-                article.appendChild(articleId);
+                article.appendChild(articleSource);
                 article.appendChild(articleDate);
                 article.appendChild(articleContent);
+                article.appendChild(articleId);
                 article.appendChild(articleLink);
                 article.appendChild(br); //not readable, why?? here
                 article.appendChild(loveBtn);
@@ -125,7 +147,6 @@ axios.post(`showNewsContent`,{
                 articleBlock.appendChild(article)
 
                 articles.appendChild(articleBlock); // append to all articles list
-                // localStorage.removeItem("clickedPoints"); // remove local storage items
 
             }
         }
@@ -136,23 +157,38 @@ axios.post(`showNewsContent`,{
             for (j=0;j<res.data.length;j++){
                 if (res.data[i].clickedId == 0){ //is a matched article
                     if (res.data[j].matchedId == res.data[i].id){ // if a clickedArticle's matched Article == this matched article
+                        var rawDate = res.data[i].post_date;
+                        var re = /([^T]+)/;
+                        var pureDatePart = rawDate.split(re);
+                        var datePart = pureDatePart[1];
+                        var datePartArray = datePart.split("-");
+                        
+                        var beautifyDateYear = datePartArray[0];
+                        var beautifyDateMonth = datePartArray[1];
+                        var beautifyDateDate = datePartArray[2];
+                        var finalBeutifiedDate = beautifyDateYear+"/"+beautifyDateMonth+"/"+beautifyDateDate;
+
                         matchedArticleBlock = document.getElementById(`articleBlock_${res.data[j].id}`);
                         articleDBId = res.data[i].id;
-                        var article = document.createElement('article-matched');
-                        article.setAttribute("id", `article_${articleDBId}`);
-                        article.setAttribute("class", "col-md-6 item");
+                        var article = document.createElement('div');
+                        article.setAttribute("id", `articleMatched_${articleDBId}`);
+                        article.setAttribute("class", "col-md-6");
 
-                        var articleId = document.createElement('articleId');
-                        articleId.setAttribute("id", `articleId_${articleDBId}`);
+                        var articleSource = document.createElement('div');
+                        articleSource.setAttribute("id",`source_${res.data[i].post_source}`);
+                        articleSource.setAttribute("class", "col-md-6");
 
-                        var articleDate = document.createElement('articleDate');
+                        var articleDate = document.createElement('div');
                         articleDate.setAttribute("id", `articleDate_${articleDBId}`);
 
-                        var articleContent = document.createElement('articleContent');
+                        var articleContent = document.createElement('div');
                         articleContent.setAttribute("id", `articleContent_${articleDBId}`);
 
-                        var articleLink = document.createElement('articleLink');
-                        articleLink.setAttribute("id", `articleLink_${articleDBId}`);
+                        var articleId = document.createElement('div');
+                        articleId.setAttribute("id", `articleId_${articleDBId}`);
+
+                        var articleLink = document.createElement('a');
+                        articleLink.setAttribute("href", `${res.data[i].post_link}`);
 
                         var br = document.createElement("br");
 
@@ -172,10 +208,15 @@ axios.post(`showNewsContent`,{
                         hahaBtn.innerHTML = "Haha";
                         hahaBtn.setAttribute("id", `user_hahaBtn_${articleDBId}`);
 
-                        articleId.textContent = res.data[i].id;
-                        articleDate.textContent = res.data[i].post_date;
+                        articleDate.textContent = finalBeutifiedDate;
                         articleContent.textContent = res.data[i].content;
-                        articleLink.textContent = res.data[i].post_link;
+                        articleId.textContent = res.data[i].id;
+                        articleLink.textContent = "read more";
+                        if (res.data[i].post_source == 'nytimes'){
+                            articleSource.textContent = "New York Times";
+                        }else{
+                            articleSource.textContent = "Fox News";
+                        }
 
                         // ===================================calculate average post emotion
                         avgPostSentiment += res.data[i].sentiment_score;
@@ -202,9 +243,11 @@ axios.post(`showNewsContent`,{
                         }
 
                         // append single article
-                        article.appendChild(articleId);
+                        
+                        article.appendChild(articleSource);
                         article.appendChild(articleDate);
                         article.appendChild(articleContent);
+                        article.appendChild(articleId);
                         article.appendChild(articleLink);
                         article.appendChild(br); //not readable, why?? here
                         article.appendChild(loveBtn);
@@ -215,7 +258,6 @@ axios.post(`showNewsContent`,{
                         matchedArticleBlock.appendChild(article)
 
                         articles.appendChild(matchedArticleBlock); // append to all articles list
-                        localStorage.removeItem("clickedPoints"); // remove local storage items
                     }
 
                 }
