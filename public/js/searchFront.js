@@ -17,7 +17,7 @@ async function searchNews(){
         'searchTopic1': searchTopic1,
         'searchTopic2': searchTopic2
     }).then(res=>{
-        console.log("res.data ss: ", res.data);
+        // console.log("res.data ss: ", res.data);
         if(res.data.FBNYNewsContent == 'NA'){
             alert("No news found!");
             window.location.href="/";
@@ -115,8 +115,13 @@ async function searchNews(){
             })
             
             chooseDotsBtn.addEventListener('click',()=>{
-                if(localStorage.getItem("clickedPoints))
-                window.location.href = "/showNewsContent.html";
+                if(!localStorage.getItem("clickedPoints")){
+                    console.log("no clicked point!");
+                    alert("Please select at least one point.");
+                }else{
+                    window.location.href = "/showNewsContent.html";
+                }
+                
             })
 
             reselectNewsBtn.addEventListener('click',()=>{
