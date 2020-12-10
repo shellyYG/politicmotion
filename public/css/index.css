@@ -7,10 +7,18 @@ p,a,input,label,textarea,span,ul,li{
 }
 
 .btn{
-    background: #f05f5c;
+    background: #43BFC7;
     color: white;
     padding: 9px 20px;
     border-radius: 20px;
+}
+
+.topic1, .topic2{
+    margin-bottom: 10px;
+}
+
+#userInput1, #userInput2{
+    border-radius: 10px;
 }
 
 #intro .jumbotron{
@@ -19,7 +27,7 @@ p,a,input,label,textarea,span,ul,li{
 }
 
 #main .jumbotron{
-    height:20vh;
+    height:15vh;
     margin-bottom:0px;
 }
 
@@ -48,4 +56,45 @@ header nav img{
 
 header li{
     margin: 0 15px;
+}
+
+.all-news .container .row{
+    background-color: #ECF0F1;
+    height: 220px;
+    margin-bottom: 20px;
+    padding: 9px 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 8px 0 rgba(0,0,0,0,08);
+}
+
+.all-news .container .row article-clicked{
+    flex-grow:1; /* let it grow to the whole space when no matched news*/
+    background-color: #CFECEC;
+    height: 200px;
+    /* margin: auto; */
+    padding: 9px 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 8px 0 rgba(0,0,0,0,08);
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.all-news .container .row article-matched{
+    background-color: #FFF5EE;
+    height: 200px;
+    /* margin: auto; */
+    padding: 9px 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 8px 0 rgba(0,0,0,0,08);
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+footer{
+    border-top: solid 1px #c9c9c9;
+    padding: 80px 0px;
+}
+
+footer img{
+    width: 80px;
 }

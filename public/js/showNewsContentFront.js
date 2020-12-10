@@ -45,10 +45,12 @@ axios.post(`showNewsContent`,{
                 var articleDBId = res.data[i].id;
                 articleBlock = document.createElement('articleBlock');
                 articleBlock.setAttribute("id", `articleBlock_${articleDBId}`);
+                articleBlock.setAttribute("class", "row container");
                 console.log("i: ", i, "articleBlock: ", articleBlock);
 
                 var article = document.createElement('article-clicked');
                 article.setAttribute("id", `article_${articleDBId}`);
+                article.setAttribute("class", "col-md-6 item");
 
                 var articleId = document.createElement('articleId');
                 articleId.setAttribute("id", `articleId_${articleDBId}`);
@@ -138,6 +140,7 @@ axios.post(`showNewsContent`,{
                         articleDBId = res.data[i].id;
                         var article = document.createElement('article-matched');
                         article.setAttribute("id", `article_${articleDBId}`);
+                        article.setAttribute("class", "col-md-6 item");
 
                         var articleId = document.createElement('articleId');
                         articleId.setAttribute("id", `articleId_${articleDBId}`);
