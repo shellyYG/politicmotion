@@ -17,7 +17,7 @@
             <div class="container">
                 <nav class="navbar navbar-expand-lg navbar-light bg-light">
                     <div class="container-fluid">
-                    <a class="navbar-brand" href="#">
+                    <a class="navbar-brand" href="/">
                         <img src="../imgs/OriginalTrans.png">
                     </a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,7 +52,11 @@
             <a href="/">Search Another Topic</a>
         </div>
         <div class="all-news">
-            <div class="container" id="articles"></div>
+            <div class="container" id="articles">
+                <div id="forSentimentBlock">
+                    <div id="loading">Loading...</div>
+                </div>
+            </div>
         </div>
         <div>
             <button class="btn" id="btn-analyzeUser">Show me my emotion!</button>

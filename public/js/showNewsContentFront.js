@@ -144,7 +144,10 @@ axios.post(`showNewsContent`,{
                 article.appendChild(cryBtn);
                 article.appendChild(hahaBtn);
 
-                articleBlock.appendChild(article)
+                articleBlock.appendChild(article);
+
+                const loadingSection = document.getElementById("loading");
+                loadingSection.innerHTML = "";
 
                 articles.appendChild(articleBlock); // append to all articles list
 
@@ -255,7 +258,10 @@ axios.post(`showNewsContent`,{
                         article.appendChild(cryBtn);
                         article.appendChild(hahaBtn);
 
-                        matchedArticleBlock.appendChild(article)
+                        matchedArticleBlock.appendChild(article);
+
+                        const loadingSection = document.getElementById("loading");
+                        loadingSection.innerHTML = "";
 
                         articles.appendChild(matchedArticleBlock); // append to all articles list
                     }

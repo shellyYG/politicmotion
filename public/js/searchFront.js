@@ -95,6 +95,9 @@ async function searchNews(){
                 hovermode: 'closest'
             }
 
+            const loadingSection = document.getElementById("loading");
+            loadingSection.innerHTML = "";
+
             Plotly.newPlot(sentimentShow, data, layout);
 
             // -------------------------------------------------- Build click event & saved it to localStorage     

@@ -144,6 +144,9 @@ axios.post(`calUserEmotion`,{
             hovermode: 'closest'
         }
 
+        const loadingSection = document.getElementById("loading");
+        loadingSection.innerHTML = "";
+        
         Plotly.newPlot(userAndPostEmotionShow, data, layout);
 
         var ChatWithBuddy = document.createElement('button');

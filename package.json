@@ -28,6 +28,7 @@
     "natural": "^2.1.5",
     "node-nlp": "^4.16.0",
     "nodemon": "^2.0.6",
+    "socket.io": "^3.0.4",
     "util.promisify": "^1.0.1",
     "vader-sentiment": "^1.1.3"
   }
