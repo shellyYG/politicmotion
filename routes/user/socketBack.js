@@ -6,48 +6,59 @@ const botName = 'Sexy Admin';
 // =================================================================================== End Function Creation
 // Run when client connects
 let socketCon = function(io){
+    // Run when client connects
     io.on('connection', socket => {
-        
-        console.log("socket.id", socket.id);
-        
-        socket.on('joinRoom',({ username, room })=>{
+        socket.on('joinRoom', ({ username, room }) => {
             const user = userJoin(socket.id, username, room);
-            console.log("user: ", user);
-            socket.join(user.room); //join the user
-            socket.emit('ToClient', formatMessage(user.username, 'Welcome to PoliticChat!')); //Welcome current user
+            console.log("io.on 3 user",user); //{ id: 'g-ChP6WK0uTkwvtUAAAB', username: 'dd', room: 'Python' }
+            socket.join(user.room);
+
+        // Welcome current user
+        socket.emit('message',formatMessage(botName,'歡迎來跟寂寞的Shelly talk talk')); 
+
+        // Broadcast when a user connects
+        socket.broadcast
+            .to(user.room)
+            .emit(
+                'message',
+                formatMessage(botName,`${user.username} 來了`)
+                );
+            // Send users and room info
+            io.to(user.room).emit('roomUsers', {
+                room: user.room,
+                users: getRoomUsers(user.room)
+            });
+        });
+
+        // Listen to chatMessage
+        socket.on('chatMessage', (msg)=> {
+            console.log("4");
+            const user = getCurrentUser(socket.id);
+            console.log("5", user);
+            console.log("user aka getCurrentUser(socket.id)is:", user);
+            // Emit the listened message to everybody
+            io.to(user.room).emit('message', formatMessage(user.username,msg));
         })
 
-        socket.on('ToServer', ({ username, room })=>{
-            console.log("username: ", username);
-            socket.emit('ToClient2', formatMessage(user.username, 'Welcome to PoliticChat!')); 
-
-        })
-        // // Listen to chatMessage (input from user) and send it back
-        // socket.on('chat msg from client', (msg)=> {
-        //     const user = getCurrentUser(socket.id);
-        //     console.log("msg Backend: ", msg);
-        //     io.to(user.room).emit('chat msg to client', msg); //send msg back to client
-        // })
-    
-        // // Broadcast when a user disconnects
-        // socket.on('disconnect',() => {
-        //     const user = userLeave(socket.id);
-        //     if (user) {
-        //         io.to(user.room).emit(
-        //             'message', 
-        //             formatMessage(botName,`${user.username} left.`)
-        //         );
+        // Broadcast when a user disconnects
+        socket.on('disconnect',() => {
+            const user = userLeave(socket.id);
+            if (user) {
+                io.to(user.room).emit(
+                    'message', 
+                    formatMessage(botName,`${user.username}不視好歹離開了`)
+                );
             
-        //         // Send users and room info
-        //         io.to(user.room).emit('roomUsers', {
-        //             room: user.room,
-        //             users: getRoomUsers(user.room)
-        //         });
-        //     }   
-        // });
+
+                // Send users and room info
+                io.to(user.room).emit('roomUsers', {
+                    room: user.room,
+                    users: getRoomUsers(user.room)
+                });
+            }   
+        });
         
     });
-
 }
 
 
