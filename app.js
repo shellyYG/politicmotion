@@ -13,7 +13,7 @@ const showNewsContentRoutes = require('./routes/analyzeNews/showNewsContentBack'
 const analyzeUserEmotion = require('./routes/analyzeUsers/userEmotionBack');
 const signUpRoutes = require('./routes/user/signUp');
 const signInRoutes = require('./routes/user/signIn');
-const chatRoutes = require('./routes/user/socketBack');
+const calChatPartnerRoutes = require('./routes/user/calChatPartner');
 
 app.use(bodyParser.urlencoded({ extended: false}));
 app.use(bodyParser.json());
@@ -28,6 +28,7 @@ app.use('/showNewsContent', showNewsContentRoutes);
 app.use('/calUserEmotion', analyzeUserEmotion);
 app.use('/user/signup', signUpRoutes);
 app.use('/user/signin', signInRoutes);
+app.use('/calChatPartner', calChatPartnerRoutes);
 
 
 const server = require("http").createServer(app);

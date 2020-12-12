@@ -13,14 +13,12 @@ function formatMessage(username, text){
 function userJoin(id, username, room){
     const user = { id, username, room };
     users.push(user);
-    console.log("userJoin func output is: ", user);
     return user;
 }
 
 // ----------------------------------------------------Get current user
 function getCurrentUser(id) {
-    console.log("current userId is: ", id);
-    // console.log("Inside user.id is", user.id); //cant have this line because user does not exist! only in users.find(user-> will user exist as one of the elements of users)
+    console.log("current userId (socket.id) is: ", id);
     return users.find(user => user.id === id);
 }
 
@@ -37,9 +35,16 @@ function getRoomUsers(room){
     return users.filter(user => user.room === room);
 }
 
+// ----------------------------------------------------Get all users
+function getAllUsers(){
+    return users;
+}
+
 module.exports = {
     formatMessage,
     userJoin,
     getCurrentUser,
     userLeave,
-    getRoomUsers};
+    getRoomUsers,
+    getAllUsers
+};

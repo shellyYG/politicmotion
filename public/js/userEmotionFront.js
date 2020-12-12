@@ -13,7 +13,6 @@ axios.post(`calUserEmotion`,{
     'finalEmotionClicked': finalEmotionClicked,
     'firstSearchTopic': searchTopic1,
     'secondSearchTopic': searchTopic2
-
     },{headers: headers})
     .then(res=>{
         const userAvgSentEmotionArray = [];
@@ -169,3 +168,11 @@ axios.post(`calUserEmotion`,{
     })
 localStorage.removeItem("clickedPoints");
 localStorage.removeItem("clickedEmotions");
+
+axios.post(`calChatPartner`, {
+    'firstSearchTopic': searchTopic1,
+    'secondSearchTopic': searchTopic2
+})
+.then(res=>{
+    console.log("calChatPartner res: ", res);
+})
