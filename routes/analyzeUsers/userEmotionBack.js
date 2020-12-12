@@ -8,7 +8,6 @@ router.post('/', verifyToken, (req, res)=>{
     jwt.verify(req.token, process.env.ACCESS_TOKEN_SECRET, (err, payload) => {
         if (err) {
             console.log("You are too long away. Please sign in again.");
-            // res.send(err);
             res.status(403).send({message: 'User does not have permission'});
         }else {
             console.log("Payload is",payload);
@@ -44,6 +43,9 @@ router.post('/', verifyToken, (req, res)=>{
             combinedUserEmotion.avgUserSentiment = avgUserSentiment.toFixed(2);
             combinedUserEmotion.avgUserMagnitude = avgUserMagnitude.toFixed(2);
             
+            
+            
+            
             // insert user emotion to database
             const firstSearchTopic = req.body.firstSearchTopic;
             const secondSearchTopic = req.body.secondSearchTopic;
@@ -54,7 +56,8 @@ router.post('/', verifyToken, (req, res)=>{
                     username: payload.data.name,
                     email: payload.data.email,
                     user_sentiment_score: avgUserSentiment.toFixed(2),
-                    user_magnitude_score: avgUserMagnitude.toFixed(2)
+                    user_magnitude_score: avgUserMagnitude.toFixed(2),
+
                     };
                 let sql = 'INSERT INTO user_emotion SET ?';
                 let sqlquery = await query(sql, insertedData);

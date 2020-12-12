@@ -161,6 +161,20 @@ axios.post(`calUserEmotion`,{
         GoToChat.appendChild(ChatWithBuddy);
         GoToChat.appendChild(ChatWithOpposite);
 
+        const ChatWithBuddyBtn = document.getElementById('chat-buddy');
+        ChatWithBuddyBtn.addEventListener('click',()=>{ 
+            axios.post(`calChatPartner`, {
+                'firstSearchTopic': searchTopic1,
+                'secondSearchTopic': searchTopic2
+            },{headers: headers})
+            .then(res=>{
+                console.log("calChatPartner res: ", res);
+                const chatPartners = res.data.chatPartners;
+                localStorage.setItem("chatpartner1",chatPartners[0]);
+            
+            })
+        })
+
     }).catch(err=>{
         console.log("err from getting emotion is:", err)
         alert("Sorry, you need to sign in to see your score!");
@@ -169,10 +183,9 @@ axios.post(`calUserEmotion`,{
 localStorage.removeItem("clickedPoints");
 localStorage.removeItem("clickedEmotions");
 
-axios.post(`calChatPartner`, {
-    'firstSearchTopic': searchTopic1,
-    'secondSearchTopic': searchTopic2
-})
-.then(res=>{
-    console.log("calChatPartner res: ", res);
-})
+
+
+
+
+
+

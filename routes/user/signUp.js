@@ -61,9 +61,7 @@ router.post('/',(req, res, next)=> {
 
     async function getLatestUserId(){
         let insertUserResult = await insertUser();
-        console.log('insertUserResult is',insertUserResult);
         let latestUserId = insertUserResult.insertId;
-        console.log("Latest inserted user ID is:", latestUserId);
         return latestUserId;
     }
 
@@ -73,13 +71,11 @@ router.post('/',(req, res, next)=> {
         let sqlUserAttri = 
         `SELECT id, provider, username, email, encryptpass FROM politicmotion.user_basic WHERE id =${userId}`;
         let userAttribute = await query(sqlUserAttri);
-        console.log("User attributes are:", userAttribute);
         return userAttribute;
     }
 
     async function createUserObject(){
         let userRawAttri = await getUserRawAttribute();
-        console.log('user Raw Attri is', userRawAttri);
         let userObject = {};
         userObject['id']= userRawAttri[0]["id"];
         userObject['provider']= userRawAttri[0]["provider"];

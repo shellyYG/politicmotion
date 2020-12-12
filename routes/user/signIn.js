@@ -57,8 +57,6 @@ router.post('/',(req, res, next)=> {
         console.log("Encrypted sign-in password is:", userPass);
         console.log("Encrypted User pass in database is:", DataBasePass);
         if (userPass == DataBasePass) {
-            console.log("Encrypted Login pass == stored user pass");
-            console.log('user Raw Attri is', LoginUserResult);
             let userObject = {};
             userObject['id']= LoginUserResult[0]["id"];
             userObject['provider']= LoginUserResult[0]["provider"];
