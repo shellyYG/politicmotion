@@ -183,7 +183,7 @@ router.post('/', (req, res)=> {
             }
             let matchedArticle = stringCosineCombination.reduce(findMatchArticleId,0);
             let twoMatched = {};
-            
+            console.log("singleMatch: ", singleMatch);
             twoMatched.firstArticle = singleMatch[0].firstString;
             twoMatched.secondString = matchedArticle;
             twoMatched.score = maxSingleScore;

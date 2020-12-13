@@ -161,19 +161,35 @@ axios.post(`calUserEmotion`,{
         GoToChat.appendChild(ChatWithBuddy);
         GoToChat.appendChild(ChatWithOpposite);
 
+        // find chat-buddies when clicked
         const ChatWithBuddyBtn = document.getElementById('chat-buddy');
         ChatWithBuddyBtn.addEventListener('click',()=>{ 
-            axios.post(`calChatPartner`, {
+            axios.post(`findBuddies`, {
                 'firstSearchTopic': searchTopic1,
                 'secondSearchTopic': searchTopic2
             },{headers: headers})
             .then(res=>{
-                console.log("calChatPartner res: ", res);
-                const chatPartners = res.data.chatPartners;
-                localStorage.setItem("chatpartner1",chatPartners[0]);
+                console.log("findBuddies res: ", res);
+                const buddies = res.data.buddies;
+                localStorage.setItem("buddy1",buddies[0]);
             
             })
         })
+
+        // find chat-opposites when clicked
+        const ChatWithOppositeBtn = document.getElementById('chat-opposite');
+        ChatWithOppositeBtn.addEventListener('click',()=>{
+            axios.post(`findOpposites`,{
+                'firstSearchTopic': searchTopic1,
+                'secondSearchTopic': searchTopic2
+            },{headers: headers})
+            .then(res=>{
+                console.log("findOpposites res: ", res);
+                const opposites = res.data.opposites;
+                localStorage.setItem("opposite1",opposites[0]);
+            })
+        })
+
 
     }).catch(err=>{
         console.log("err from getting emotion is:", err)

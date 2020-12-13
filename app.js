@@ -13,11 +13,11 @@ const showNewsContentRoutes = require('./routes/analyzeNews/showNewsContentBack'
 const analyzeUserEmotion = require('./routes/analyzeUsers/userEmotionBack');
 const signUpRoutes = require('./routes/user/signUp');
 const signInRoutes = require('./routes/user/signIn');
-const calChatPartnerRoutes = require('./routes/user/calChatPartner');
+const findBuddiesRoutes = require('./routes/user/findBuddies');
+const findOppositesRoutes = require('./routes/user/findOpposites');
 
 app.use(bodyParser.urlencoded({ extended: false}));
 app.use(bodyParser.json());
-// app.use(express.static(path.join(__dirname, 'public'))); // for socket io
 app.use(express.static('public'));
 
 app.use('/NYTimesWeb', NYTWebDataRoutes);
@@ -28,7 +28,8 @@ app.use('/showNewsContent', showNewsContentRoutes);
 app.use('/calUserEmotion', analyzeUserEmotion);
 app.use('/user/signup', signUpRoutes);
 app.use('/user/signin', signInRoutes);
-app.use('/calChatPartner', calChatPartnerRoutes);
+app.use('/findBuddies', findBuddiesRoutes);
+app.use('/findOpposites', findOppositesRoutes);
 
 
 const server = require("http").createServer(app);
