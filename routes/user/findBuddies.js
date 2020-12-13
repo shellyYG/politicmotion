@@ -83,10 +83,13 @@ router.post('/', verifyToken, (req, res)=>{
                 console.log("buddies: ", buddies)
 
                 const filteredSentDistance = [];
-                
+                console.log("sentimentMultiples: ", sentimentMultiples);
                 // filter to min sentiment distance
                 for (i=0; i<buddies.length; i++){
-                    filteredSentDistance.push(sentimentMultiples[buddies[i].buddyIndex].sentimentDistance);
+                    //kickout selfs for finding min. (do not need this when finding opposite because no possibility of finding self)
+                    if(sentimentMultiples[buddies[i].buddyIndex].matchedEmail !== currentUserEmail){ 
+                        filteredSentDistance.push(sentimentMultiples[buddies[i].buddyIndex].sentimentDistance);
+                    }
                 }
                 
                 var minSentDistance = Math.min.apply(Math, filteredSentDistance.filter(function(x){return x >= 0})); 
@@ -115,21 +118,29 @@ router.post('/', verifyToken, (req, res)=>{
                     }
                 }
                 var firstdegreeBuddies = [];
+                var firstdegreeBuddiesEmails = [];
                 for (i=0; i< smallestSentids.length; i++){
                     for(j=0; j<smallestMagids.length; j++){
                         if(smallestSentids[i]==smallestMagids[j]){
                             firstdegreeBuddies.push(smallestSentids[i]);
+                            firstdegreeBuddiesEmails.push(buddies[smallestSentids[i]].buddyEmail);
                         }
                         
                     }
                 }
-                console.log("firstdegreeBuddies: ", firstdegreeBuddies);
+                console.log("firstdegreeBuddiesEmails: ", firstdegreeBuddiesEmails);
 
                 var seconddegreeBuddies = [];
+                var seconddegreeBuddiesEmails = [];
+                
                 for (i=0; i< smallestSentids.length; i++){
-                    seconddegreeBuddies.push(smallestSentids[i]);
+                    if(!firstdegreeBuddies.includes(smallestSentids[i])){
+                        seconddegreeBuddies.push(smallestSentids[i]);
+                        seconddegreeBuddiesEmails.push(buddies[smallestSentids[i]].buddyEmail);
+                    }
+                    
                 }
-                console.log("seconddegreeBuddies: ", seconddegreeBuddies);
+                console.log("seconddegreeBuddiesEmails: ", seconddegreeBuddiesEmails);
                 // --------------------------------------------------------construct final buddy emails
                 let finalBuddyEmails = [];
                 // --------------------------------------------------add first-degree email first
@@ -138,21 +149,45 @@ router.post('/', verifyToken, (req, res)=>{
                 }
                 // --------------------------------------------------then second-degree email first
                 for (i=0; i<seconddegreeBuddies.length; i++){
-                    finalBuddyEmails.push(buddies[seconddegreeBuddies[i]].buddyEmail);
+                    if(seconddegreeBuddies.length !==0){
+                        finalBuddyEmails.push(buddies[seconddegreeBuddies[i]].buddyEmail);
+                    }
                 }
                 // --------------------------------------------------finally other emails
                 for (i=0; i<buddies.length; i++){
-                    if(buddies[i].buddyEmail !== currentUserEmail){
+                    if(buddies[i].buddyEmail !== currentUserEmail && 
+                    !firstdegreeBuddiesEmails.includes(buddies[i].buddyEmail) && 
+                    !seconddegreeBuddiesEmails.includes(buddies[i].buddyEmail)){
                         finalBuddyEmails.push(buddies[i].buddyEmail); //don't add self
                     }
                 }
-
-                finalBuddyEmails = finalBuddyEmails.filter(unique);
-
                 console.log("finalBuddyEmails: ", finalBuddyEmails);
+                
+                return finalBuddyEmails;
+                
             }
 
-            findBuddies();
+            async function findBuddyNames(){
+                var buddyEmails = await findBuddies();
+                var formatbuddyEmails = buddyEmails.map(element=>'"'+element+'"');
+                console.log("buddyEmails: ", buddyEmails);
+                sql = `SELECT username FROM politicmotion.user_basic WHERE email IN (${formatbuddyEmails})
+                        ORDER BY Field(email,${formatbuddyEmails});` // ASC so it will already rank by distance
+                var sqlquery = await query(sql);
+                return sqlquery;
+            }
+
+            async function sendBuddyNames(){
+                var buddyNames = await findBuddyNames();
+                console.log("buddyNames: ", buddyNames);
+                buddyNames = buddyNames.map(element=>element.username);
+                console.log("buddyNames: ", buddyNames);
+                res.send(buddyNames);
+                // console.log("buddyNames: ", buddyNames);
+            }
+            sendBuddyNames();
+            
+            
            
         }
     })        

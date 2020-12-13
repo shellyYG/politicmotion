@@ -170,8 +170,20 @@ axios.post(`calUserEmotion`,{
             },{headers: headers})
             .then(res=>{
                 console.log("findBuddies res: ", res);
-                const buddies = res.data.buddies;
-                localStorage.setItem("buddy1",buddies[0]);
+                const buddyNamesRank = res.data;
+                console.log("buddyNamesRank: ", buddyNamesRank);
+
+                for (i=0; i<buddyNamesRank.length; i++){
+                    var buddiesToChat = localStorage.getItem("buddiesToChat");
+                    var buddiesToChatArray = [];
+                    if(buddiesToChat){
+                        buddiesToChatArray = JSON.parse(buddiesToChat);
+                    }
+                    buddiesToChatArray.push({"buddies": buddyNamesRank[i]});
+                    localStorage.setItem("buddiesToChat", JSON.stringify(buddiesToChatArray));
+                }
+                const finalBuddies = localStorage.getItem("buddiesToChat");
+                console.log("finalBuddies: ", finalBuddies); 
             
             })
         })

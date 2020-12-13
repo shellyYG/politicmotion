@@ -119,21 +119,29 @@ router.post('/', verifyToken, (req, res)=>{
                 }
                 
                 var firstdegreeOpposites = [];
+                var firstdegreeOppositesEmails = [];
                 for (i=0; i< largestSentidsOpposite.length; i++){
                     for(j=0; j<smallestMagidsOpposite.length; j++){
                         if(largestSentidsOpposite[i]==smallestMagidsOpposite[j]){
                             firstdegreeOpposites.push(largestSentidsOpposite[i]);
+                            firstdegreeOppositesEmails.push(Opposites[largestSentidsOpposite[i]].oppositeEmail);
                         }
                         
                     }
                 }
-                console.log("firstdegreeOpposites: ", firstdegreeOpposites);
+                console.log("firstdegreeOpposites" , firstdegreeOpposites, "firstdegreeOppositesEmails: ", firstdegreeOppositesEmails);
 
                 var seconddegreeOpposites = [];
+                var seconddegreeOppositesEmails = [];
+
                 for (i=0; i< largestSentidsOpposite.length; i++){
-                    seconddegreeOpposites.push(largestSentidsOpposite[i]);
+                    if(!firstdegreeOpposites.includes(largestSentidsOpposite[i])){
+                        seconddegreeOpposites.push(largestSentidsOpposite[i]);
+                        seconddegreeOppositesEmails.push(Opposites[largestSentidsOpposite[i]].oppositeEmail);
+                    }
+                    
                 }
-                console.log("seconddegreeOpposites: ", seconddegreeOpposites);
+                console.log("seconddegreeOppositesEmails: ", seconddegreeOppositesEmails);
                 // --------------------------------------------------------construct final Opposites emails
                 let finalOppositeEmails = [];
                 // --------------------------------------------------add first-degree email first
@@ -146,12 +154,14 @@ router.post('/', verifyToken, (req, res)=>{
                 }
                 // --------------------------------------------------finally other emails
                 for (i=0; i<Opposites.length; i++){
-                    if(Opposites[i].oppositeEmail !== currentUserEmail){
+                    if(Opposites[i].oppositeEmail !== currentUserEmail &&
+                        !firstdegreeOppositesEmails.includes(Opposites[i].oppositeEmail) &&
+                        !seconddegreeOppositesEmails.includes(Opposites[i].oppositeEmail)){
                         finalOppositeEmails.push(Opposites[i].oppositeEmail); //don't add self
                     }
                 }
 
-                finalOppositeEmails = finalOppositeEmails.filter(unique);
+                // finalOppositeEmails = finalOppositeEmails.filter(unique);
 
                 console.log("finalOppositeEmails: ", finalOppositeEmails);
             }
