@@ -205,15 +205,38 @@ router.post('/', verifyToken, (req, res)=>{
 
                 console.log("middleRooms: ", middleRooms);
 
-                // for (i=0; i<middleRooms.length; i++){
-                //     for (j=0; j<middleRooms.length; j++){
-                        
-                //     }
-                // }
-
-
-
-
+                const tempRooms = [];
+                const mirrowRooms = [];
+                const finalRoomPackages = [];
+                for (i=0; i<middleRooms.length; i++){
+                    var calRoomParts = middleRooms[i].split("_");
+                    var currentUser = calRoomParts[0];
+                    var matchedUser = calRoomParts[1];
+                    var tempRoom = currentUser + "_" + matchedUser;
+                    var mirrowRoom = matchedUser + "_" + currentUser;
+                    
+                    if (tempRooms.includes(mirrowRoom)){
+                        console.log("repeat!");
+                        console.log("tempRoom: ", tempRoom, "mirrowRoom: ", mirrowRoom);
+                        console.log("tempRooms: ", tempRooms, "mirrowRooms: ", mirrowRooms);
+                        finalRoomPackage.currentUser = currentUser;
+                        finalRoomPackage.matchedUser = matchedUser;
+                        finalRoomPackage.roomName = mirrowRoom;
+                        finalRoomPackages.push(finalRoomPackage);
+                    }else {
+                        console.log("temp Room & mirrow room not exist yet");
+                        console.log("tempRoom: ", tempRoom, "mirrowRoom: ", mirrowRoom);
+                        console.log("tempRooms: ", tempRooms, "mirrowRooms: ", mirrowRooms);
+                        var finalRoomPackage = {};
+                        tempRooms.push(tempRoom);
+                        mirrowRooms.push(mirrowRoom);
+                        finalRoomPackage.currentUser = currentUser;
+                        finalRoomPackage.matchedUser = matchedUser;
+                        finalRoomPackage.roomName = tempRoom;
+                        finalRoomPackages.push(finalRoomPackage);
+                    }
+                }
+                console.log("finalRoomPackages: ", finalRoomPackages);
 
                 res.send(buddyNames);
             }
