@@ -161,13 +161,26 @@ router.post('/', verifyToken, (req, res)=>{
                     }
                 }
 
-                // finalOppositeEmails = finalOppositeEmails.filter(unique);
-
-                console.log("finalOppositeEmails: ", finalOppositeEmails);
+                return finalOppositeEmails;
+            }
+            async function findOppositeNames(){
+                var oppositeEmails = await findOpposites();
+                var formatoppositeEmails = oppositeEmails.map(element=>'"'+element+'"');
+                console.log("formatoppositeEmails: ", formatoppositeEmails);
+                sql = `SELECT username FROM politicmotion.user_basic WHERE email IN (${formatoppositeEmails})
+                        ORDER BY Field(email,${formatoppositeEmails});` // ASC so it will already rank by distance
+                var sqlquery = await query(sql);
+                return sqlquery;
             }
 
-            findOpposites();
-
+            async function sendOppositeNames(){
+                var oppositeNames = await findOppositeNames();
+                oppositeNames = oppositeNames.map(element=>element.username);
+                console.log("oppositeNames: ", oppositeNames);
+                res.send(oppositeNames);
+            }
+            sendOppositeNames();
+            
         }
     })        
 })

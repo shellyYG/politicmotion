@@ -161,8 +161,7 @@ router.post('/', verifyToken, (req, res)=>{
                         finalBuddyEmails.push(buddies[i].buddyEmail); //don't add self
                     }
                 }
-                console.log("finalBuddyEmails: ", finalBuddyEmails);
-                
+
                 return finalBuddyEmails;
                 
             }
@@ -179,11 +178,9 @@ router.post('/', verifyToken, (req, res)=>{
 
             async function sendBuddyNames(){
                 var buddyNames = await findBuddyNames();
-                console.log("buddyNames: ", buddyNames);
                 buddyNames = buddyNames.map(element=>element.username);
                 console.log("buddyNames: ", buddyNames);
                 res.send(buddyNames);
-                // console.log("buddyNames: ", buddyNames);
             }
             sendBuddyNames();
             

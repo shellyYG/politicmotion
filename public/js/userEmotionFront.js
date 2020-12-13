@@ -197,8 +197,18 @@ axios.post(`calUserEmotion`,{
             },{headers: headers})
             .then(res=>{
                 console.log("findOpposites res: ", res);
-                const opposites = res.data.opposites;
-                localStorage.setItem("opposite1",opposites[0]);
+                const oppositesNamesRank = res.data;
+                for (i=0; i<oppositesNamesRank.length; i++){
+                    var oppositesToChat = localStorage.getItem("oppositesToChat");
+                    var oppositesToChatArray = [];
+                    if(oppositesToChat){
+                        oppositesToChatArray = JSON.parse(oppositesToChat);
+                    }
+                    oppositesToChatArray.push({"opposites": oppositesNamesRank[i]});
+                    localStorage.setItem("oppositesToChat", JSON.stringify(oppositesToChatArray));
+                }
+                const finalOpposites = localStorage.getItem("oppositesToChat");
+                console.log("finalOpposites: ", finalOpposites);
             })
         })
 
