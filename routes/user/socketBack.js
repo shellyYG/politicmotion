@@ -2,15 +2,21 @@ const moment = require('moment');
 const { formatMessage, userJoin, getCurrentUser, userLeave, getRoomUsers, getAllUsers } = require('../../util/messages');
 
 const botName = 'Sexy Admin';
+var arrAllSocket = [];
+
+const markus = "markus";
 
 // =================================================================================== End Function Creation
 // Run when client connects
 let socketCon = function(io){
+    
     // Run when client connects
     io.on('connection', socket => {
         socket.on('joinRoom', ({ username, room }) => {
             const user = userJoin(socket.id, username, room); //give it email & id from database & room (think about the logic)
             socket.join(user.room);
+            arrAllSocket.push(user);
+
 
         // Welcome current user
         socket.emit('message',formatMessage(botName,'Welcome to politic-chat!')); 
@@ -33,6 +39,7 @@ let socketCon = function(io){
                 users: getAllUsers()
             })
         });
+        console.log("arrAllSocket: ", arrAllSocket);
 
         // Listen to chatMessage
         socket.on('chatMessage', (msg)=> {
@@ -41,6 +48,12 @@ let socketCon = function(io){
             // Emit the listened message to everybody
             io.to(user.room).emit('message', formatMessage(user.username,msg));
         })
+
+
+        // // Listen private message
+        // socket.on('ToMarkus', (privateM)=>{
+        //     console.log("privateM: ", privateM);
+        // })
 
         // Broadcast when a user disconnects
         socket.on('disconnect',() => {

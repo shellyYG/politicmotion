@@ -1,15 +1,22 @@
+const socket = io();
+const messageForm = document.getElementById('send-container');
+const messageInput = document.getElementById('message-input');
 const chatForm = document.getElementById('chat-form');
 const chatMessages = document.querySelector('.chat-messages');
 const roomName = document.getElementById('room-name');
 const roomUserList = document.getElementById('room-users');
 const allUserList = document.getElementById('all-users');
+
+
 // Get username and room from URL
 const { username, room } = Qs.parse(location.search, {
     ignoreQueryPrefix: true
 });
 
-const socket = io(); // we can access this because we have <script src="/socket.io/socket.io.js"></script> @FrontEnd
-console.log("username is:", username,"room is:", room);
+
+let buddies = localStorage.getItem("buddiesToChat");
+buddies = JSON.parse(buddies);
+console.log("buddies: ", buddies);
 
 // Join chatroom
 socket.emit('joinRoom', { username , room });
@@ -18,6 +25,7 @@ socket.emit('joinRoom', { username , room });
 socket.on('roomUsers', ({ room, users }) => {
     outputRoomName(room);
     outputRoomUsers(users);
+    console.log("users: ", users);
 });
 
 // Get room and users
@@ -49,6 +57,9 @@ chatForm.addEventListener('submit', (e) => { // (e) means event
 
     // Emit message to server
     socket.emit('chatMessage', msg);
+
+    // // Emit to Markus only
+    // io.to("mVoX8U_neyVuEdK7AAAL").emit('ToMarkus',"loveyou");
 
     // Clear input @input box
     e.target.elements.msg.value = '';

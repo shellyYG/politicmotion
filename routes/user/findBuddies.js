@@ -175,11 +175,46 @@ router.post('/', verifyToken, (req, res)=>{
                 var sqlquery = await query(sql);
                 return sqlquery;
             }
+            
+            const rooms = [];
+            const middleRooms = [];
+            const finalRooms = [];
 
             async function sendBuddyNames(){
                 var buddyNames = await findBuddyNames();
                 buddyNames = buddyNames.map(element=>element.username);
                 console.log("buddyNames: ", buddyNames);
+
+                let allNames = buddyNames;
+                allNames.push(payload.data.name);
+                console.log(allNames);
+               
+
+                for (i=0; i<allNames.length; i++){
+                    for (j=0; j<allNames.length; j++){
+                        rooms.push(allNames[i]+"_"+allNames[j]);
+                    }
+                }
+                
+                for (i=0; i<rooms.length; i++){
+                    var roomParts = rooms[i].split("_");
+                    if (roomParts[0]!==roomParts[1]){
+                        middleRooms.push(rooms[i]);
+                    }
+                }
+
+                console.log("middleRooms: ", middleRooms);
+
+                // for (i=0; i<middleRooms.length; i++){
+                //     for (j=0; j<middleRooms.length; j++){
+                        
+                //     }
+                // }
+
+
+
+
+
                 res.send(buddyNames);
             }
             sendBuddyNames();

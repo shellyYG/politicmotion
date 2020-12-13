@@ -184,6 +184,7 @@ axios.post(`calUserEmotion`,{
                 }
                 const finalBuddies = localStorage.getItem("buddiesToChat");
                 console.log("finalBuddies: ", finalBuddies); 
+                window.location.href = '/chatDoorBuddy.html';
             
             })
         })
@@ -209,6 +210,7 @@ axios.post(`calUserEmotion`,{
                 }
                 const finalOpposites = localStorage.getItem("oppositesToChat");
                 console.log("finalOpposites: ", finalOpposites);
+                
             })
         })
 
