@@ -34,7 +34,7 @@ app.use('/findOpposites', findOppositesRoutes);
 
 const server = require("http").createServer(app);
 const io = require("socket.io")(server);
-const { socketCon } = require("./routes/user/socketBack");
+const { socketCon } = require("./routes/user/chatBack");
 socketCon(io);
 
 server.listen(PORT, PORT,()=>{

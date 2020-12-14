@@ -184,7 +184,7 @@ axios.post(`calUserEmotion`,{
                 }
                 const finalBuddies = localStorage.getItem("buddiesToChat");
                 console.log("finalBuddies: ", finalBuddies); 
-                window.location.href = '/chatDoorBuddy.html';
+                window.location.href = '/chat.html';
             
             })
         })
