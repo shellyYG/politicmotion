@@ -1,13 +1,44 @@
-var socket = io();
+console.log("generalToken: ", localStorage.getItem("generalToken"));
+let buddiesToChat = localStorage.getItem("buddiesToChat");
+buddiesToChat = JSON.parse(buddiesToChat);
+console.log("buddiesToChat (Front): ", buddiesToChat);
+
+let buddyNames = buddiesToChat.map(element=>element.buddies);
+console.log("buddyNames: ", buddyNames);
+
+const partnerContainer = document.getElementById('partnerContainer');
+for (i=0; i<buddyNames.length; i++){
+    var partnerDiv = document.createElement('div');
+    partnerDiv.innerHTML = `${buddyNames[i]}`;
+    partnerContainer.appendChild(partnerDiv);
+}
+
+
+msgPlaceHolder.appendChild(div);
+
+
+const socket = io({
+    query: {
+        generalToken: localStorage.getItem("generalToken"),
+        buddyNames: buddyNames
+    }
+});
 const chatForm = document.getElementById('chat-form');
 const msgPlaceHolder = document.getElementById('messages');
+
+
 
 socket.on("connect",() => { //default event from socket.io. Have to write "connect" instead of "connection" (but at back-end you need to write "connection")
     console.log("@Front socket.id: ", socket.id);
 })
 
+// Not permitted user
+socket.on('AuthError', () => {
+    alert("Please sign-in to continue.");
+    window.location.href="/signIn.html"
+})
 
-
+// Permitted user
 chatForm.addEventListener('submit',(e)=>{
     e.preventDefault();
     // Get message inserted by user

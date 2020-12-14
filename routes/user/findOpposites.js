@@ -3,8 +3,6 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const { query } = require('../../models/query');
 
-const { unique } = require('../../models/tfidf');
-
 router.post('/', verifyToken, (req, res)=>{
     
     const searchTopic1 = req.body.firstSearchTopic;
