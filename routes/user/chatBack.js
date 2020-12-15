@@ -41,6 +41,7 @@ let socketCon = function(io){
                 onlineUserList = onlineUserList.filter(unique);
 
                 socket.emit('Self', payload.data.name);
+                console.log("payload.data.name", payload.data.name);
                 socket.emit('OnlineUsers', onlineUserList);
                 
                 socket.on('selectedPartner',(selectedPartner)=>{

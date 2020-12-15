@@ -53,7 +53,7 @@ socket.on('OnlineUsers', (onlineUsers)=>{
     console.log("online users: ", onlineUsers);
     for (i=0; i<potentialPartners.length; i++){
         if(onlineUsers.includes(potentialPartners[i].innerHTML)){
-            potentialPartners[i].setAttribute("id","onlinePartner");
+            potentialPartners[i].setAttribute("id","onlinePartner"); //change
         }
     }
     var onlinePartners = document.querySelectorAll('#onlinePartner');
