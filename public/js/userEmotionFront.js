@@ -17,9 +17,11 @@ axios.post(`calUserEmotion`,{
     .then(res=>{
         const userAvgSentEmotionArray = [];
         userAvgSentEmotionArray.push(res.data.avgUserSentiment);
+        console.log("res.data.avgUserSentiment: ", res.data.avgUserSentiment);
 
         const userAvgMagEmotionArray = [];
         userAvgMagEmotionArray.push(res.data.avgUserMagnitude);
+        console.log("res.data.avgUserMagnitude: ", res.data.avgUserMagnitude);
 
         // -----------------------------------------------------------------Get emotion regardless of news source
         const postAvgSentEmotionArray = [];
@@ -58,6 +60,9 @@ axios.post(`calUserEmotion`,{
 
         const reactionAvgFoxMagEmotionArray = []
         reactionAvgFoxMagEmotionArray.push(localStorage.getItem('avgFoxReactionMagnitude'));
+
+        console.log('userAvgSentEmotionArray: ', userAvgSentEmotionArray);
+        console.log('userAvgMagEmotionArray: ', userAvgMagEmotionArray);
 
         // -----------------------------------------------------------------Show userAndPostEmotionShow Scatter Plot
         userAndPostEmotionShow = document.getElementById('userAndPostEmotionShow');
@@ -171,10 +176,8 @@ axios.post(`calUserEmotion`,{
                 'secondSearchTopic': searchTopic2
             },{headers: headers})
             .then(res=>{
-                console.log("findBuddies res: ", res);
                 const buddyNamesRank = res.data;
-                console.log("buddyNamesRank: ", buddyNamesRank);
-
+                
                 for (i=0; i<buddyNamesRank.length; i++){
                     var buddiesToChat = localStorage.getItem("buddiesToChat");
                     var buddiesToChatArray = [];
@@ -185,8 +188,7 @@ axios.post(`calUserEmotion`,{
                     localStorage.setItem("buddiesToChat", JSON.stringify(buddiesToChatArray));
                 }
                 const finalBuddies = localStorage.getItem("buddiesToChat");
-                console.log("finalBuddies: ", finalBuddies); 
-                window.location.href = '/chat.html';
+                window.location.href = '/chat.html'; 
             
             })
         })

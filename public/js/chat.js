@@ -11,10 +11,15 @@ const partnerContainer = document.getElementById('partnerContainer');
 const startChatBtn = document.getElementById('startChat');
 const selfNameDiv = document.getElementById('selfName');
 
+function test(){
+    socket.emit('test','test');
+}
+
 function unique(value, index, self){
     return self.indexOf(value) === index;
 }
 buddiesToChat = buddiesToChat.filter(unique);
+console.log("buddiesToChat after filter: ", buddiesToChat);
 
 // put buddies to chat as button on the front-end
 for (i=0; i<buddiesToChat.length; i++){
@@ -24,43 +29,80 @@ for (i=0; i<buddiesToChat.length; i++){
     partnerContainer.appendChild(singleBuddy);
 }
 
-const socket = io({
-    query: {
-        generalToken: localStorage.getItem("generalToken"),
-        buddyNames: buddyNames
-    }
-});
+const socket = io();
 
-socket.on("connect",() => { //default event from socket.io. Have to write "connect" instead of "connection" (but at back-end you need to write "connection")
-    console.log("@Front socket.id: ", socket.id);
+const tokenTest = () =>{
+    return new Promise((resolve, reject) =>{
+        let query= {
+            generalToken: localStorage.getItem("generalToken"),
+            buddyNames: buddyNames
+        }
+        resolve(query)
+    })
+}
+
+tokenTest().then(result => {
+    socket.emit("verifyToken",(result))
 })
+//1
+
+
+// socket.on("connect",() => { //default event from socket.io. Have to write "connect" instead of "connection" (but at back-end you need to write "connection")
+//     console.log("@Front socket.id: ", socket.id);
+// })
 // ======================================================== Not permitted user
 socket.on('AuthError', () => {
     alert("Please sign-in to continue.");
     window.location.href="/signIn.html"
 })
 
+socket.on('test2',(a)=>{
+    console.log("test2", a);
+})
 // ======================================================== Permitted user
 // --- get self
 socket.on('Self', (self)=>{
-    selfNameDiv.innerHTML = self;
-});
-
-// --- get who is online
-var potentialPartners = document.querySelectorAll('.singleBuddy');
-console.log("potentialPartners: ", potentialPartners);
-socket.on('OnlineUsers', (onlineUsers)=>{
-    console.log("online users: ", onlineUsers);
+    console.log("self", self)
+    console.log("selfNameDiv.innerText: ", selfNameDiv.innerText)
+    selfNameDiv.innerText = self.self;
+    var potentialPartners = document.querySelectorAll('.singleBuddy');
     for (i=0; i<potentialPartners.length; i++){
-        if(onlineUsers.includes(potentialPartners[i].innerHTML)){
-            potentialPartners[i].setAttribute("id","onlinePartner"); //change
+        console.log(potentialPartners[i].innerHTML, self.onlineUsers)
+        if(self.onlineUsers.includes(potentialPartners[i].innerHTML)){
+            console.log("set color");
+            potentialPartners[i].setAttribute("class","onlinePartner"); //change
         }
     }
-    var onlinePartners = document.querySelectorAll('#onlinePartner');
-    console.log("onlinePartners: ", onlinePartners);
+    socket.emit('newUserUser', self.self);     
+});
+
+socket.on('updateUser', (newUser)=>{
+    console.log("updateUser");
+    var potentialPartners = document.querySelectorAll('.singleBuddy');
+    potentialPartners.forEach(element=>{
+        if(element.innerText==newUser){
+            console.log("element.innerText", element.innerText);
+            element.classList.add('onlinePartner');
+        }
+    })
 })
 
+socket.on("userDisconnected", (msg) => {
+    console.log("userDisconnected", msg)
+})
 
+// --- get who is online
+// var potentialPartners = document.querySelectorAll('.singleBuddy');
+// socket.on('OnlineUsers', (onlineUsers)=>{
+//     console.log("OnlineUsers happened!");
+//     for (i=0; i<potentialPartners.length; i++){
+//         console.log(potentialPartners[i].innerHTML, onlineUsers)
+//         if(onlineUsers.includes(potentialPartners[i].innerHTML)){
+//             console.log("set color");
+//             potentialPartners[i].setAttribute("id","onlinePartner"); //change
+//         }
+//     }
+// })
 
 // var onlineBuddyButtons = document.querySelectorAll('[id^="online_"]');
 // for(let i=0; i<onlineBuddyButtons.length; i++){
@@ -80,21 +122,21 @@ socket.on('OnlineUsers', (onlineUsers)=>{
 const selectedPartner = localStorage.getItem("selectedPartner");
 
 // --- send chat partner to backend
-socket.emit('selectedPartner', selectedPartner);
+// socket.emit('selectedPartner', selectedPartner);
 
-chatForm.addEventListener('submit',(e)=>{
-    e.preventDefault();
-    // Get message inserted by user
-    let msg = e.target.elements.m.value; // m is the id of the input box
-    if(!msg){
-        return false;
-    }
-    socket.emit('chatMsg',msg);
-})
+// chatForm.addEventListener('submit',(e)=>{
+//     e.preventDefault();
+//     // Get message inserted by user
+//     let msg = e.target.elements.m.value; // m is the id of the input box
+//     if(!msg){
+//         return false;
+//     }
+//     socket.emit('chatMsg',msg);
+// })
 
-io.on('echoChatMsg',(msg)=>{
-    console.log("echoChatMsg: ", msg);
-})
+// socket.on('echoChatMsg',(msg)=>{
+//     console.log("echoChatMsg: ", msg);
+// })
 
 
 

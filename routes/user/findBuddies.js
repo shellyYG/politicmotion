@@ -180,12 +180,8 @@ router.post('/', verifyToken, (req, res)=>{
             async function sendBuddyNames(){
                 var buddyNames = await findBuddyNames();
                 buddyNames = buddyNames.map(element=>element.username);
-                console.log("buddyNames: ", buddyNames);
 
-                let allNames = buddyNames;
-                allNames.push(payload.data.name);
-                console.log(allNames);
-
+                console.log("buddyNames before sent: ", buddyNames);
                 res.send(buddyNames);
             }
             sendBuddyNames();
@@ -198,7 +194,6 @@ router.post('/', verifyToken, (req, res)=>{
 
 function verifyToken(req, res, next){
     const bearerHeader=req.headers['authorization'];
-    console.log('bearerHeader is: ',bearerHeader);
     
     if(typeof bearerHeader !== 'undefined'){
         const bearer = bearerHeader.split(' ');

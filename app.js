@@ -16,10 +16,6 @@ const signInRoutes = require('./routes/user/signIn');
 const findBuddiesRoutes = require('./routes/user/findBuddies');
 const findOppositesRoutes = require('./routes/user/findOpposites');
 
-app.use(bodyParser.urlencoded({ extended: false}));
-app.use(bodyParser.json());
-app.use(express.static('public'));
-
 app.use('/NYTimesWeb', NYTWebDataRoutes);
 app.use('/segmentTopic', segmentTopicRoutes);
 app.use('/searchNews', searchRoutes);
@@ -34,8 +30,15 @@ app.use('/findOpposites', findOppositesRoutes);
 
 const server = require("http").createServer(app);
 const io = require("socket.io")(server);
-const { socketCon } = require("./routes/user/chatBack");
-socketCon(io);
+
+const socketChat = require("./routes/user/chatBack");
+io.on('connection', socketChat);
+app.use(express.static('public'));
+app.use(bodyParser.urlencoded({ extended: false}));
+app.use(bodyParser.json());
+
+// const { socketCon } = require("./routes/user/chatBack");
+// socketCon(io);
 
 server.listen(PORT, PORT,()=>{
     console.log(`Socket listening on port ${PORT}...`);
