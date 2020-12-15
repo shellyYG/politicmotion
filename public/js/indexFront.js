@@ -1,5 +1,15 @@
 const searchButton = document.getElementById('btn-search');
 const chooseSentimentButton = document.getElementById('btn-chooseSentiment');
+const signInButton = document.getElementById('btn_signin');
+const signUpButton = document.getElementById('btn_signup');
+
+signInButton.addEventListener('click',()=>{
+    window.location.href='/signIn.html';
+})
+
+signUpButton.addEventListener('click',()=>{
+    window.location.href='/signUp.html';
+})
 
 searchButton.addEventListener('click',()=>{
     

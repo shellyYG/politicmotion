@@ -3,6 +3,7 @@ const { unique } = require('../../models/tfidf');
 
 var userList = {};
 var onlineUserList = [];
+
 let eachBuddyName;
 
 let socketCon = function(io){
@@ -26,40 +27,29 @@ let socketCon = function(io){
                     console.log("Auth Error!");
                 })
             }else{
-                // console.log("payload: ", payload, 'a user connected - from @Back');
-                console.log('@Back socket.id: ', socket.id);
                 
-                userList[payload.data.name] = socket; //logged-in
-
-                // console.log("userList: ", userList);
+                userList[payload.data.name] = socket.id; //logged-in
 
                 //emit to front-end who is online
                 for (const key in userList) {
-                    console.log("key: ", key, "payload.data.name: ", payload.data.name);
-                    if(eachBuddyName.includes(key) && key !== payload.data.name){ //only push when it's related users && not self
-                    console.log("key is: ", key);    
+                    console.log("payload.data.name: ", payload.data.name);
+                    if(eachBuddyName.includes(key) && key !== payload.data.name){ //only push when it's related users && not self   
                     onlineUserList.push(key);
                     }
                 }
                 console.log("onlineUserList: ", onlineUserList);
                 onlineUserList = onlineUserList.filter(unique);
+
                 socket.emit('Self', payload.data.name);
-                socket.emit('OnlineUser', onlineUserList);
+                socket.emit('OnlineUsers', onlineUserList);
                 
-                // socket.on('chatMsg', (x)=>{
-                //     console.log("chatMsg received from Front - from @Back: ", x);
-                //     io.emit('echoChatMsgFromBack', x);
-                // })
-            
-                // pm part
-                /////try1
-                socket.on('clickedUser',(clickedUser)=>{
-                    console.log("clickedUser: ", clickedUser);
-                    var socketAsAUser = userList[clickedUser]; //payload.data.name
-                    if(socketAsAUser !== undefined){
+                socket.on('selectedPartner',(selectedPartner)=>{
+                    console.log("selectedPartner: ", selectedPartner);
+                    var receiverId = userList[selectedPartner]; //payload.data.name
+                    if(receiverId !== undefined){
                         socket.on('chatMsg', (x)=>{
                             console.log("chatMsg received from Front - from @Back: ", x);
-                            socketAsAUser.emit('echoChatMsg',x);
+                            io.to(receiverId).emit('echoChatMsg',x);
                         })
                         
                     }else{
@@ -68,17 +58,10 @@ let socketCon = function(io){
                     
                 })
                 
-
-                /////try2
-                socket.on('pm', (anotherSocketId, msg)=>{
-                    console.log("Inside PM Back");
-                    socket.to(anotherSocketId).emit('echoPm', socket.id, msg);
-                })
-            
-                socket.on('disconnect', ()=>{
-                    console.log('a user disconnected - from @Back');
-                })
             }
+            socket.on('disconnect',()=>{
+                console.log('user disconnected');
+            })
         })
         
     })

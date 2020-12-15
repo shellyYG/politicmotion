@@ -13,6 +13,13 @@ p,a,input,label,textarea,span,ul,li{
     border-radius: 20px;
 }
 
+#onlinePartner{
+    background: #eb6434;
+    color: white;
+    padding: 9px 20px;
+    border-radius: 20px;
+}
+
 .topic1, .topic2{
     margin-bottom: 10px;
 }

@@ -151,10 +151,12 @@ axios.post(`calUserEmotion`,{
         var ChatWithBuddy = document.createElement('button');
         ChatWithBuddy.innerHTML = 'Chat with Same-Opinions Friends!';
         ChatWithBuddy.setAttribute('id','chat-buddy');
+        ChatWithBuddy.setAttribute('class','btn');
 
         var ChatWithOpposite = document.createElement('button');
         ChatWithOpposite.innerHTML = 'Chat with Different-Opinions Friends!';
         ChatWithOpposite.setAttribute('id','chat-opposite');
+        ChatWithOpposite.setAttribute('class', 'btn');
 
         const GoToChat = document.getElementById('GoToChat');
         console.log("GoToChat: ", GoToChat);
