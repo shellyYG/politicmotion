@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { unique } = require('../../models/tfidf');
 const { query } = require('../../models/query');
+// const moment = require('moment');
 
 var userList = {};
 var onlineUserList = [];
@@ -66,8 +67,22 @@ const socketChat = (socket) => {
         
     socket.on('userSendMsg',(data)=>{
         console.log("userSendMsg: ", data.msg, "sender: ", data.sender, "receiver: ", data.receiver);
-        // save to DB
-        
+        let dateTime = new Date();
+        console.log("dateTime: ", dateTime);
+        let msgPackage = {};
+        msgPackage.sender = data.sender;
+        msgPackage.receiver = data.receiver;
+        msgPackage.message = data.msg;
+        msgPackage.message_time = dateTime;
+        console.log("msgPackage: ", msgPackage);
+
+        async function saveMsg(){
+            // save to DB
+            sql = 'INSERT INTO chat_history SET ?'
+            let sqlquery = await query(sql, msgPackage);
+            return sqlquery;
+        }
+        saveMsg()
     
     })
 
