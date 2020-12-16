@@ -13,7 +13,7 @@ p,a,input,label,textarea,span,ul,li{
     border-radius: 20px;
 }
 
-.onlinePartner{
+#onlinePartner{
     background: #eb6434;
     color: white;
     padding: 9px 20px;

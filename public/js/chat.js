@@ -53,16 +53,22 @@ socket.on("onlineUsers", (onlineUserList) => {
     var potentialPartners = document.querySelectorAll('.singleBuddy');
     console.log("onlineUsers: ", onlineUserList);
     for (i=0; i<potentialPartners.length; i++){
-        // console.log(potentialPartners[i].innerHTML)
         if(onlineUserList.includes(potentialPartners[i].innerHTML)){
             console.log("set color");
-            potentialPartners[i].setAttribute("class","onlinePartner"); //change
+            potentialPartners[i].setAttribute("id","onlinePartner"); //change
         }
     }
     console.log("F7");
 });
 socket.on("userDisconnected", (disconnectUserName) => {
     console.log("F8");
+    var potentialPartners = document.querySelectorAll('.singleBuddy');
+    for (i=0; i<potentialPartners.length; i++){
+        if(potentialPartners[i].innerHTML == disconnectUserName){
+            console.log("remove color");
+            potentialPartners[i].removeAttribute("id"); //remove color
+        }
+    }
     console.log("disconnectUserName: ", disconnectUserName);
     
 
