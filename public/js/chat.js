@@ -106,7 +106,10 @@ socket.on('history',(data)=>{
             var re = /([^T]+)/;
             var pureDatePart = element.message_time.split(re);
             var DatePart = pureDatePart[1].split("-");
-            var timeToShow = DatePart[1]+"/"+DatePart[2]+" "+pureDatePart[3].substring(0,5);
+            var lastDatePart = DatePart[2];
+            var timePart = lastDatePart.split(" ")[1];
+            var timingPart = timePart.split(":")[0]+":"+timePart.split(":")[1];
+            var timeToShow = DatePart[1]+"/"+lastDatePart.split(" ")[0]+" "+timingPart;
             var sendTime = document.createElement('div');
             sendTime.setAttribute("class","sendTime col-md-2");
             sendTime.innerText = timeToShow;
@@ -130,7 +133,10 @@ socket.on('history',(data)=>{
             var re = /([^T]+)/;
             var pureDatePart = element.message_time.split(re);
             var DatePart = pureDatePart[1].split("-");
-            var timeToShow = DatePart[1]+"/"+DatePart[2]+" "+pureDatePart[3].substring(0,5);
+            var lastDatePart = DatePart[2];
+            var timePart = lastDatePart.split(" ")[1];
+            var timingPart = timePart.split(":")[0]+":"+timePart.split(":")[1];
+            var timeToShow = DatePart[1]+"/"+lastDatePart.split(" ")[0]+" "+timingPart;
             var sendTime = document.createElement('div');
             sendTime.setAttribute("class","sendTime col-md-2");
             sendTime.innerText = timeToShow;
