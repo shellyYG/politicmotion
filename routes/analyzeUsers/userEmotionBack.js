@@ -10,7 +10,7 @@ router.post('/', verifyToken, (req, res)=>{
             console.log("You are too long away. Please sign in again.");
             res.status(403).send({message: 'User does not have permission'});
         }else {
-            console.log("Payload is",payload);
+            // console.log("Payload is",payload);
             let userEmotion = req.body.finalEmotionClicked;
             userEmotion = JSON.parse(userEmotion);
             const cleanEmotion = [];

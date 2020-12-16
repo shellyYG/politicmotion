@@ -1,108 +1,63 @@
 const jwt = require('jsonwebtoken');
 const { unique } = require('../../models/tfidf');
-
 var userList = {};
 var onlineUserList = [];
-
 let eachBuddyName;
-let room = "public"
-
-const socketChat = (socket)=>{
+let room = "public";
+let selfName;
+const socketChat = (socket) => {
+    console.log("B1");
+    let buddyNames;
+    socket.emit("getToken");
+    console.log("B2");
     socket.on('verifyToken', (query)=>{
-        let token = query.generalToken;
-        let buddyNames = query.buddyNames;
-        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, payload)=>{
-            if (err) {
-                console.log("You are too long away. Please sign in again.");
-                socket.emit('AuthError', ()=>{
-                    console.log("Auth Error!");
-                })
+        console.log("B3");
+        let {generalToken} = query;
+        buddyNames = query.buddyNames;
+        jwt.verify(generalToken, process.env.ACCESS_TOKEN_SECRET, (err, payload)=>{
+            if(err) {
+                socket.emit("AuthError", "invalid token")
+                console.log("B4 invalid, 跳9");
             }else{
-                userList[payload.data.name] = socket.id; //logged-in
-                console.log("userList1: ", userList);
-
-                //emit to front-end who is online
+                selfName = payload.data.name;
+                userList[payload.data.name] = socket.id;
+                socket.join(room);
+                console.log("B4");
+                console.log(`${selfName} join`)
+                socket.emit('Self', { self: payload.data.name, onlineUsers: onlineUserList});
+                console.log("onlineUserList before pushing from connected users: ", onlineUserList);
+                console.log("B5.");
                 for (const key in userList) {
-                    console.log("buddyNames: ", buddyNames, "key: ", key);
-                    if(buddyNames.includes(key)){ //only push when it's related users   
-                        onlineUserList.push(key);
+                    console.log("key: ", key, "|userList: ", userList, "|buddyNames: ", buddyNames) ;
+                    if(buddyNames.includes(key) || key == selfName){ //only push when it's related users (same topic, same positive or negative score)
+                        onlineUserList.push(key); //push also self into online user list
+                        console.log("B6");
                     }
                 }
-                console.log("onlineUserList: ", onlineUserList);
                 onlineUserList = onlineUserList.filter(unique);
-                socket.emit('Self', { self: payload.data.name, onlineUsers: onlineUserList});
-
+                socket.to(room).emit("onlineUsers", onlineUserList); //emit to others
+                socket.emit("onlineUsers", onlineUserList); //emit to self
+                console.log("B7, onlineUsers: ", onlineUserList);
             }
         })
-
-    })
-    socket.on('newUserUser',(newUser)=>{
-        console.log("newUser get in");
-        socket.emit('updateUser',newUser);
-    })
-
-    socket.on('test',(a)=>{
-        console.log("a: ", a);
-        socket.emit('test2', 'test2');
+    });
+    socket.on("tokem", (msg) => {
+        console.log(msg);
+        console.log("B8");
     })
 
-    socket.on('disconnect',()=>{
-        console.log('user disconnected');
-        socket.emit("userDisconnected", "userleave");
-        // socket.to(room).emit("userDisconnected", "userleave");
+    socket.on("disconnect", () => {
+        console.log("B9");
+        console.log("selfName: ", selfName); 
+        console.log("disconnected:", "socket.id: ", socket.id, "onlineUserList: ", onlineUserList);
+        onlineUserList = onlineUserList.filter(function(value, index, arr){
+            return value !== selfName
+        })
+        console.log("after someone disconnect, remaining online users: ", onlineUserList);
+        console.log("B10");
+        socket.to(room).emit("userDisconnected", (selfName)); // send to all in room except sender
+        console.log("B11");
     })
-    // let token = socket.handshake.query.generalToken;
-    // let buddyNames = socket.handshake.query.buddyNames;
-    
-    
-    
-    // jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, payload)=>{
-    //     if (err) {
-    //         console.log("You are too long away. Please sign in again.");
-    //         socket.emit('AuthError', ()=>{
-    //             console.log("Auth Error!");
-    //         })
-    //     }else{
-            
-    //         userList[payload.data.name] = socket.id; //logged-in
-
-    //         //nick
-    //         socket.emit('newuser', userList);
-    //         //emit to front-end who is online
-    //         for (const key in userList) {
-    //             console.log("payload.data.name: ", payload.data.name);
-    //             if(eachBuddyName.includes(key) && key !== payload.data.name){ //only push when it's related users && not self   
-    //             onlineUserList.push(key);
-    //             }
-    //         }
-            
-    //         onlineUserList = onlineUserList.filter(unique);
-
-    //         socket.emit('Self', payload.data.name);
-            
-    //         socket.emit('OnlineUsers', onlineUserList);
-            
-    //         socket.on('selectedPartner',(selectedPartner)=>{
-    //             console.log("selectedPartner: ", selectedPartner);
-    //             var receiverId = userList[selectedPartner]; //payload.data.name
-    //             if(receiverId !== undefined){
-    //                 socket.on('chatMsg', (x)=>{
-    //                     console.log("chatMsg received from Front - from @Back: ", x);
-    //                     io.to(receiverId).emit('echoChatMsg',x);
-    //                 })
-                    
-    //             }else{
-    //                 console.log("partner is not online.");
-    //             }
-                
-    //         })
-            
-    //     }
-    //     socket.on('disconnect',()=>{
-    //         console.log('user disconnected');
-    //     })
-    // })
-    
 }
 
 module.exports = socketChat;

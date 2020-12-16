@@ -183,7 +183,7 @@ router.post('/', (req, res)=> {
             }
             let matchedArticle = stringCosineCombination.reduce(findMatchArticleId,0);
             let twoMatched = {};
-            console.log("singleMatch: ", singleMatch);
+            // console.log("singleMatch: ", singleMatch);
             twoMatched.firstArticle = singleMatch[0].firstString;
             twoMatched.secondString = matchedArticle;
             twoMatched.score = maxSingleScore;
@@ -191,7 +191,7 @@ router.post('/', (req, res)=> {
             allMatched.push(twoMatched);
         }
 
-        console.log("allMatched: ", allMatched);
+        // console.log("allMatched: ", allMatched);
 
         const newsIdtoShow = [];
         for (i=0; i<allMatched.length; i++){
@@ -199,11 +199,11 @@ router.post('/', (req, res)=> {
             newsIdtoShow.push(allMatched[i].secondString);
         }
         let uniqueNewsIdtoShow = newsIdtoShow.filter(unique);
-        console.log("uniqueNewsIdtoShow: ", uniqueNewsIdtoShow);
+        // console.log("uniqueNewsIdtoShow: ", uniqueNewsIdtoShow);
         
         let clickedNews = [];
         clickedNews = allMatched.map((element)=> {return element.firstArticle});
-        console.log("clickedNews: ", clickedNews);
+        // console.log("clickedNews: ", clickedNews);
         
         async function getRelevantNews(){
             sql = `SELECT id, content, post_date, post_link, reaction, post_source, sentiment_score, magnitude_score, user_sentiment_score, user_magnitude_score
@@ -245,7 +245,7 @@ router.post('/', (req, res)=> {
 
                 finalNewsPackage.push(singleNews);
             }
-            console.log("finalNewsPackage: ", finalNewsPackage);
+            // console.log("finalNewsPackage: ", finalNewsPackage);
             res.json(finalNewsPackage);
             
         }

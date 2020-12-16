@@ -27,7 +27,7 @@ router.post('/', verifyToken, (req, res)=>{
         
             async function findBuddies(){
                 var allUsers = await getAllUsers();
-                console.log("allUsers (findBuddies): ", allUsers);
+                // console.log("allUsers (findBuddies): ", allUsers);
                 
                 var allEmails = allUsers.map((element)=>{return element.email});
                 var currentUserEmail = payload.data.email;
@@ -77,10 +77,10 @@ router.post('/', verifyToken, (req, res)=>{
                         buddies.push(singleBuddy);
                     }
                 }
-                console.log("buddies: ", buddies)
+                // console.log("buddies: ", buddies)
 
                 const filteredSentDistance = [];
-                console.log("sentimentMultiples: ", sentimentMultiples);
+                // console.log("sentimentMultiples: ", sentimentMultiples);
                 // filter to min sentiment distance
                 for (i=0; i<buddies.length; i++){
                     //kickout selfs for finding min. (do not need this when finding opposite because no possibility of finding self)

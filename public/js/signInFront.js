@@ -5,6 +5,9 @@ signUpT.addEventListener('click',()=>{
 })
 // use axios post for signup. rather than form
 let signInT = document.querySelector("#btn_signin");
+
+
+
 signInT.addEventListener('click',()=>{
   axios.post(`/user/signIn`,{
     'email': document.querySelector("#signInEmail").value,

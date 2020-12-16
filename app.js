@@ -4,6 +4,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 // const path = require('path'); // for socket io
+app.use(express.static('public'));
+app.use(bodyParser.urlencoded({ extended: false}));
+app.use(bodyParser.json());
 
 const NYTWebDataRoutes = require('./routes/getNews/getNYTData');
 const segmentTopicRoutes = require('./routes/getNews/segmentTopic');
@@ -33,13 +36,11 @@ const io = require("socket.io")(server);
 
 const socketChat = require("./routes/user/chatBack");
 io.on('connection', socketChat);
-app.use(express.static('public'));
-app.use(bodyParser.urlencoded({ extended: false}));
-app.use(bodyParser.json());
+
 
 // const { socketCon } = require("./routes/user/chatBack");
 // socketCon(io);
 
-server.listen(PORT, PORT,()=>{
+server.listen(PORT,()=>{
     console.log(`Socket listening on port ${PORT}...`);
 })
