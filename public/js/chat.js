@@ -1,4 +1,5 @@
 const socket = io();
+
 let buddiesToChat = localStorage.getItem("buddiesToChat");
 buddiesToChat = JSON.parse(buddiesToChat);
 let buddyNames = buddiesToChat.map(element=>element.buddies);
@@ -84,6 +85,10 @@ potentialPartners.forEach(element=>{
 // Load the history
 socket.on('history',(data)=>{
     console.log("history : ", data);
+    // empty history with other people
+    msgPlaceHolder.innerHTML = "";
+
+    // add history with others
     data.forEach(element=>{
         var singleMessage = document.createElement('div');
         singleMessage.setAttribute("class","row container");
@@ -91,61 +96,59 @@ socket.on('history',(data)=>{
         // switch sender & receiver based on if it's self
         if(element.sender == senderNow){ //if its self, add to sender class
             console.log("sender is self")
+            // append message
+            var message = document.createElement('div');
+            message.setAttribute("class","message col-md-8");
+            message.innerText = element.message;
+            singleMessage.appendChild(message);
+            
+            // append time
+            var re = /([^T]+)/;
+            var pureDatePart = element.message_time.split(re);
+            var DatePart = pureDatePart[1].split("-");
+            var timeToShow = DatePart[1]+"/"+DatePart[2]+" "+pureDatePart[3].substring(0,5);
+            var sendTime = document.createElement('div');
+            sendTime.setAttribute("class","sendTime col-md-2");
+            sendTime.innerText = timeToShow;
+            singleMessage.appendChild(sendTime);
+
+            // append sender (self)
             var historySender = document.createElement('div');
             historySender.setAttribute("class","sender col-md-2");
             historySender.innerText = "You";
             singleMessage.appendChild(historySender);
-            // append time
-            var re = /([^T]+)/;
-            var pureDatePart = element.message_time.split(re);
-            var DatePart = pureDatePart[1].split("-");
-            var timeToShow = DatePart[1]+"/"+DatePart[2]+" "+pureDatePart[3].substring(0,5);
-            var sendTime = document.createElement('div');
-            sendTime.setAttribute("class","sendTime col-md-2");
-            sendTime.innerText = timeToShow;
-            singleMessage.appendChild(sendTime);
-
-            // append message
-            var message = document.createElement('div');
-            message.setAttribute("class","message col-md-4");
-            message.innerText = element.message;
-            singleMessage.appendChild(message);
-
 
         }else if(element.receiver == senderNow){ //switch
             console.log("sender is not self")
-            // append message
-            var message = document.createElement('div');
-            message.setAttribute("class","message col-md-4");
-            message.innerText = element.message;
-            singleMessage.appendChild(message);
-
-            // append time
-            var re = /([^T]+)/;
-            var pureDatePart = element.message_time.split(re);
-            var DatePart = pureDatePart[1].split("-");
-            var timeToShow = DatePart[1]+"/"+DatePart[2]+" "+pureDatePart[3].substring(0,5);
-            var sendTime = document.createElement('div');
-            sendTime.setAttribute("class","sendTime col-md-2");
-            sendTime.innerText = timeToShow;
-            singleMessage.appendChild(sendTime);
-
-            
+            // append sender (other people)
             var historySender = document.createElement('div');
             historySender.setAttribute("class","sender col-md-2");
             historySender.innerText = element.sender;
             singleMessage.appendChild(historySender);
+            
+            // append time
+            var re = /([^T]+)/;
+            var pureDatePart = element.message_time.split(re);
+            var DatePart = pureDatePart[1].split("-");
+            var timeToShow = DatePart[1]+"/"+DatePart[2]+" "+pureDatePart[3].substring(0,5);
+            var sendTime = document.createElement('div');
+            sendTime.setAttribute("class","sendTime col-md-2");
+            sendTime.innerText = timeToShow;
+            singleMessage.appendChild(sendTime);
+
+            // append message
+            var message = document.createElement('div');
+            message.setAttribute("class","message col-md-8");
+            message.innerText = element.message;
+            singleMessage.appendChild(message);
+
         }
 
-        
-
         msgPlaceHolder.append(singleMessage);
-
-        
     })
 })
 
-// start chatting to selected chat partner
+// start chat
 // When message submit by the user
 chatForm.addEventListener('submit', (e) => { // (e) means event
     e.preventDefault();
@@ -167,16 +170,56 @@ chatForm.addEventListener('submit', (e) => { // (e) means event
 })
 
 socket.on('msgToShow',(data)=>{
-    console.log("msgToShow" , data);
-    var sender = document.createElement('div');
-    sender.setAttribute("class","sender");
-    sender.innerText = data.sender+":";
-    msgPlaceHolder.appendChild(sender);
+    var singleMessage = document.createElement('div');
+    singleMessage.setAttribute("class","row container");
 
+    // append message
     var message = document.createElement('div');
-    message.setAttribute("class","message");
+    message.setAttribute("class","message col-md-8");
     message.innerText = data.msg;
-    msgPlaceHolder.appendChild(message);
+    singleMessage.appendChild(message);
+    
+    // append time
+    let dateTime = new Date();
+    let DatePart=dateTime.toLocaleDateString('en-US').split("/");
+    DatePart = DatePart[0]+"/"+DatePart[1];
+    
+    console.log("DatePart: ", DatePart);
+    
+    const timeOptions = {
+        hour12: false,
+        hour: 'numeric',
+        minute: '2-digit',
+        second: '2-digit',
+    };
+
+    var timing = dateTime.toLocaleDateString('en-US', timeOptions);
+    var timingTimePart = timing.split(",")[1].split(":");
+    timingTimePart = timingTimePart[0]+":"+timingTimePart[1];
+    var timeToShow = DatePart + " "+timingTimePart
+    
+    var sendTime = document.createElement('div');
+    sendTime.setAttribute("class","sendTime col-md-2");
+    sendTime.innerText = timeToShow;
+    singleMessage.appendChild(sendTime);
+
+    // append sender (self)
+    var historySender = document.createElement('div');
+    historySender.setAttribute("class","sender col-md-2");
+    historySender.innerText = "You";
+    singleMessage.appendChild(historySender);
+
+    // var sender = document.createElement('div');
+    // sender.setAttribute("class","sender");
+    // sender.innerText = data.sender+":";
+    // msgPlaceHolder.appendChild(sender);
+
+    // var message = document.createElement('div');
+    // message.setAttribute("class","message");
+    // message.innerText = data.msg;
+    // msgPlaceHolder.appendChild(message);
+
+    msgPlaceHolder.append(singleMessage);
 
 })
 

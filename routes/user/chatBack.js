@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { unique } = require('../../models/tfidf');
 const { query } = require('../../models/query');
-// const moment = require('moment');
+
 
 var userList = {};
 var onlineUserList = [];
@@ -84,7 +84,6 @@ const socketChat = (socket) => {
     socket.on('userSendMsg',(data)=>{
         // console.log("userSendMsg: ", data.msg, "sender: ", data.sender, "receiver: ", data.receiver);
         let dateTime = new Date();
-        console.log("dateTime: ", dateTime);
         let msgPackage = {};
         msgPackage.sender = data.sender;
         msgPackage.receiver = data.receiver;
