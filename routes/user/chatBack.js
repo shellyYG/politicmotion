@@ -60,13 +60,29 @@ const socketChat = (socket) => {
                 receiverId; // receiverId remains undefined
             }
         }
+
+        // send historical msg to Front-End for later refresh
+        async function searchHistory(){
+            sql = `SELECT * FROM chat_history 
+            WHERE (sender = '${selfName}' AND receiver = '${receiver}') 
+            OR (sender = '${receiver}' AND receiver = '${selfName}')
+            ORDER BY message_time ASC;`
+            var sqlquery = await query(sql);
+            return sqlquery;
+        }
+        async function showHistory(){
+            let history = await searchHistory();
+            console.log("history: ", history);
+            socket.emit('history', history); // emit history to self
+        }
+        showHistory()
         
     })
 
     console.log("receiverId: ", receiverId); // emit to that socketId
         
     socket.on('userSendMsg',(data)=>{
-        console.log("userSendMsg: ", data.msg, "sender: ", data.sender, "receiver: ", data.receiver);
+        // console.log("userSendMsg: ", data.msg, "sender: ", data.sender, "receiver: ", data.receiver);
         let dateTime = new Date();
         console.log("dateTime: ", dateTime);
         let msgPackage = {};
@@ -74,7 +90,6 @@ const socketChat = (socket) => {
         msgPackage.receiver = data.receiver;
         msgPackage.message = data.msg;
         msgPackage.message_time = dateTime;
-        console.log("msgPackage: ", msgPackage);
 
         async function saveMsg(){
             // save to DB
