@@ -1,13 +1,15 @@
 const jwt = require('jsonwebtoken');
 const { unique } = require('../../models/tfidf');
+const { query } = require('../../models/query');
+
 var userList = {};
 var onlineUserList = [];
-let eachBuddyName;
 let room = "public";
 let selfName;
+let buddyNames;
+var receiverId;
 const socketChat = (socket) => {
     console.log("B1");
-    let buddyNames;
     socket.emit("getToken");
     console.log("B2");
     socket.on('verifyToken', (query)=>{
@@ -36,14 +38,37 @@ const socketChat = (socket) => {
                 }
                 onlineUserList = onlineUserList.filter(unique);
                 socket.to(room).emit("onlineUsers", onlineUserList); //emit to others
-                socket.emit("onlineUsers", onlineUserList); //emit to self
+                socket.emit("onlineUsers", onlineUserList); //emit to self the latest online user list
                 console.log("B7, onlineUsers: ", onlineUserList);
             }
         })
     });
-    socket.on("tokem", (msg) => {
-        console.log(msg);
-        console.log("B8");
+    
+    socket.on("receiver", (receiver)=>{
+        
+        console.log("received receiver, try to get its socket.id");
+
+        for (const key in userList){
+            console.log("key: ", key, "receiver: ", receiver);
+            if(key == receiver){ //----------------------------------------- if receiver is online
+                console.log("receiver is online");
+                receiverId = userList[receiver]; //receiverId = socketId
+                
+            }else{      //----------------------------------------- if receiver is NOT online
+                console.log("receiver is NOT online");
+                receiverId; // receiverId remains undefined
+            }
+        }
+        
+    })
+
+    console.log("receiverId: ", receiverId); // emit to that socketId
+        
+    socket.on('userSendMsg',(data)=>{
+        console.log("userSendMsg: ", data.msg, "sender: ", data.sender, "receiver: ", data.receiver);
+        // save to DB
+        
+    
     })
 
     socket.on("disconnect", () => {

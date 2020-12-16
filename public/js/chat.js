@@ -7,6 +7,10 @@ const msgPlaceHolder = document.getElementById('messages');
 const partnerContainer = document.getElementById('partnerContainer');
 const startChatBtn = document.getElementById('startChat');
 const selfNameDiv = document.getElementById('selfName');
+const sendMsgBtn = document.getElementById('sendMsgBtn');
+let sender;
+let receiver;
+
 function unique(value, index, self){
     return self.indexOf(value) === index;
 }
@@ -44,6 +48,7 @@ socket.on("AuthError", (msg) => {
 
 socket.on('Self', (self)=>{
     console.log("F4");
+    sender = self.self;
     selfNameDiv.innerText = self.self;
     socket.emit('newUserUser');
     console.log("F5");
@@ -60,6 +65,44 @@ socket.on("onlineUsers", (onlineUserList) => {
     }
     console.log("F7");
 });
+
+
+// select chat partner
+var potentialPartners = document.querySelectorAll('.singleBuddy');
+console.log("potentialPartners: ", potentialPartners);
+potentialPartners.forEach(element=>{
+    element.addEventListener('click',()=>{
+        localStorage.setItem('receiver', element.innerText);
+        receiver = localStorage.getItem("receiver");
+        console.log("receiver: ",receiver);
+        socket.emit('receiver', receiver); //send to all server
+        console.log("receiver sent to back-end!");
+    })
+    
+})
+
+// start chatting to selected chat partner
+// When message submit by the user
+chatForm.addEventListener('submit', (e) => { // (e) means event
+    e.preventDefault();
+
+    // Get message inserted by user
+    let msg = e.target.elements.userMsg.value;
+    msg = msg.trim(); //remove white space
+
+    console.log("msg: ", msg);
+
+    if(!msg){
+        return false;
+    }
+    socket.emit('userSendMsg',{
+        msg: msg,
+        sender: sender,
+        receiver: receiver
+    });
+})
+
+
 socket.on("userDisconnected", (disconnectUserName) => {
     console.log("F8");
     var potentialPartners = document.querySelectorAll('.singleBuddy');

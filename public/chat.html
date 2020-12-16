@@ -104,12 +104,21 @@
   <div id="welcome">Welcome, </div>
   <div id="selfName"></div>
   <div id="partnerContainer">Chat Partners</div>
-  <button id="startChat">Start Chat!</button>
-  <ul id="messages"></ul>
+  <div class="container">
+    <div class='row'>
+      <div class="col-md-12 text-center">
+        <span class="border border-info">
+          <ul id="messages"></ul>
+        </span>
+      </div>
+    </div>
+    
+  </div>
+  
+  
   <form action="" id="chat-form">
-    <input id="m" autocomplete="off" /><button>Send</button>
+    <input id="userMsg" autocomplete="off" /><button id="sendMsgBtn">Send</button>
   </form>
-  <button id="test" onclick="test()">test</button>
   <script src="socket.io/socket.io.js"></script>
   <script src="js/chat.js"></script>
 </body>
