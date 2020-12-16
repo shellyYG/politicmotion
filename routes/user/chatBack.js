@@ -83,7 +83,37 @@ const socketChat = (socket) => {
             return sqlquery;
         }
         saveMsg()
-    
+
+        // emit received msg to selected user's front-end & self's front-end
+        //--------get receiver's socket id
+        let receiverSocketId = userList[data.receiver];
+        console.log('receiver: ', data.receiver, 'receiver socket id: ', receiverSocketId);
+        if(!receiverSocketId){
+            //------------if no receiveer, push to self's front-end only
+            console.log("receiver is not online!");
+            socket.emit('msgToShow',{ //emit to self
+                msg: data.msg,
+                sender: data.sender,
+                receiver: data.receiver
+            })
+        }else{
+            //------------if yes receiveer, push to self's + receiver's front-end
+            console.log("receiver is online!");
+            socket.emit('msgToShow',{ //emit to self
+                msg: data.msg,
+                sender: data.sender,
+                receiver: data.receiver
+            })
+            socket.to(receiverSocketId).emit('msgToShow',{ //emit to receiver
+                msg: data.msg,
+                sender: data.sender,
+                receiver: data.receiver
+            })
+        }
+        
+
+        
+        // socket.to().emit('receivedMsg')
     })
 
     socket.on("disconnect", () => {

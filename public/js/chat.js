@@ -102,6 +102,20 @@ chatForm.addEventListener('submit', (e) => { // (e) means event
     });
 })
 
+socket.on('msgToShow',(data)=>{
+    console.log("msgToShow" , data);
+    var sender = document.createElement('div');
+    sender.setAttribute("class","sender");
+    sender.innerText = data.sender;
+    msgPlaceHolder.appendChild(sender);
+
+    var message = document.createElement('div');
+    message.setAttribute("class","sender");
+    message.innerText = data.msg;
+    msgPlaceHolder.appendChild(message);
+
+})
+
 
 socket.on("userDisconnected", (disconnectUserName) => {
     console.log("F8");
