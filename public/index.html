@@ -56,7 +56,7 @@
                         <a class="nav-link" href="contact.html">Chat</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="contact.html">LogIn</a>
+                        <a class="nav-link" href="signIn.html">LogIn</a>
                     </li>
                 </ul>
             </div>
@@ -74,18 +74,18 @@
         </div>
         <section id="main" class="container searchBox">
             <div class="row d-flex justify-content-start">
-                <div class="col-lg-11 mx-auto">
+                <div class="col-xl-11 mx-auto mt-3">
                     <div class="topic1">
-                        <label id="topic1">Person</label>
-                        <input type="text" id="userInput1" required>
+                        <label id="topic1">Topic One</label>
+                        <input type="text" id="userInput1" aria-describedby="inputGroup-sizing-lg" required>
                     </div>
                 </div>
             </div>
             <div class="row d-flex justify-content-start">
-                <div class="col-lg-11 mx-auto">
+                <div class="col-xl-11 mx-auto mt-3">
                     <div class="topic2">
-                        <label id="topic2">Topic</label>
-                        <input type="text" id="userInput2">
+                        <label id="topic2">Topic Two</label>
+                        <input type="text" id="userInput2" aria-describedby="inputGroup-sizing-lg" required>
                     </div>
                 </div>
             </div>
@@ -93,7 +93,7 @@
         <section id="button" class="container">
             <div>
                 <div class="row d-flex justify-content-start">
-                    <div class="col-lg-11 mx-auto">
+                    <div class="col-lg-11 mx-auto mt-3">
                         <button class="btn" id="btn-search" type="submit">Search</button>
                     </div>
                     
@@ -186,6 +186,8 @@
 
     <!-- Main Script -->
     <script src="js/script.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="js/indexFront.js"></script>
 
 </body>
 
