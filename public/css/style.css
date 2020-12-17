@@ -251,7 +251,10 @@ a:hover {
 }
 
 .bg-primary {
-  background: #41228e !important;
+  background-image: url("/../imgs/backgrounds/camptalk.jpg") !important;
+  background-position: bottom;
+  background-size: cover;
+  /* background: white !important; */
 }
 
 .bg-gray {
@@ -339,7 +342,7 @@ a:hover {
 }
 
 .bg-dark {
-  background-color: #222222 !important;
+  background-color: #17202A !important;
 }
 
 /* icon */
@@ -426,7 +429,7 @@ textarea.form-control {
 }
 
 .navigation.nav-bg {
-  background-color: #41228e;
+  background-color: #17202A;
   padding: 15px 100px;
 }
 
@@ -915,4 +918,12 @@ blockquote {
   font-family: "BwNistaInt-xBd", serif;
   line-height: 1.2;
   font-size: 22px;
+}
+
+#btn-search {
+  background: #5A52A4;
+  color: white;
+  padding: 9px 20px;
+  border-radius: 20px;
+  font-family: "BwNistaInt-xBd", serif;
 }
