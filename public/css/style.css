@@ -80,16 +80,11 @@ h6, .h6 {
 
 /* Button style */
 .btn {
-  font-size: 22px;
-  font-family: "Playfair Display", serif;
-  text-transform: capitalize;
-  padding: 16px 44px;
-  border-radius: 5px;
-  font-weight: 600;
-  border: 0;
-  position: relative;
-  z-index: 1;
-  transition: .2s ease;
+  background: #E59866;
+  color: white;
+  padding: 9px 20px;
+  border-radius: 20px;
+  font-family: "BwNistaInt-xBd", serif;
 }
 
 .btn:focus {
@@ -112,31 +107,31 @@ h6, .h6 {
 }
 
 .btn-primary {
-  background: #41228e;
+  background: #17202A;
   color: #fff;
 }
 
 .btn-primary:active {
-  background: #542cb7 !important;
+  background: #17202A !important;
 }
 
 .btn-primary:hover {
-  background: #542cb7;
+  background: #17202A;
 }
 
 .btn-primary.focus, .btn-primary.active {
-  background: #542cb7 !important;
+  background: #17202A !important;
   box-shadow: none !important;
 }
 
 .btn-transparent {
   background: transparent;
-  color: #41228e;
+  color: #17202A;
   font-weight: bold;
 }
 
 .btn-transparent:active, .btn-transparent:hover {
-  color: #41228e;
+  color: #17202A;
 }
 
 body {
@@ -145,12 +140,12 @@ body {
 }
 
 ::-moz-selection {
-  background: #542cb7;
+  background: #17202A;
   color: #fff;
 }
 
 ::selection {
-  background: #542cb7;
+  background: #17202A;
   color: #fff;
 }
 
@@ -199,11 +194,11 @@ select:focus {
 }
 
 a.text-dark:hover {
-  color: #41228e !important;
+  color: #17202A !important;
 }
 
 a:hover {
-  color: #41228e;
+  color: #17202A;
 }
 
 .slick-slide {
@@ -262,7 +257,7 @@ a:hover {
 }
 
 .text-primary {
-  color: #41228e !important;
+  color: #17202A !important;
 }
 
 .text-color {
@@ -399,7 +394,7 @@ a:hover {
 }
 
 .form-control:focus {
-  border-color: #41228e;
+  border-color: #17202A;
   outline: 0;
   box-shadow: none !important;
 }
@@ -442,7 +437,7 @@ textarea.form-control {
 @media (max-width: 991px) {
   .navigation {
     padding: 20px;
-    background: #41228e;
+    background: #17202A;
   }
 }
 
@@ -609,7 +604,7 @@ textarea.form-control {
 }
 
 .hover-bg-primary:hover {
-  background: #41228e;
+  background: #17202A;
 }
 
 .hover-bg-primary:hover * {
@@ -618,7 +613,7 @@ textarea.form-control {
 
 .active-bg-primary {
   transition: .3s ease;
-  background: #41228e;
+  background: #17202A;
 }
 
 .active-bg-primary * {
@@ -927,3 +922,24 @@ blockquote {
   border-radius: 20px;
   font-family: "BwNistaInt-xBd", serif;
 }
+
+.bg-main {
+  background-color: #17202A !important;
+  background-position: bottom;
+  background-size: cover;
+  /* background: white !important; */
+}
+
+#main-main{
+  background-color: #17202A !important;
+  /* background-position: bottom; */
+  background-size: cover;
+
+}
+
+.spacer{
+  width: 100%;
+  height: 95px;
+}
+
+

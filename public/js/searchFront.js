@@ -92,13 +92,19 @@ async function searchNews(){
                     title: 'Magnitude Score'
                 },
                 title: 'News Sentiment & Magnitude Score',
-                hovermode: 'closest'
+                hovermode: 'closest',
+                paper_bgcolor: "rgba(0,0,0,0)",
+                plot_bgcolor: "rgba(0,0,0,0)"
+            }
+
+            var config = {
+                displayModeBar: false
             }
 
             const loadingSection = document.getElementById("loading");
             loadingSection.innerHTML = "";
 
-            Plotly.newPlot(sentimentShow, data, layout);
+            Plotly.newPlot(sentimentShow, data, layout, config);
 
             // -------------------------------------------------- Build click event & saved it to localStorage     
             sentimentShow.on('plotly_click', function(data){
