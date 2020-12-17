@@ -2,3 +2,4 @@ chromedriver
 .env
 node_modules
 .png
+/public/imgs
