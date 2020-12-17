@@ -8,7 +8,7 @@
         if ($('.navigation').offset().top > 100) {
             $('.navigation').addClass('nav-bg');
         } else {
-            // $('.navigation').removeClass('nav-bg');
+            // $('.navigation').removeClass('nav-bg'); //so the top bar appears still when scroller is on top
         }
     });
 

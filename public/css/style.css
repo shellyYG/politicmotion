@@ -24,6 +24,17 @@ body {
   color: #4c4c4c;
 }
 
+
+#body-nonMain {
+  line-height: 1.2;
+  font-family: "Roboto", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  font-size: 15px;
+  color: #4c4c4c;
+  padding-top: 70px; /*because fixed-top is by default 50px*/
+  background-color: #17202A;
+}
+
 p, .paragraph {
   font-weight: 400;
   color: #4c4c4c;
@@ -112,7 +123,7 @@ h6, .h6 {
 }
 
 .btn-primary:active {
-  background: #17202A !important;
+  background: #1363be !important;
 }
 
 .btn-primary:hover {
@@ -120,7 +131,7 @@ h6, .h6 {
 }
 
 .btn-primary.focus, .btn-primary.active {
-  background: #17202A !important;
+  background: #1363be !important;
   box-shadow: none !important;
 }
 
@@ -419,6 +430,7 @@ textarea.form-control {
 
 /* /card */
 .navigation {
+  background-color: #17202A;
   padding: 40px 130px;
   transition: .3s ease;
 }
@@ -927,12 +939,10 @@ blockquote {
   background-color: #17202A !important;
   background-position: bottom;
   background-size: cover;
-  /* background: white !important; */
 }
 
 #main-main{
   background-color: #17202A !important;
-  /* background-position: bottom; */
   background-size: cover;
 
 }
@@ -942,4 +952,28 @@ blockquote {
   height: 95px;
 }
 
+.progressBar{
+  background-color: #17202A !important;
+  background-size: cover;
+  padding-top: 70px;
+}
 
+/* .svg-container{
+  margin: auto;
+} */
+
+
+
+.loader {
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #005cbf; /* Blue */
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

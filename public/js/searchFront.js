@@ -25,28 +25,29 @@ async function searchNews(){
             console.log("Has news!");
 
             // ----------------------------------------------------------------- create graph block
-            const graphBlock = document.getElementById("forSentimentBlock");
-            
-            // ----------------------------------------------------------- append graph
-            const graph = document.createElement('graph');
-            graph.setAttribute("id","sentimentShow");
-            graph.setAttribute("style","width:400px;height:400px;");
-            graphBlock.appendChild(graph);
+            // const graphBlock = document.getElementById("forSentimentBlock");
+            const graphBox = document.getElementById("graphBox");
+            const loadingBlock = document.getElementById("loadingBox");
+
+            // ----------------------------------------------------------- get a row container for btn
+            const btnRow = document.getElementById('btnRow');
+            console.log("btnRow: ", btnRow)
 
             // ----------------------------------------------------------- append send-button
-            const chooseDotsBtn = document.createElement('button');
-            chooseDotsBtn.innerHTML = 'Give me those news & their similar news!'
-            chooseDotsBtn.setAttribute("id","btn-chooseSentiment");
-            chooseDotsBtn.setAttribute("class","btn");
-            graphBlock.appendChild(chooseDotsBtn);
+            const showNewsBtnCol = document.createElement('div');
+            showNewsBtnCol.innerHTML = 'Show News'
+            showNewsBtnCol.setAttribute("id","showNewsBtnCol");
+            showNewsBtnCol.setAttribute("class","btn offset-md-3 col-lg-2");
+            btnRow.appendChild(showNewsBtnCol);
+            
 
             // ----------------------------------------------------------- append remove-dots-button
-            const reselectNewsBtn = document.createElement('button');
-            reselectNewsBtn.innerHTML = 'Re-select News'
-            reselectNewsBtn.setAttribute("id","btn-reselect-news");
-            reselectNewsBtn.setAttribute("class","btn");
-            graphBlock.appendChild(reselectNewsBtn);
-
+            const reselectBtnCol = document.createElement('div');
+            reselectBtnCol.innerHTML = 'Reselect News'
+            reselectBtnCol.setAttribute("id","reselectBtnCol");
+            reselectBtnCol.setAttribute("class","btn offset-md-2 col-lg-2");
+            btnRow.appendChild(reselectBtnCol);
+            
             // ----------------------------------------------------------------- Score of all dots
             const NYSentimentArray = res.data.NYSentimentArray;
             const NYMagnitudeArray = res.data.NYMagnitudeArray;
@@ -54,7 +55,14 @@ async function searchNews(){
             const FoxMagnitudeArray = res.data.FoxMagnitudeArray;
 
             // ----------------------------------------------------------------- Show Sentiment Scatter Plot
-            sentimentShow = document.getElementById('sentimentShow');
+            const graph = document.createElement('graph');
+            graph.setAttribute("id","sentimentShowgraph");
+            graph.setAttribute("style","width:400px;height:400px;");
+            
+            console.log("graphBox: ", graphBox);
+
+            graphBox.appendChild(graph);
+
             var traceNYT = {
                 x : NYSentimentArray,
                 y : NYMagnitudeArray,
@@ -101,13 +109,13 @@ async function searchNews(){
                 displayModeBar: false
             }
 
-            const loadingSection = document.getElementById("loading");
-            loadingSection.innerHTML = "";
+            // ----------------------remove loading first
+            loadingBlock.innerHTML=""
 
-            Plotly.newPlot(sentimentShow, data, layout, config);
+            Plotly.newPlot(graph, data, layout, config);
 
             // -------------------------------------------------- Build click event & saved it to localStorage     
-            sentimentShow.on('plotly_click', function(data){
+            graph.on('plotly_click', function(data){
                 for(var i=0; i < data.points.length; i++){
                     Xaxis = data.points[i].x;
                     Yaxis = data.points[i].y;
