@@ -1033,13 +1033,13 @@ p[id^="matchedNewsContent_"] {
   margin: 20px 0px 0px;
 }
 
-img[id^="love_"],img[id^="haha_"], img[id^="sad_"], img[id^="angry_"]{
+img[id^="user_love_"],img[id^="user_haha_"], img[id^="user_sad_"], img[id^="user_angry_"]{
   margin: 0px 5px;
   width: 30px;
   height: 30px;
 }
 
-img[id^="love_"]:hover, img[id^="haha_"]:hover, img[id^="sad_"]:hover, img[id^="angry_"]:hover {
+img[id^="user_love_"]:hover, img[id^="user_haha_"]:hover, img[id^="user_sad_"]:hover, img[id^="user_angry_"]:hover {
   transform: scale(1.5)
 }
 
