@@ -979,27 +979,41 @@ blockquote {
   100% { transform: rotate(360deg); }
 }
 
-#selectedNews {
+article[id^="selectedNews_"] {
   background-color: #17202A !important;
 }
 
-#matchedNews {
+article[id^="matchedNews_"]  {
   background-color: white !important;
 }
 
-#selectedNewsTitle {
+h4[id^="selectedNewsSrc_"] {
   color: white !important;
   font-family: "BwNistaInt-xBd";
   line-height: 1.2;
 }
 
-#matchedNewsTitle {
+
+h4[id^="matchedNewsSrc_"] {
   color: black !important;
   font-family: "BwNistaInt-xBd";
   line-height: 1.2;
 }
 
-#selectedNewsContent {
+h5[id^="selectedNewsDate_"] {
+  color: white !important;
+  font-family: "BwNistaInt-xBd";
+  font-size: 15px;
+}
+
+
+h5[id^="matchedNewsDate_"] {
+  color: black !important;
+  font-family: "BwNistaInt-xBd";
+  font-size: 15px;
+}
+
+p[id^="selectedNewsContent_"] {
   font-weight: 400;
   color: white;
   font-size: 15px;
@@ -1007,7 +1021,7 @@ blockquote {
   font-family: "Roboto", sans-serif;
 }
 
-#matchedNewsContent {
+p[id^="matchedNewsContent_"] {
   font-weight: 400;
   color: black;
   font-size: 15px;
@@ -1017,27 +1031,15 @@ blockquote {
 
 #icons{
   margin: 20px 0px 0px;
-  /* padding: 20px 0px 0px; */
 }
-#love, #haha, #sad, #angry{
+
+img[id^="love_"],img[id^="haha_"], img[id^="sad_"], img[id^="angry_"]{
   margin: 0px 5px;
   width: 30px;
   height: 30px;
 }
 
-#love:hover {
-  transform: scale(1.5)
-}
-
-#haha:hover {
-  transform: scale(1.5)
-}
-
-#sad:hover {
-  transform: scale(1.5)
-}
-
-#angry:hover {
+img[id^="love_"]:hover, img[id^="haha_"]:hover, img[id^="sad_"]:hover, img[id^="angry_"]:hover {
   transform: scale(1.5)
 }
 

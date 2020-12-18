@@ -1,4 +1,5 @@
 let articles = document.querySelector('#articles');
+let articleElements = document.querySelectorAll('article');
 const searchTopic1 = localStorage.getItem("searchTopic1");
 const searchTopic2 = localStorage.getItem("searchTopic2");
 var finalPointsClicked = localStorage.getItem("clickedPoints");
@@ -21,14 +22,21 @@ let avgFoxReactionSentiment = 0;
 let avgFoxReactionMagnitude = 0;
 let FoxLength = 0;
 
-
+if (articleElements.length == 0){
+    console.log("No articles yet.");
+}else{
+    for (i=0; i<articleElements.length;i++){
+        articles.removeChild(articleElements[i]);
+    }
+    console.log("Removed old articles!");
+}
 
 axios.post(`showNewsContent`,{
     'searchTopic1': searchTopic1,
     'searchTopic2': searchTopic2,
     'clickedIds': finalPointsClicked
 }).then(res=>{
-        var articleRow;
+        var articleBlock;
         for (i=0; i<res.data.length; i++){
             // ============================================================= Get clicked Articles and create a block
             if (res.data[i].clickedId !== 0){
@@ -45,29 +53,16 @@ axios.post(`showNewsContent`,{
                 
                 var articleDBId = res.data[i].id;
 
-                articleRow = document.createElement('div');
-                articleRow.setAttribute("id", `articleRow_${articleDBId}`);
-                articleRow.setAttribute("class", "row");
+                articleBlock = document.createElement('div');
+                articleBlock.setAttribute("id", `articleBlock_${articleDBId}`);
+                articleBlock.setAttribute("class", "row container");
 
-                articleCol = document.createElement('div');
-                articleCol.setAttribute("class", "col-lg-6 col-sm-6 mb-4");
-                articleRow.appendChild(articleCol);
+                var article = document.createElement('div');
+                article.setAttribute("id", `articleClicked_${articleDBId}`);
+                article.setAttribute("class", "col-md-6 item");
 
-                cardShadow = document.createElement('article');
-                cardShadow.setAttribute("class", "card shadow");
-                cardShadow.setAttribute("id", "selectedNews");
-                articleCol.appendChild(cardShadow);
-
-                articleBody = document.createElement('div');
-                articleBody.setAttribute("class", "card-body");
-                cardShadow.appendChild(articleBody);
-
-                // var article = document.createElement('div');
-                // article.setAttribute("id", `articleClicked_${articleDBId}`);
-                // article.setAttribute("class", "col-md-6 item");
-
-                // var articleElementContainer = document.createElement('div');
-                // articleElementContainer.setAttribute("class", "row");
+                var articleElementContainer = document.createElement('div');
+                articleElementContainer.setAttribute("class", "row");
 
                 var articleSource = document.createElement('div');
                 articleSource.setAttribute("id",`source_${res.data[i].post_source}`);
@@ -148,18 +143,18 @@ axios.post(`showNewsContent`,{
                 article.appendChild(cryBtn);
                 article.appendChild(hahaBtn);
 
-                articleRow.appendChild(article);
+                articleBlock.appendChild(article);
 
                 const loadingSection = document.getElementById("loading");
                 loadingSection.innerHTML = "";
 
-                articles.appendChild(articleRow); // append to all articles list
+                articles.appendChild(articleBlock); // append to all articles list
 
             }
         }
 
         for (i=0; i<res.data.length; i++){
-            var matchedArticleRow;
+            var matchedArticleBlock;
             // ============================================================= Get matched Articles in same block
             for (j=0;j<res.data.length;j++){
                 if (res.data[i].clickedId == 0){ //is a matched article
@@ -175,7 +170,7 @@ axios.post(`showNewsContent`,{
                         var beautifyDateDate = datePartArray[2];
                         var finalBeutifiedDate = beautifyDateYear+"/"+beautifyDateMonth+"/"+beautifyDateDate;
 
-                        matchedArticleRow = document.getElementById(`articleRow_${res.data[j].id}`);
+                        matchedArticleBlock = document.getElementById(`articleBlock_${res.data[j].id}`);
                         articleDBId = res.data[i].id;
                         var article = document.createElement('div');
                         article.setAttribute("id", `articleMatched_${articleDBId}`);
@@ -262,12 +257,12 @@ axios.post(`showNewsContent`,{
                         article.appendChild(cryBtn);
                         article.appendChild(hahaBtn);
 
-                        matchedArticleRow.appendChild(article);
+                        matchedArticleBlock.appendChild(article);
 
                         const loadingSection = document.getElementById("loading");
                         loadingSection.innerHTML = "";
 
-                        articles.appendChild(matchedArticleRow); // append to all articles list
+                        articles.appendChild(matchedArticleBlock); // append to all articles list
                     }
 
                 }
