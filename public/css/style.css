@@ -944,7 +944,13 @@ blockquote {
 #main-main{
   background-color: #17202A !important;
   background-size: cover;
+  margin: 100px 0px 0px; 
+}
 
+#main-main-content{
+  background-color: #17202A !important;
+  background-size: cover;
+  margin: 100px 0px 0px; /* top leftRight bottom */
 }
 
 .spacer{
@@ -971,4 +977,23 @@ blockquote {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+#selectedNews {
+  background-color: #17202A !important;
+}
+
+#selectedNewsTitle {
+  color: white !important;
+  font-family: "Playfair Display", serif;
+  line-height: 1.2;
+
+}
+
+#selectedNewsContent {
+  font-weight: 400;
+  color: white;
+  font-size: 15px;
+  line-height: 1.8;
+  font-family: "Roboto", sans-serif;
 }

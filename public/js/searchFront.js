@@ -170,7 +170,7 @@ async function searchNews(){
                     localStorage.setItem("clickedPoints",JSON.stringify(pointArray));
                     
                     // ------------------------------ add annotation
-                    annotate_text = 'mood = '+data.points[i].x+", intensity = "+data.points[i].y+" clicked!";
+                    annotate_text = '('+data.points[i].x+", "+data.points[i].y+") selected!";
                     annotation = {
                         text: annotate_text,
                         x: data.points[i].x,
@@ -203,6 +203,7 @@ async function searchNews(){
             const reselectNewsBtn = document.getElementById("reselectBtnCol");
             reselectNewsBtn.addEventListener('click',()=>{
                 localStorage.removeItem("clickedPoints");
+                Plotly.relayout(graph,{annotations: []});
             })
         }
     }).catch(err=>{
