@@ -257,10 +257,10 @@ a:hover {
 }
 
 .bg-primary {
-  background-image: url("/../imgs/backgrounds/camptalk.jpg") !important;
-  background-position: bottom;
+  background-image: url("/../imgs/backgrounds/readnews7.jpg") !important;
+  background-position: center;
   background-size: cover;
-  /* background: white !important; */
+  
 }
 
 .bg-gray {
@@ -468,7 +468,7 @@ textarea.form-control {
 }
 
 .hero-area {
-  padding: 300px 0 200px;
+  padding: 250px 0 200px;
   position: relative;
 }
 
@@ -955,13 +955,8 @@ blockquote {
 .progressBar{
   background-color: #17202A !important;
   background-size: cover;
-  padding-top: 70px;
+  padding-top: 50px;
 }
-
-/* .svg-container{
-  margin: auto;
-} */
-
 
 
 .loader {
