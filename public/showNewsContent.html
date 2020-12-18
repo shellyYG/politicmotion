@@ -62,11 +62,11 @@
         <div class="row mb-5 progressBar">
             <div class="col-12">
                 <div class="btn-group btn-group-toggle justify-content-center d-flex" data-toggle="buttons">
-                    <label class="btn btn-sm btn-primary active">
-                        <input type="radio" name="shuffle-filter" value="all" checked="checked" />Select Dots
-                    </label>
                     <label class="btn btn-sm btn-primary">
-                        <input type="radio" name="shuffle-filter" value="design" />Give Emotions
+                        <input type="radio" name="shuffle-filter" value="all" />Select Dots
+                    </label>
+                    <label class="btn btn-sm btn-primary active">
+                        <input type="radio" name="shuffle-filter" value="design" checked="checked" />Click Emotions
                     </label>
                     <label class="btn btn-sm btn-primary">
                         <input type="radio" name="shuffle-filter" value="branding" />Select Chat Partner
@@ -84,6 +84,27 @@
     <!-- blog -->
     <section class="hero-area" id="main-main-content">
         <div class="container">
+            <div class="row text-center">
+                <div class="col-lg-6 col-sm-6 mb-4">
+                    <article class="card shadow" id="selectedNews">
+                        <div class="card-body">
+                            <h4 class="card-title"><a id="selectedNewsTitle" href="blog-single.html">News you clicked</a>
+                            </h4>
+                            
+                        </div>
+                    </article>
+                </div>
+                <div class="col-lg-6 col-sm-6 mb-4">
+                    <article class="card shadow">
+                        <div class="card-body">
+                            <h4 class="card-title"><a id="matchedNewsTitle" href="blog-single.html">Similar News From Another Source</a>
+                            </h4>
+                            
+                            
+                        </div>
+                    </article>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-lg-6 col-sm-6 mb-4">
                     <article class="card shadow" id="selectedNews">
@@ -96,24 +117,35 @@
                                 incididunt ut labore et
                                 dolore magna aliqua.</p>
                             <a href="blog-single.html" class="btn btn-xs btn-primary">Read More</a>
+                            <div id="icons">
+                                <img id="love" src="imgs/iconx/love.png">
+                                <img id="haha" src="imgs/iconx/haha.png">
+                                <img id="sad" src="imgs/iconx/sad.png">
+                                <img id="angry" src="imgs/iconx/angry.png">
+                            </div>
                         </div>
                     </article>
                 </div>
                 <div class="col-lg-6 col-sm-6 mb-4">
-                    <article class="card shadow">
+                    <article class="card shadow" id="matchedNews">
                         <div class="card-body">
-                            <h4 class="card-title"><a class="text-dark" href="blog-single.html">Amazon increase income
+                            <h4 class="card-title"><a id="matchedNewsTitle" href="blog-single.html">Amazon increase income
                                     1.5 Million</a>
                             </h4>
-                            <p class="cars-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+                            <p class="cars-text" id="matchedNewsContent">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
                                 eiusmod tempor
                                 incididunt ut labore et
                                 dolore magna aliqua.</p>
                             <a href="blog-single.html" class="btn btn-xs btn-primary">Read More</a>
+                            <div id="icons">
+                                <img id="love" src="imgs/iconx/love.png">
+                                <img id="haha" src="imgs/iconx/haha.png">
+                                <img id="sad" src="imgs/iconx/sad.png">
+                                <img id="angry" src="imgs/iconx/angry.png">
+                            </div>
                         </div>
                     </article>
                 </div>
-
             </div>
             
             <div class="row">
@@ -128,6 +160,12 @@
                                 incididunt ut labore et
                                 dolore magna aliqua.</p>
                             <a href="blog-single.html" class="btn btn-xs btn-primary">Read More</a>
+                            <div id="icons">
+                                <img id="love" src="imgs/iconx/love.png">
+                                <img id="haha" src="imgs/iconx/haha.png">
+                                <img id="sad" src="imgs/iconx/sad.png">
+                                <img id="angry" src="imgs/iconx/angry.png">
+                            </div>
                         </div>
                     </article>
                 </div>

@@ -983,11 +983,20 @@ blockquote {
   background-color: #17202A !important;
 }
 
+#matchedNews {
+  background-color: white !important;
+}
+
 #selectedNewsTitle {
   color: white !important;
-  font-family: "Playfair Display", serif;
+  font-family: "BwNistaInt-xBd";
   line-height: 1.2;
+}
 
+#matchedNewsTitle {
+  color: black !important;
+  font-family: "BwNistaInt-xBd";
+  line-height: 1.2;
 }
 
 #selectedNewsContent {
@@ -997,3 +1006,39 @@ blockquote {
   line-height: 1.8;
   font-family: "Roboto", sans-serif;
 }
+
+#matchedNewsContent {
+  font-weight: 400;
+  color: black;
+  font-size: 15px;
+  line-height: 1.8;
+  font-family: "Roboto", sans-serif;
+}
+
+#icons{
+  margin: 20px 0px 0px;
+  /* padding: 20px 0px 0px; */
+}
+#love, #haha, #sad, #angry{
+  margin: 0px 5px;
+  width: 30px;
+  height: 30px;
+}
+
+#love:hover {
+  transform: scale(1.5)
+}
+
+#haha:hover {
+  transform: scale(1.5)
+}
+
+#sad:hover {
+  transform: scale(1.5)
+}
+
+#angry:hover {
+  transform: scale(1.5)
+}
+
+
