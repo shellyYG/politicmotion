@@ -55,7 +55,7 @@ axios.post(`showNewsContent`,{
 
                 cardShadow = document.createElement('article');
                 cardShadow.setAttribute("class", "card shadow");
-                cardShadow.setAttribute("id", "selectedNews");
+                cardShadow.setAttribute("id", "selectedNews_");
                 articleCol.appendChild(cardShadow);
 
                 articleBody = document.createElement('div');
@@ -144,12 +144,6 @@ axios.post(`showNewsContent`,{
                 iconDiv.appendChild(hahaBtn);
                 iconDiv.appendChild(cryBtn);
                 iconDiv.appendChild(angryBtn);
-                
-                
-                articleRow.appendChild(articleBody);
-
-                // const loadingSection = document.getElementById("loading");
-                // loadingSection.innerHTML = "";
 
                 articles.appendChild(articleRow); // append to all articles list
 
@@ -179,7 +173,7 @@ axios.post(`showNewsContent`,{
 
                         articleCol = document.createElement('div');
                         articleCol.setAttribute("class", "col-lg-6 col-sm-6 mb-4");
-                        articleRow.appendChild(articleCol);
+                        matchedArticleRow.appendChild(articleCol);
 
                         cardShadow = document.createElement('article');
                         cardShadow.setAttribute("class", "card shadow");
@@ -272,7 +266,7 @@ axios.post(`showNewsContent`,{
                         iconDiv.appendChild(cryBtn);
                         iconDiv.appendChild(angryBtn);
 
-                        matchedArticleRow.appendChild(articleBody);
+                        
 
                         // const loadingSection = document.getElementById("loading");
                         // loadingSection.innerHTML = "";
