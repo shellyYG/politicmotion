@@ -81,7 +81,7 @@ axios.post(`calUserEmotion`, {
             textfont: {
                 family: 'Raleway, sans-serif'
             },
-            marker: { size: 20, color: 'rgb(255, 20, 147)', symbol: 'diamond'},
+            marker: { size: 40, color: 'rgb(255, 20, 147)', symbol: 'diamond'},
             type: 'scatter'
         }
 
@@ -103,7 +103,7 @@ axios.post(`calUserEmotion`, {
             x: reactionAvgNYTSentEmotionArray,
             y: reactionAvgNYTMagEmotionArray,
             mode: 'markers+text',
-            name: "FB User (NYT)",
+            name: "FB User ON NYT",
             textposition: 'top center',
             textfont: {
                 family: 'Raleway, sans-serif'
@@ -129,7 +129,7 @@ axios.post(`calUserEmotion`, {
             x: reactionAvgFoxSentEmotionArray,
             y: reactionAvgFoxMagEmotionArray,
             mode: 'markers+text',
-            name: "FB User (Fox)",
+            name: "FB User ON Fox",
             textposition: 'top center',
             textfont: {
                 family: 'Raleway, sans-serif'

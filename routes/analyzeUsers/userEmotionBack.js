@@ -20,16 +20,16 @@ router.post('/', verifyToken, (req, res)=>{
                 cleanEmotion.push(userEmotion[i].split("_")[1]);
                 console.log("cleanEmotion: ", cleanEmotion);
 
-                if(cleanEmotion[i] == "loveBtn"){
+                if(cleanEmotion[i] == "love"){
                     avgUserSentiment += 0.9;
                     avgUserMagnitude += 0.9;
-                }else if(cleanEmotion[i] =="hahaBtn"){
+                }else if(cleanEmotion[i] =="haha"){
                     avgUserSentiment += 0.5;
                     avgUserMagnitude += 0.5;
-                }else if(cleanEmotion[i] == "cryBtn"){
+                }else if(cleanEmotion[i] == "cry"){
                     avgUserSentiment += -0.6;
                     avgUserMagnitude += 0.6;
-                }else if(cleanEmotion[i] == "angryBtn"){
+                }else if(cleanEmotion[i] == "angry"){
                     avgUserSentiment += -0.9;
                     avgUserMagnitude += 0.9;
                 }else{
@@ -42,9 +42,6 @@ router.post('/', verifyToken, (req, res)=>{
             combinedUserEmotion = {};
             combinedUserEmotion.avgUserSentiment = avgUserSentiment.toFixed(2);
             combinedUserEmotion.avgUserMagnitude = avgUserMagnitude.toFixed(2);
-            
-            
-            
             
             // insert user emotion to database
             const firstSearchTopic = req.body.firstSearchTopic;
@@ -64,6 +61,7 @@ router.post('/', verifyToken, (req, res)=>{
                 return sqlquery;
             }
             insertUserEmotion();
+            console.log("combinedUserEmotion: ", combinedUserEmotion);
 
             res.json(combinedUserEmotion);
         }
