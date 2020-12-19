@@ -116,7 +116,7 @@
         <!-- selected chat -->
     	<div class="col-md-8 bg-white ">
             <div class="chat-message">
-                <ul class="chat">
+                <ul class="chat" id="chatList">
                     <li class="left clearfix">
                     	<span class="chat-img pull-left">
                     		<img src="https://bootdey.com/img/Content/user_3.jpg" alt="User Avatar">
@@ -132,7 +132,7 @@
                     	</div>
                     </li>
                     <li class="right clearfix">
-                    	<span class="chat-img pull-right">
+                    	<span class="chat-img pull-right" id="Yourself">
                     		<img src="https://bootdey.com/img/Content/user_1.jpg" alt="User Avatar">
                     	</span>
                     	<div class="chat-body clearfix">
@@ -219,9 +219,9 @@
             </div>
             <div class="chat-box bg-white">
             	<div class="input-group">
-            		<input class="form-control border no-shadow no-rounded" placeholder="Type your message here">
+            		<input class="form-control border no-shadow no-rounded" id="userMsg" placeholder="Type your message here">
             		<span class="input-group-btn">
-            			<button class="btn btn-success no-rounded" type="button">Send</button>
+            			<button class="btn btn-success no-rounded" id="sendMsgBtn"  type="button">Send</button>
             		</span>
             	</div><!-- /input-group -->	
             </div>            

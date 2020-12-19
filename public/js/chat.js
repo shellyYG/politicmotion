@@ -4,14 +4,17 @@ let buddiesToChat = localStorage.getItem("buddiesToChat");
 buddiesToChat = JSON.parse(buddiesToChat);
 let buddyNames = buddiesToChat.map(element=>element.buddies);
 const chatForm = document.getElementById('chat-form');
+const submitBtn = document.getElementById('sendMsgBtn');
 const msgPlaceHolder = document.getElementById('messages');
 const partnerContainer = document.getElementById('friend-list');
 const startChatBtn = document.getElementById('startChat');
-
 const sendMsgBtn = document.getElementById('sendMsgBtn');
 let senderNow;
 let receiver;
 let selfNameDiv = document.getElementById('selfName');
+
+const chatList = document.getElementById('chatList');
+
 
 function unique(value, index, self){
     return self.indexOf(value) === index;
@@ -91,8 +94,8 @@ socket.on('history',(data)=>{
 
     // add history with others
     data.forEach(element=>{
-        var singleMessage = document.createElement('div');
-        singleMessage.setAttribute("class","row container");
+        var singleMessage = document.createElement('li');
+        singleMessage.setAttribute("class","right clearfix");
 
         // switch sender & receiver based on if it's self
         if(element.sender == senderNow){ //if its self, add to sender class
@@ -117,8 +120,8 @@ socket.on('history',(data)=>{
             singleMessage.appendChild(sendTime);
 
             // append sender (self)
-            var historySender = document.createElement('div');
-            historySender.setAttribute("class","sender col-md-2");
+            var historySender = document.createElement('span');
+            historySender.setAttribute("class","sender chat-img pull-right");
             historySender.innerText = "You";
             singleMessage.appendChild(historySender);
 
@@ -157,11 +160,11 @@ socket.on('history',(data)=>{
 
 // start chat
 // When message submit by the user
-chatForm.addEventListener('submit', (e) => { // (e) means event
+submitBtn.addEventListener('click', (e) => { // (e) means event
     e.preventDefault();
 
     // Get message inserted by user
-    let msg = e.target.elements.userMsg.value;
+    let msg = document.querySelector("#userMsg").value;
     msg = msg.trim(); //remove white space
 
     console.log("msg: ", msg);
@@ -177,8 +180,11 @@ chatForm.addEventListener('submit', (e) => { // (e) means event
 })
 
 socket.on('msgToShow',(data)=>{
-    var singleMessage = document.createElement('div');
-    singleMessage.setAttribute("class","row container");
+    
+    var singleMessage = document.createElement('li');
+    singleMessage.setAttribute("class","right clearfix");
+
+    
 
     // append message
     var message = document.createElement('div');
@@ -216,17 +222,9 @@ socket.on('msgToShow',(data)=>{
     historySender.innerText = "You";
     singleMessage.appendChild(historySender);
 
-    // var sender = document.createElement('div');
-    // sender.setAttribute("class","sender");
-    // sender.innerText = data.sender+":";
-    // msgPlaceHolder.appendChild(sender);
+   
 
-    // var message = document.createElement('div');
-    // message.setAttribute("class","message");
-    // message.innerText = data.msg;
-    // msgPlaceHolder.appendChild(message);
-
-    msgPlaceHolder.append(singleMessage);
+    chatList.appendChild(singleMessage);
 
 })
 

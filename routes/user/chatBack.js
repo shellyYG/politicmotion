@@ -90,6 +90,8 @@ const socketChat = (socket) => {
         msgPackage.message = data.msg;
         msgPackage.message_time = dateTime;
 
+        console.log("user message: ", data);
+
         async function saveMsg(){
             // save to DB
             sql = 'INSERT INTO chat_history SET ?'
