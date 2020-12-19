@@ -192,52 +192,97 @@ submitBtn.addEventListener('click', (e) => { // (e) means event
 
 // -------------- real time message part
 socket.on('msgToShow',(data)=>{
-    
+
     var singleMessage = document.createElement('li');
-    singleMessage.setAttribute("class","right clearfix");
 
-    // ------ append sender (self)
-    var nowSender = document.createElement('span');
-    nowSender.setAttribute("class","sender chat-img pull-right");
-    nowSender.innerText = "You";
-    singleMessage.appendChild(nowSender);
+    if(data.sender == senderNow){
+        singleMessage.setAttribute("class","right clearfix");
 
-    // ------ append clearfix for time & message
-    var timeContentDiv = document.createElement('div');
-    timeContentDiv.setAttribute('class','chat-body clearfix');
-    singleMessage.appendChild(timeContentDiv);
+        // ------ append sender (self)
+        var nowSender = document.createElement('span');
+        nowSender.setAttribute("class","sender chat-img pull-right");
+        nowSender.innerText = "You";
+        singleMessage.appendChild(nowSender);
 
-    // --------------- append time
-    let dateTime = new Date();
-    let DatePart=dateTime.toLocaleDateString('en-US').split("/");
-    DatePart = DatePart[0]+"/"+DatePart[1];
+        // ------ append clearfix for time & message
+        var timeContentDiv = document.createElement('div');
+        timeContentDiv.setAttribute('class','chat-body clearfix');
+        singleMessage.appendChild(timeContentDiv);
+
+        // --------------- append time
+        let dateTime = new Date();
+        let DatePart=dateTime.toLocaleDateString('en-US').split("/");
+        DatePart = DatePart[0]+"/"+DatePart[1];
+        
+        const timeOptions = {
+            hour12: false,
+            hour: 'numeric',
+            minute: '2-digit',
+            second: '2-digit',
+        };
+
+        var timing = dateTime.toLocaleDateString('en-US', timeOptions);
+        var timingTimePart = timing.split(",")[1].split(":");
+        timingTimePart = timingTimePart[0]+":"+timingTimePart[1];
+        var timeToShow = DatePart + " "+timingTimePart
+        
+        var sendTime = document.createElement('div');
+        sendTime.setAttribute("class","sendTime header");
+        sendTime.innerText = timeToShow;
+        timeContentDiv.appendChild(sendTime);
+
+        // --------------- append message
+        var message = document.createElement('p');
+        message.innerText = data.msg;
+        timeContentDiv.appendChild(message);
+        
+        chatList.appendChild(singleMessage);
+    }else{
+        singleMessage.setAttribute("class","left clearfix");
+
+        // ------ append sender (self)
+        var nowSender = document.createElement('span');
+        nowSender.setAttribute("class","sender chat-img pull-left");
+        nowSender.innerText = data.sender;
+        singleMessage.appendChild(nowSender);
+
+        // ------ append clearfix for time & message
+        var timeContentDiv = document.createElement('div');
+        timeContentDiv.setAttribute('class','chat-body clearfix');
+        singleMessage.appendChild(timeContentDiv);
+
+        // --------------- append time
+        let dateTime = new Date();
+        let DatePart=dateTime.toLocaleDateString('en-US').split("/");
+        DatePart = DatePart[0]+"/"+DatePart[1];
+        
+        const timeOptions = {
+            hour12: false,
+            hour: 'numeric',
+            minute: '2-digit',
+            second: '2-digit',
+        };
+
+        var timing = dateTime.toLocaleDateString('en-US', timeOptions);
+        var timingTimePart = timing.split(",")[1].split(":");
+        timingTimePart = timingTimePart[0]+":"+timingTimePart[1];
+        var timeToShow = DatePart + " "+timingTimePart
+        
+        var sendTime = document.createElement('div');
+        sendTime.setAttribute("class","sendTime header");
+        sendTime.innerText = timeToShow;
+        timeContentDiv.appendChild(sendTime);
+
+        // --------------- append message
+        var message = document.createElement('p');
+        message.innerText = data.msg;
+        timeContentDiv.appendChild(message);
+        
+        chatList.appendChild(singleMessage);
+
+    }
     
-    console.log("DatePart: ", DatePart);
     
-    const timeOptions = {
-        hour12: false,
-        hour: 'numeric',
-        minute: '2-digit',
-        second: '2-digit',
-    };
-
-    var timing = dateTime.toLocaleDateString('en-US', timeOptions);
-    var timingTimePart = timing.split(",")[1].split(":");
-    timingTimePart = timingTimePart[0]+":"+timingTimePart[1];
-    var timeToShow = DatePart + " "+timingTimePart
-    
-    var sendTime = document.createElement('div');
-    sendTime.setAttribute("class","sendTime header");
-    sendTime.innerText = timeToShow;
-    timeContentDiv.appendChild(sendTime);
-
-    // --------------- append message
-    var message = document.createElement('p');
-    // message.setAttribute("class","message col-md-8");
-    message.innerText = data.msg;
-    timeContentDiv.appendChild(message);
-    
-    chatList.appendChild(singleMessage);
 
 })
 
