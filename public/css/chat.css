@@ -1,6 +1,6 @@
 body {
     padding-top: 0;
-    font-size: 12px;
+    font-size: 16px;
     color: #777;
     background: #f9f9f9;
     font-family: 'Open Sans',sans-serif;
@@ -102,12 +102,14 @@ body {
   }
   
   .chat li.left .chat-body {
-    margin-left: 70px;
+    margin-left: 75px;
+    width: 535px;
     background-color: #fff;
   }
   
   .chat li .chat-body {
     position: relative;
+    margin-left: 75px;
     font-size: 11px;
     padding: 10px;
     border: 1px solid #f1f5fc;
@@ -131,10 +133,10 @@ body {
     left: -8px;
     display: inline-block;
     background: #fff;
-    width: 16px;
+    width: 12px;
     height: 16px;
     border-top: 1px solid #f1f5fc;
-    border-left: 1px solid #f1f5fc;
+    border-left: 5px solid #f1f5fc;
     content: '';
     transform: rotate(-45deg);
     -webkit-transform: rotate(-45deg);
@@ -166,7 +168,8 @@ body {
   }
   
   .chat li.right .chat-body {
-    margin-right: 70px;
+    margin-right: 40px;
+    width: 535px;
     background-color: #fff;
   }
   
