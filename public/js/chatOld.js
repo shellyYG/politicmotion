@@ -5,21 +5,20 @@ buddiesToChat = JSON.parse(buddiesToChat);
 let buddyNames = buddiesToChat.map(element=>element.buddies);
 const chatForm = document.getElementById('chat-form');
 const msgPlaceHolder = document.getElementById('messages');
-const partnerContainer = document.getElementById('friend-list');
+const partnerContainer = document.getElementById('partnerContainer');
 const startChatBtn = document.getElementById('startChat');
-
+const selfNameDiv = document.getElementById('selfName');
 const sendMsgBtn = document.getElementById('sendMsgBtn');
 let senderNow;
 let receiver;
-let selfNameDiv = document.getElementById('selfName');
 
 function unique(value, index, self){
     return self.indexOf(value) === index;
 }
 buddiesToChat = buddiesToChat.filter(unique);
 for (i=0; i<buddiesToChat.length; i++){
-    var singleBuddy = document.createElement('li');
-    singleBuddy.setAttribute("class","clearfix");
+    var singleBuddy = document.createElement('div');
+    singleBuddy.setAttribute("class","btn singleBuddy");
     singleBuddy.innerHTML = buddiesToChat[i].buddies;
     partnerContainer.appendChild(singleBuddy);
 }
