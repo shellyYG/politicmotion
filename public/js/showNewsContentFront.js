@@ -50,7 +50,8 @@ axios.post(`showNewsContent`,{
                 articleRow.setAttribute("class", "row");
 
                 articleCol = document.createElement('div');
-                articleCol.setAttribute("class", "col-lg-6 col-sm-6 mb-4");
+                articleCol.setAttribute("class", "col-md-6 mb-4");
+                articleCol.setAttribute("id", "No-match-grow");
                 articleRow.appendChild(articleCol);
 
                 cardShadow = document.createElement('article');
@@ -268,8 +269,8 @@ axios.post(`showNewsContent`,{
 
                         
 
-                        // const loadingSection = document.getElementById("loading");
-                        // loadingSection.innerHTML = "";
+                        const loadingSection = document.getElementById("btnLoader");
+                        loadingSection.innerHTML = "";
 
                         articles.appendChild(matchedArticleRow); // append to all articles list
                     }
@@ -284,6 +285,7 @@ axios.post(`showNewsContent`,{
             let userEmotionId = userEmotionButton.getAttribute('id');
 
             userEmotionButton.addEventListener('click',()=>{
+                userEmotionButton.setAttribute("class", "userEmotionClicked");
                 var emotionClicked = localStorage.getItem("clickedEmotions");
                 var emotionArray = [];
                 if(emotionClicked){
@@ -338,10 +340,27 @@ axios.post(`showNewsContent`,{
         localStorage.setItem("avgFoxReactionSentiment", avgFoxReactionSentiment);
         localStorage.setItem("avgFoxReactionMagnitude", avgFoxReactionMagnitude);
         
-        // const analyzeUserEmotionButton = document.getElementById('btn-analyzeUser');
-        // analyzeUserEmotionButton.addEventListener('click',()=>{
-        //     window.location.href = '/userEmotion.html';
-        // })
+        var BlockShowEmotionBtn = document.getElementById('showEmotion');
+
+        var RowShowEmotionBtn = document.createElement('div');
+        RowShowEmotionBtn.setAttribute("class", "row");
+
+        var ColShowEmotionBtn = document.createElement('div');
+        ColShowEmotionBtn.setAttribute("class", "col-md-12 text-center");
+        
+        var showEmotionBtn = document.createElement('button');
+        showEmotionBtn.setAttribute("class","btn btn-lg btn-primary");
+        showEmotionBtn.setAttribute("id","btn-analyzeUser");
+        showEmotionBtn.innerText = "Compare my emotion with others";
+
+        RowShowEmotionBtn.appendChild(ColShowEmotionBtn);
+        ColShowEmotionBtn.appendChild(showEmotionBtn);
+        BlockShowEmotionBtn.appendChild(RowShowEmotionBtn);
+
+        const analyzeUserEmotionButton = document.getElementById('btn-analyzeUser');
+        analyzeUserEmotionButton.addEventListener('click',()=>{
+            window.location.href = '/userEmotion.html';
+        })
 }).catch(err => {
     console.log("err from tfidf: ",err);
 }) 

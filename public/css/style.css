@@ -927,14 +927,6 @@ blockquote {
   font-size: 22px;
 }
 
-#btn-search {
-  background: #E59866;
-  color: white;
-  padding: 9px 20px;
-  border-radius: 20px;
-  font-family: "BwNistaInt-xBd", serif;
-}
-
 .bg-main {
   background-color: #17202A !important;
   background-position: bottom;
@@ -981,6 +973,7 @@ blockquote {
 
 article[id^="selectedNews_"] {
   background-color: #17202A !important;
+  flex-grow: 1;
 }
 
 article[id^="matchedNews_"]  {
@@ -1041,6 +1034,15 @@ img[id^="user_love_"],img[id^="user_haha_"], img[id^="user_sad_"], img[id^="user
 
 img[id^="user_love_"]:hover, img[id^="user_haha_"]:hover, img[id^="user_sad_"]:hover, img[id^="user_angry_"]:hover {
   transform: scale(1.5)
+}
+
+.userEmotionClicked{
+  transform: scale(1.5)
+}
+
+#No-match-grow {
+  flex-grow: 1 !important;
+  max-width: 100% !important; /*make 2 news line-by-line if no other news*/
 }
 
 

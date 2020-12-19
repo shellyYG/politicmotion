@@ -34,14 +34,14 @@ async function searchNews(){
             const showNewsBtnCol = document.createElement('div');
             showNewsBtnCol.innerHTML = 'Show News'
             showNewsBtnCol.setAttribute("id","showNewsBtnCol");
-            showNewsBtnCol.setAttribute("class","btn offset-md-3 col-lg-2");
+            showNewsBtnCol.setAttribute("class","btn btn-xs btn-primary offset-md-3 col-lg-2");
             btnRow.appendChild(showNewsBtnCol);
 
             // ----------------------------------------------------------- append remove-dots-button
             const reselectBtnCol = document.createElement('div');
             reselectBtnCol.innerHTML = 'Clear Dots'
             reselectBtnCol.setAttribute("id","reselectBtnCol");
-            reselectBtnCol.setAttribute("class","btn offset-md-2 col-lg-2");
+            reselectBtnCol.setAttribute("class","btn btn-xs btn-primary offset-md-2 col-lg-2");
             btnRow.appendChild(reselectBtnCol);
             
             // ----------------------------------------------------------------- Score of all dots
