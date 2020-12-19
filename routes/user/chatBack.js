@@ -60,7 +60,7 @@ const socketChat = (socket) => {
                 receiverId; // receiverId remains undefined
             }
         }
-
+        console.log("selfName: ",selfName, "receiver: ", receiver);
         // send historical msg to Front-End for later refresh
         async function searchHistory(){
             sql = `SELECT * FROM chat_history 
@@ -141,6 +141,7 @@ const socketChat = (socket) => {
         })
         console.log("after someone disconnect, remaining online users: ", onlineUserList);
         console.log("B10");
+        socket.emit("userDisconnected", (selfName));
         socket.to(room).emit("userDisconnected", (selfName)); // send to all in room except sender
         console.log("B11");
     })

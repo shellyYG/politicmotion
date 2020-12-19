@@ -22,8 +22,23 @@ function unique(value, index, self){
 buddiesToChat = buddiesToChat.filter(unique);
 for (i=0; i<buddiesToChat.length; i++){
     var singleBuddy = document.createElement('li');
-    singleBuddy.setAttribute("class","clearfix singleBuddy");
-    singleBuddy.innerHTML = buddiesToChat[i].buddies;
+    singleBuddy.setAttribute("class","active bounceInDown singleBuddy");
+    
+    var statusDiv = document.createElement('div');
+    statusDiv.setAttribute('class','friend-name');
+
+    var nameStrong = document.createElement('strong');
+    nameStrong.innerText = buddiesToChat[i].buddies;
+    var statusSmall = document.createElement('small');
+    statusSmall.setAttribute('class', 'chat-alert label label-danger');
+    statusSmall.innerText = 'offline';
+
+    statusDiv.appendChild(statusSmall);
+    statusDiv.appendChild(nameStrong);
+    
+
+    singleBuddy.appendChild(statusDiv);
+    
     partnerContainer.appendChild(singleBuddy);
 }
 const tokenTest = () =>{
@@ -58,21 +73,24 @@ socket.on('Self', (self)=>{
     socket.emit('newUserUser');
     console.log("F5");
 });
+
+// change color to green when online
 socket.on("onlineUsers", (onlineUserList) => {
     console.log("F6");
-    var potentialPartners = document.querySelectorAll('.singleBuddy');
+    var potentialPartners = document.querySelectorAll('strong');
     console.log("onlineUsers: ", onlineUserList);
     for (i=0; i<potentialPartners.length; i++){
-        if(onlineUserList.includes(potentialPartners[i].innerHTML)){
-            console.log("set color");
-            potentialPartners[i].setAttribute("id","onlinePartner"); //change
+        if(onlineUserList.includes(potentialPartners[i].innerText)){
+            var statusSmall = document.querySelectorAll('small');
+            statusSmall[i].setAttribute('class', 'chat-alert label label-success');
+            statusSmall[i].innerText = 'online';
         }
     }
     console.log("F7");
 });
 
 // select chat partner //change the element to load historical msg
-var potentialPartners = document.querySelectorAll('.singleBuddy');
+var potentialPartners = document.querySelectorAll('strong');
 console.log("potentialPartners: ", potentialPartners);
 potentialPartners.forEach(element=>{
     element.addEventListener('click',()=>{
@@ -159,7 +177,6 @@ socket.on('history',(data)=>{
 
             // append message
             var message = document.createElement('p');
-            // message.setAttribute("class","message col-md-8");
             message.innerText = element.message;
             timeContentDiv.appendChild(message);
 
@@ -279,25 +296,20 @@ socket.on('msgToShow',(data)=>{
         timeContentDiv.appendChild(message);
         
         chatList.appendChild(singleMessage);
-
     }
-    
-    
-
 })
-
 
 socket.on("userDisconnected", (disconnectUserName) => {
     console.log("F8");
-    var potentialPartners = document.querySelectorAll('.singleBuddy');
+    var potentialPartners = document.querySelectorAll('strong');
     for (i=0; i<potentialPartners.length; i++){
-        if(potentialPartners[i].innerHTML == disconnectUserName){
+        if(potentialPartners[i].innerText == disconnectUserName){
             console.log("remove color");
-            potentialPartners[i].removeAttribute("id"); //remove color
+            var statusSmall = document.querySelectorAll('small');
+            statusSmall[i].setAttribute('class', 'chat-alert label label-danger');
+            statusSmall[i].innerText = 'offline';
             // clear localStorage chat partner list
         }
     }
     console.log("disconnectUserName: ", disconnectUserName);
-    
-
 })
