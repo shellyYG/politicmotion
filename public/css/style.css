@@ -1046,3 +1046,15 @@ img[id^="user_love_"]:hover, img[id^="user_haha_"]:hover, img[id^="user_sad_"]:h
 }
 
 
+.btn-xlarge {
+  padding: 20px 10px;
+  font-size: 20px; /*change this to your desired size*/
+  line-height: normal;
+  -webkit-border-radius: 8px;
+     -moz-border-radius: 8px;
+          border-radius: 8px;
+  white-space:normal !important;
+  text-align: center !important;
+  box-sizing: content-box !important;
+  
+}

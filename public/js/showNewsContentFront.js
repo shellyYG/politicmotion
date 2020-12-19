@@ -1,3 +1,4 @@
+localStorage.removeItem("clickedEmotions");
 let articles = document.querySelector('#articles');
 const searchTopic1 = localStorage.getItem("searchTopic1");
 const searchTopic2 = localStorage.getItem("searchTopic2");
