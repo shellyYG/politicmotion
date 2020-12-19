@@ -184,15 +184,18 @@ socket.on('msgToShow',(data)=>{
     var singleMessage = document.createElement('li');
     singleMessage.setAttribute("class","right clearfix");
 
-    
+    // ------ append sender (self)
+    var historySender = document.createElement('span');
+    historySender.setAttribute("class","sender chat-img pull-right");
+    historySender.innerText = "You";
+    singleMessage.appendChild(historySender);
 
-    // append message
-    var message = document.createElement('div');
-    message.setAttribute("class","message col-md-8");
-    message.innerText = data.msg;
-    singleMessage.appendChild(message);
-    
-    // append time
+    // ------ append clearfix for time & message
+    var timeContentDiv = document.createElement('div');
+    timeContentDiv.setAttribute('class','chat-body clearfix');
+    singleMessage.appendChild(timeContentDiv);
+
+    // --------------- append time
     let dateTime = new Date();
     let DatePart=dateTime.toLocaleDateString('en-US').split("/");
     DatePart = DatePart[0]+"/"+DatePart[1];
@@ -212,18 +215,16 @@ socket.on('msgToShow',(data)=>{
     var timeToShow = DatePart + " "+timingTimePart
     
     var sendTime = document.createElement('div');
-    sendTime.setAttribute("class","sendTime col-md-2");
+    sendTime.setAttribute("class","header");
     sendTime.innerText = timeToShow;
-    singleMessage.appendChild(sendTime);
+    timeContentDiv.appendChild(sendTime);
 
-    // append sender (self)
-    var historySender = document.createElement('div');
-    historySender.setAttribute("class","sender col-md-2");
-    historySender.innerText = "You";
-    singleMessage.appendChild(historySender);
-
-   
-
+    // --------------- append message
+    var message = document.createElement('p');
+    // message.setAttribute("class","message col-md-8");
+    message.innerText = data.msg;
+    timeContentDiv.appendChild(message);
+    
     chatList.appendChild(singleMessage);
 
 })
