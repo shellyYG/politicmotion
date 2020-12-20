@@ -35,7 +35,6 @@ for (i=0; i<buddiesToChat.length; i++){
 
     statusDiv.appendChild(statusSmall);
     statusDiv.appendChild(nameStrong);
-    
 
     singleBuddy.appendChild(statusDiv);
     

@@ -236,7 +236,8 @@ axios.post(`calUserEmotion`, {
             }, { headers: headers })
                 .then(res => {
                     const buddyNamesRank = res.data;
-                    console.log("buddyNamesRank: ", buddyNamesRank)
+                    console.log("buddyNamesRank: ", buddyNamesRank);
+                    var buddiesToChatpreExist = localStorage.removeItem('buddiesToChat');
 
                     for (i = 0; i < buddyNamesRank.length; i++) {
                         var buddiesToChat = localStorage.getItem("buddiesToChat");
