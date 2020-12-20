@@ -61,7 +61,7 @@ p-lg, .paragraph-lg {
 
 h1, h2, h3, h4, h5, h6 {
   color: #000;
-  font-family: "Playfair Display", serif;
+  font-family: "Roboto", sans-serif;
   line-height: 1.2;
 }
 
@@ -348,7 +348,7 @@ a:hover {
 }
 
 .font-secondary {
-  font-family: "Playfair Display", serif !important;
+  font-family: "Roboto", sans-serif !important;
 }
 
 .font-tertiary {
@@ -756,7 +756,7 @@ textarea.form-control {
 /* /testimonial */
 /* footer */
 .footer-section {
-  padding-top: 200px;
+  padding-top: 0px;
 }
 
 .footer-section-chat {
@@ -1096,4 +1096,8 @@ img[id^="user_love_"]:hover, img[id^="user_haha_"]:hover, img[id^="user_sad_"]:h
 
 #textMain {
   margin-left: 0px !important;
+}
+
+#about {
+  font-size: 18px;
 }
