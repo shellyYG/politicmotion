@@ -24,8 +24,14 @@ p,a,input,label,textarea,span,ul,li{
     margin-bottom: 10px;
 }
 
+#topic1, #topic2 {
+    font-size: 27px;
+}
+
 #userInput1, #userInput2{
     border-radius: 10px;
+    font-size: 27px;
+    width: 200px;
 }
 
 #intro .jumbotron{

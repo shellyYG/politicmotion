@@ -948,7 +948,13 @@ blockquote {
   color: white;
   font-family: "BwNistaInt-xBd", serif;
   line-height: 1.2;
-  font-size: 22px;
+  font-size: 27px;
+  width: 150px;
+}
+
+#userInput1, #userInput2 {
+  font-size: 27px;
+  width: 180px;
 }
 
 .bg-main {
