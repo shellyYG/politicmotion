@@ -944,7 +944,7 @@ blockquote {
 
 /*# sourceMappingURL=maps/style.css.map */
 
-#topic1, #topic2 {
+.preUserInput, #topic1, #topic2 {
   color: white;
   font-family: "BwNistaInt-xBd", serif;
   line-height: 1.2;
@@ -952,7 +952,7 @@ blockquote {
   width: 150px;
 }
 
-#userInput1, #userInput2 {
+.userInput, #userInput1, #userInput2, #signInEmail, #signInPass, #signUpEmail, #signUpPass, #selfIntro, #signUpName{
   font-size: 27px;
   width: 180px;
 }
@@ -1087,4 +1087,13 @@ img[id^="user_love_"]:hover, img[id^="user_haha_"]:hover, img[id^="user_sad_"]:h
   text-align: center !important;
   box-sizing: content-box !important;
   
+}
+
+#signInUpBtnDiv, .signInUpBtnDiv {
+  padding-left: 14px;
+  padding-top: 22px;
+}
+
+#textMain {
+  margin-left: 0px !important;
 }

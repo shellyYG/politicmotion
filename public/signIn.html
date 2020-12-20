@@ -62,7 +62,7 @@
     <section class="hero-area bg-primary" id="parallax">
         <div class="container" id="mainIntro">
             <div class="row">
-                <div class="col-lg-11 mx-auto">
+                <div class="col-lg-11 mx-auto" id="textMain">
                     <h2 class="text-white font-tertiary">Log In</h2>
                     <h3 class="text-white font-tertiary">to meet your politic emotion & friends.</h3>
                 </div>
@@ -70,31 +70,32 @@
         </div>
         <section id="main" class="container searchBox">
             <div class="row d-flex justify-content-start">
-                <div class="col-xl-11 mx-auto mt-3">
+                <div class="col-xl-11 mx-auto mt-3" id="textMain">
                     <div class="topic1">
                         <label id="topic1">Email</label>
-                        <input type="text" id="userInput1" aria-describedby="inputGroup-sizing-lg" required>
+                        <input type="text" id="signInEmail" aria-describedby="inputGroup-sizing-lg" required>
                     </div>
                 </div>
             </div>
-            <div class="row d-flex justify-content-start">
-                <div class="col-xl-11 mx-auto mt-3">
+            <div class="row d-flex justify-content-start" >
+                <div class="col-xl-11 mx-auto mt-3" id="textMain">
                     <div class="topic2">
                         <label id="topic2">Password</label>
-                        <input type="text" id="userInput2" aria-describedby="inputGroup-sizing-lg" required>
+                        <input type="text" id="signInPass" aria-describedby="inputGroup-sizing-lg" required>
                     </div>
                 </div>
             </div>
         </section>
-        <section id="button" class="container">
+        <section id="signInUpBtnDiv" class="container">
             <div>
                 <div class="row d-flex justify-content-start">
-                    <div class="col-lg-11 mx-auto mt-3">
-                        <button class="btn btn-lg btn-primary" id="btn-search" type="submit">Search</button>
+                    <div class="col-lg-2">
+                        <button class="btn btn-lg btn-primary " id="btn_signin" type="submit">Submit</button>
                     </div>
-                    
+                    <div class=" col-lg-2">
+                        <button class="btn btn-lg btn-primary " id="signUpBtn" type="submit">Register</button>
+                    </div>
                 </div>
-
             </div>
             
             
@@ -183,7 +184,7 @@
     <!-- Main Script -->
     <script src="js/script.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="js/indexFront.js"></script>
+    <script src="js/signInFront.js"></script>
 
 </body>
 
