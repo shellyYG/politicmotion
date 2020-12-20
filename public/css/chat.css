@@ -17,7 +17,9 @@ body {
   }
   
   .friend-list li {
-    border-bottom: 1px solid #eee;
+    border-bottom: 6px solid #eee;
+    padding: 10px;
+    cursor: pointer;
   }
   
   .friend-list li a img {
@@ -78,12 +80,18 @@ body {
 
   .scroll-message {
       overflow-y: scroll;
-      height: 600px;
+      height: 567px;
+  }
+
+  .scroll-partner{
+    overflow-y: scroll;
+    height: 567px;
   }
 
   .chat {
-      list-style: none;
-      margin: 0;
+    list-style: none;
+    margin: 0px -3px 0 0;
+    padding: 0 10px 0 0;
   }
   
   .chat-message{
@@ -106,9 +114,10 @@ body {
     padding-bottom: 20px;
   }
 
-  #chatList {
+  /* #chatList {
       overflow-y: scroll;
-  }
+      overflow-x: hidden;
+  } */
   
   .chat li.left .chat-body {
     margin-left: 75px;
@@ -129,7 +138,7 @@ body {
   
   .chat li .chat-body .header {
     padding-bottom: 5px;
-    border-bottom: 1px solid #f1f5fc;
+    /* border-bottom: 1px solid #f1f5fc;  */ /* no border btw time & message*/
   }
   
   .chat li .chat-body p {
@@ -145,7 +154,7 @@ body {
     width: 12px;
     height: 16px;
     border-top: 1px solid #f1f5fc;
-    border-left: 5px solid #f1f5fc;
+    /* border-left: 5px solid #f1f5fc; */
     content: '';
     transform: rotate(-45deg);
     -webkit-transform: rotate(-45deg);
@@ -215,14 +224,33 @@ body {
   }
 
   #row-main-chat-box {
-      margin-top: 100px;
+      margin-top: 13vh 0 0 0vh;
   }
 
   #chat-partners {
-      margin-top: 84px !important;
+      margin-top: 18vh !important;
   }
 
   #chat-boxes {
-    margin-top: -252px !important;
+    margin-top: 80px !important;
+}
+
+#selfNameDiv {
+    height: 40px;
+    margin-top: 20px;
+    padding-left: 26px;
+}
+
+#senderNameDisplay {
+    padding: 13px;
+}
+
+#non-self-senderNameDisplay {
+    padding: 13px 0px;
+}
+
+#userMsg {
+    font-size: 15px;
+    width: 100%;
 }
 

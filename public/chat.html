@@ -38,7 +38,7 @@
 
       <div class="collapse navbar-collapse text-center" id="navigation">
         <ul class="navbar-nav ml-auto">
-          <li class="nav-item active">
+          <li class="nav-item">
             <a class="nav-link" href="index.html">Search</a>
           </li>
           <li class="nav-item">
@@ -50,7 +50,7 @@
           <li class="nav-item">
             <a class="nav-link" href="userEmotion.html">Emotion</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item active">
             <a class="nav-link" href="chat.html">Chat</a>
           </li>
           <li class="nav-item">
@@ -62,7 +62,7 @@
     <div class="row mb-5 progressBar">
       <div class="col-12">
         <div class="btn-group btn-group-toggle justify-content-center d-flex" data-toggle="buttons">
-          <label class="btn btn-sm btn-primary active">
+          <label class="btn btn-sm btn-primary">
             <input type="radio" name="shuffle-filter" value="all" checked="checked" />Select Dots
           </label>
           <label class="btn btn-sm btn-primary">
@@ -71,7 +71,7 @@
           <label class="btn btn-sm btn-primary">
             <input type="radio" name="shuffle-filter" value="branding" />Select Chat Partner
           </label>
-          <label class="btn btn-sm btn-primary">
+          <label class="btn btn-sm btn-primary active">
             <input type="radio" name="shuffle-filter" value="illustration" />Chat
           </label>
         </div>
@@ -83,15 +83,19 @@
     <div class="container bootstrap snippets bootdey">
       <div class="row" id="row-main-chat-box">
         <div class="col-md-4 bg-white" id="chat-partners">
-          <div class=" row border-bottom padding-sm" style="height: 40px;" id="selfName">
-            Member
+          <div class=" row padding-sm" style="height: 40px;" id="selfNameDiv">
+            <strong id="selfName">
+
+            </strong>
+            
           </div>
 
           <!-- =============================================================== -->
           <!-- member list -->
-          <ul class="friend-list" id="friend-list">
-
-          </ul>
+          <div class="scroll-partner">
+            <ul class="friend-list" id="friend-list">
+            </ul>
+          </div>
         </div>
 
         <!--=========================================================-->
@@ -105,7 +109,7 @@
             <div class="input-group">
               <input class="form-control border no-shadow no-rounded" id="userMsg" placeholder="Type your message here">
               <span class="input-group-btn">
-                <button class="btn btn-success no-rounded" id="sendMsgBtn" type="button">Send</button>
+                <button class="btn-sm btn-primary" id="sendMsgBtn" type="button">Send</button>
               </span>
             </div><!-- /input-group -->
           </div>
@@ -113,35 +117,7 @@
       </div>
     </div>
   </section>
-  <!-- footer -->
-  <footer class="bg-dark footer-section-chat">
-    <div class="section">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-4">
-            <h5 class="text-light">Email</h5>
-            <p class="text-white paragraph-lg font-secondary">steve.fruits@email.com</p>
-          </div>
-          <div class="col-md-4">
-            <h5 class="text-light">Phone</h5>
-            <p class="text-white paragraph-lg font-secondary">+880 2544 658 256</p>
-          </div>
-          <div class="col-md-4">
-            <h5 class="text-light">Address</h5>
-            <p class="text-white paragraph-lg font-secondary">125/A, CA Commercial Area, California, USA</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="border-top text-center border-dark py-5">
-      <p class="mb-0 text-light">Copyright ©
-        <script>
-          var CurrentYear = new Date().getFullYear()
-          document.write(CurrentYear)
-        </script> a theme by <a href="https://themefisher.com">themefisher.com</a>
-      </p>
-    </div>
-  </footer>
+
   <!-- /footer -->
   <!-- jQuery -->
   <script src="plugins/jQuery/jquery.min.js"></script>

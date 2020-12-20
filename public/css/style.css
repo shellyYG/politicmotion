@@ -43,7 +43,7 @@ body {
   color: #4c4c4c;
   padding-top: 70px; /*because fixed-top is by default 50px*/
   background-color: #17202A;
-  overflow-y: hidden;
+  /* overflow-y: hidden; */
   margin-top: 40px;
 }
 

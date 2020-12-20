@@ -69,7 +69,7 @@ socket.on("AuthError", (msg) => {
 socket.on('Self', (self)=>{
     console.log("F4");
     senderNow = self.self;
-    selfNameDiv.innerText = self.self;
+    selfNameDiv.innerText = `welcome to chat, ${self.self}!`;
     socket.emit('newUserUser');
     console.log("F5");
 });
@@ -120,6 +120,7 @@ socket.on('history',(data)=>{
             // append sender (self)
             var historySender = document.createElement('span');
             historySender.setAttribute("class","sender chat-img pull-right");
+            historySender.setAttribute("id","senderNameDisplay");
             historySender.innerText = "You";
             singleMessage.appendChild(historySender);
 
@@ -154,6 +155,7 @@ socket.on('history',(data)=>{
             // append sender (other people)
             var historySender = document.createElement('span');
             historySender.setAttribute("class","sender chat-img pull-left");
+            historySender.setAttribute("id", "non-self-senderNameDisplay");
             historySender.innerText = element.sender;
             singleMessage.appendChild(historySender);
 
@@ -187,6 +189,7 @@ socket.on('history',(data)=>{
         // make scroll bar default to bottom
         var messageBody = document.querySelector('.scroll-message');
         messageBody.scrollTop = messageBody.scrollHeight-messageBody.clientHeight;
+
     })
 })
 
@@ -259,6 +262,7 @@ socket.on('msgToShow',(data)=>{
         timeContentDiv.appendChild(message);
         
         chatList.appendChild(singleMessage);
+
         // make scroll bar default to bottom
         var messageBody = document.querySelector('.scroll-message');
         messageBody.scrollTop = messageBody.scrollHeight-messageBody.clientHeight;
@@ -309,9 +313,11 @@ socket.on('msgToShow',(data)=>{
         timeContentDiv.appendChild(message);
         
         chatList.appendChild(singleMessage);
+
         // make scroll bar default to bottom
         var messageBody = document.querySelector('.scroll-message');
         messageBody.scrollTop = messageBody.scrollHeight-messageBody.clientHeight;
+       
         
     }
 })
