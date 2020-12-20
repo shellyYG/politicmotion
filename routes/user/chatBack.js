@@ -72,7 +72,7 @@ const socketChat = (socket) => {
         }
         async function showHistory(){
             let history = await searchHistory();
-            console.log("history: ", history);
+            // console.log("history: ", history);
             socket.emit('history', history); // emit history to self
         }
         showHistory()

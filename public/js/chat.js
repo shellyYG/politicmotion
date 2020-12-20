@@ -69,7 +69,7 @@ socket.on("AuthError", (msg) => {
 socket.on('Self', (self)=>{
     console.log("F4");
     senderNow = self.self;
-    selfNameDiv.innerText = `welcome to chat, ${self.self}!`;
+    selfNameDiv.innerText = `Welcome to chat, ${self.self}!`;
     socket.emit('newUserUser');
     console.log("F5");
 });
@@ -82,8 +82,8 @@ socket.on("onlineUsers", (onlineUserList) => {
     for (i=0; i<potentialPartners.length; i++){
         if(onlineUserList.includes(potentialPartners[i].innerText)){
             var statusSmall = document.querySelectorAll('small');
-            statusSmall[i].setAttribute('class', 'chat-alert label label-success');
-            statusSmall[i].innerText = 'online';
+            statusSmall[i-1].setAttribute('class', 'chat-alert label label-success'); // -1 because [0] means Welcome to chat
+            statusSmall[i-1].innerText = 'online';
         }
     }
     console.log("F7");
@@ -278,6 +278,7 @@ socket.on('msgToShow',(data)=>{
         // ------ append sender (self)
         var nowSender = document.createElement('span');
         nowSender.setAttribute("class","sender chat-img pull-left");
+        nowSender.setAttribute("id", "non-self-senderNameDisplay");
         nowSender.innerText = data.sender;
         singleMessage.appendChild(nowSender);
 
