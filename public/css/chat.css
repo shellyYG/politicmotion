@@ -2,7 +2,7 @@ body {
     padding-top: 0;
     font-size: 16px;
     color: #777;
-    background: #f9f9f9;
+    background: #17202A;
     font-family: 'Open Sans',sans-serif;
     margin-top:20px;
   }
@@ -17,7 +17,6 @@ body {
   }
   
   .friend-list li {
-    border-bottom: 6px solid #eee;
     padding: 10px;
     cursor: pointer;
   }
@@ -80,8 +79,31 @@ body {
 
   .scroll-message {
       overflow-y: scroll;
-      height: 567px;
+      scrollbar-color: white #17202A;
+      height: 524px;
+      margin: 22px 0px 0px 0px;
   }
+
+  /* width */
+::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #17202A;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: white;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
 
   .scroll-partner{
     overflow-y: scroll;
@@ -95,7 +117,7 @@ body {
   }
   
   .chat-message{
-      background: #f9f9f9;  
+      background: #17202A;  
   }
   
   .chat li img {
@@ -192,14 +214,7 @@ body {
   }
   
   .chat-box {
-  /*
-    position: fixed;
-    bottom: 0;
-    left: 444px;
-    right: 0;
-  */
     padding: 15px;
-    border-top: 1px solid #eee;
     transition: all .5s ease;
     -webkit-transition: all .5s ease;
     -moz-transition: all .5s ease;
@@ -229,10 +244,20 @@ body {
 
   #chat-partners {
       margin-top: 18vh !important;
+      margin-bottom: -1vh !important;
+      background-color: #17202A;
+      color: white;
+      border: 5px solid white;
+      border-radius: 30px;
+      
   }
 
   #chat-boxes {
-    margin-top: 80px !important;
+    margin-top: 18vh !important;
+    margin-bottom: -1vh !important;
+    border: 5px solid white;
+    /* border-right: 5px solid #1363be; */
+    border-radius: 30px;
 }
 
 #selfNameDiv {
@@ -243,14 +268,27 @@ body {
 
 #senderNameDisplay {
     padding: 13px;
+    color: white;
 }
 
 #non-self-senderNameDisplay {
     padding: 13px 0px;
+    color: white;
 }
 
 #userMsg {
     font-size: 15px;
     width: 100%;
+    border-radius: 15px;
+}
+
+#sendMsgBtn {
+    border-radius: 20px !important;
+    margin-top: 5px;
+    margin-left: 0px;
+}
+
+#header-border {
+    /* border-bottom: 5px solid #1363be; */
 }
 

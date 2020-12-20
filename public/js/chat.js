@@ -226,6 +226,7 @@ socket.on('msgToShow',(data)=>{
         // ------ append sender (self)
         var nowSender = document.createElement('span');
         nowSender.setAttribute("class","sender chat-img pull-right");
+        nowSender.setAttribute("id","senderNameDisplay");
         nowSender.innerText = "You";
         singleMessage.appendChild(nowSender);
 
