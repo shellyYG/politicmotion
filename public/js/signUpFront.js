@@ -1,3 +1,11 @@
+// go to signIn (LogIn) page when clicked
+let signInT = document.querySelector("#signInBtn");
+
+signInT.addEventListener('click',()=>{
+  window.location.href="/signin.html"
+})
+
+
 // use axios post for signup. rather than form
 let signupT=document.querySelector("#btn_signUp");
 signupT.addEventListener('click',()=>{
