@@ -35,6 +35,18 @@ body {
   background-color: #17202A;
 }
 
+#body-chat {
+  line-height: 1.2;
+  font-family: "Roboto", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  font-size: 15px;
+  color: #4c4c4c;
+  padding-top: 70px; /*because fixed-top is by default 50px*/
+  background-color: #17202A;
+  overflow-y: hidden;
+  margin-top: 40px;
+}
+
 p, .paragraph {
   font-weight: 400;
   color: #4c4c4c;
@@ -472,6 +484,12 @@ textarea.form-control {
   position: relative;
 }
 
+.hero-area-newsContent {
+  padding: 250px 0 200px;
+  position: relative;
+}
+
+
 @media (max-width: 767px) {
   .hero-area {
     padding: 250px 0 150px;
@@ -739,6 +757,12 @@ textarea.form-control {
 /* footer */
 .footer-section {
   padding-top: 200px;
+}
+
+.footer-section-chat {
+  position: fixed;
+  height: 100px;
+  bottom: 0px;
 }
 
 .section-on-footer {

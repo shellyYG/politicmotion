@@ -75,7 +75,12 @@ body {
   .chat-message {
     padding: 60px 20px 115px;
   }
-  
+
+  .scroll-message {
+      overflow-y: scroll;
+      height: 600px;
+  }
+
   .chat {
       list-style: none;
       margin: 0;
@@ -99,6 +104,10 @@ body {
   
   .chat-body {
     padding-bottom: 20px;
+  }
+
+  #chatList {
+      overflow-y: scroll;
   }
   
   .chat li.left .chat-body {
@@ -197,3 +206,23 @@ body {
     text-decoration: none;
     outline: 0;
   }
+
+  #main-chat {
+      padding: 17px 0px 0px !important;
+      background-color: #17202A !important;
+      background-size: cover;
+       
+  }
+
+  #row-main-chat-box {
+      margin-top: 100px;
+  }
+
+  #chat-partners {
+      margin-top: 84px !important;
+  }
+
+  #chat-boxes {
+    margin-top: -252px !important;
+}
+

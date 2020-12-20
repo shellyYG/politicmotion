@@ -183,6 +183,10 @@ socket.on('history',(data)=>{
         }
 
         msgPlaceHolder.append(singleMessage);
+
+        // make scroll bar default to bottom
+        var messageBody = document.querySelector('.scroll-message');
+        messageBody.scrollTop = messageBody.scrollHeight-messageBody.clientHeight;
     })
 })
 
@@ -205,6 +209,7 @@ submitBtn.addEventListener('click', (e) => { // (e) means event
         sender: senderNow,
         receiver: receiver
     });
+
 })
 
 // -------------- real time message part
@@ -212,7 +217,7 @@ socket.on('msgToShow',(data)=>{
 
     var singleMessage = document.createElement('li');
 
-    if(data.sender == senderNow){
+    if(data.sender == senderNow){ // --------------------- shown on sender side
         singleMessage.setAttribute("class","right clearfix");
 
         // ------ append sender (self)
@@ -254,7 +259,15 @@ socket.on('msgToShow',(data)=>{
         timeContentDiv.appendChild(message);
         
         chatList.appendChild(singleMessage);
-    }else{
+        // make scroll bar default to bottom
+        var messageBody = document.querySelector('.scroll-message');
+        messageBody.scrollTop = messageBody.scrollHeight-messageBody.clientHeight;
+        
+        // clear user input box
+        var userMsgForClear = document.querySelector('#userMsg');
+        userMsgForClear.value="";
+
+    }else{ // -------------------------------------- shown on receiver side
         singleMessage.setAttribute("class","left clearfix");
 
         // ------ append sender (self)
@@ -296,6 +309,10 @@ socket.on('msgToShow',(data)=>{
         timeContentDiv.appendChild(message);
         
         chatList.appendChild(singleMessage);
+        // make scroll bar default to bottom
+        var messageBody = document.querySelector('.scroll-message');
+        messageBody.scrollTop = messageBody.scrollHeight-messageBody.clientHeight;
+        
     }
 })
 

@@ -5,46 +5,157 @@
   <meta charset="utf-8">
   <!--  This file has been downloaded from bootdey.com    @bootdey on twitter -->
   <!--  All snippets are MIT license http://bootdey.com/license -->
-  <title>chat room - Bootdey.com</title>
+  <title>Distribution | PoliticMotion</title>
+  <!-- mobile responsive meta -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
   <link href="css/chat.css" rel="stylesheet">
+  <!-- ** Plugins Needed for the Project ** -->
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="plugins/bootstrap/bootstrap.min.css">
+  <!-- slick slider -->
+  <link rel="stylesheet" href="plugins/slick/slick.css">
+  <!-- themefy-icon -->
+  <link rel="stylesheet" href="plugins/themify-icons/themify-icons.css">
+
+  <!-- Main Stylesheet -->
+  <link href="css/style.css" rel="stylesheet">
+
+  <!--Favicon-->
+  <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="images/favicon.ico" type="image/x-icon">
 </head>
 
-<body>
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-  <div class="container bootstrap snippets bootdey">
-    <div class="row">
-      <div class="col-md-4 bg-white ">
-        <div class=" row border-bottom padding-sm" style="height: 40px;" id="selfName">
-          Member
-        </div>
+<body id="body-chat">
+  <header class="navigation fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <a class="navbar-brand font-tertiary h3" href="index.html">PoliticMotion</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation"
+        aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-        <!-- =============================================================== -->
-        <!-- member list -->
-        <ul class="friend-list" id="friend-list">
-          
+      <div class="collapse navbar-collapse text-center" id="navigation">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="index.html">Search</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="showNewsDots.html">Distribution</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="showNewsContent.html">News</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="userEmotion.html">Emotion</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="chat.html">Chat</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="signIn.html">LogIn</a>
+          </li>
         </ul>
       </div>
-
-      <!--=========================================================-->
-      <!-- selected chat -->
-      <div class="col-md-8 bg-white ">
-        <div class="chat-message">
-          <ul class="chat" id="chatList">
-          </ul>
-        </div>
-        <div class="chat-box bg-white">
-          <div class="input-group">
-            <input class="form-control border no-shadow no-rounded" id="userMsg" placeholder="Type your message here">
-            <span class="input-group-btn">
-              <button class="btn btn-success no-rounded" id="sendMsgBtn" type="button">Send</button>
-            </span>
-          </div><!-- /input-group -->
+    </nav>
+    <div class="row mb-5 progressBar">
+      <div class="col-12">
+        <div class="btn-group btn-group-toggle justify-content-center d-flex" data-toggle="buttons">
+          <label class="btn btn-sm btn-primary active">
+            <input type="radio" name="shuffle-filter" value="all" checked="checked" />Select Dots
+          </label>
+          <label class="btn btn-sm btn-primary">
+            <input type="radio" name="shuffle-filter" value="design" />Click Emotions
+          </label>
+          <label class="btn btn-sm btn-primary">
+            <input type="radio" name="shuffle-filter" value="branding" />Select Chat Partner
+          </label>
+          <label class="btn btn-sm btn-primary">
+            <input type="radio" name="shuffle-filter" value="illustration" />Chat
+          </label>
         </div>
       </div>
     </div>
-  </div>
+  </header>
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+  <section class="hero-area" id="main-chat">
+    <div class="container bootstrap snippets bootdey">
+      <div class="row" id="row-main-chat-box">
+        <div class="col-md-4 bg-white" id="chat-partners">
+          <div class=" row border-bottom padding-sm" style="height: 40px;" id="selfName">
+            Member
+          </div>
+
+          <!-- =============================================================== -->
+          <!-- member list -->
+          <ul class="friend-list" id="friend-list">
+
+          </ul>
+        </div>
+
+        <!--=========================================================-->
+        <!-- selected chat -->
+        <div class="col-md-8 bg-white" id="chat-boxes">
+          <div class="chat-message scroll-message">
+            <ul class="chat" id="chatList">
+            </ul>
+          </div>
+          <div class="chat-box bg-white">
+            <div class="input-group">
+              <input class="form-control border no-shadow no-rounded" id="userMsg" placeholder="Type your message here">
+              <span class="input-group-btn">
+                <button class="btn btn-success no-rounded" id="sendMsgBtn" type="button">Send</button>
+              </span>
+            </div><!-- /input-group -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- footer -->
+  <footer class="bg-dark footer-section-chat">
+    <div class="section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <h5 class="text-light">Email</h5>
+            <p class="text-white paragraph-lg font-secondary">steve.fruits@email.com</p>
+          </div>
+          <div class="col-md-4">
+            <h5 class="text-light">Phone</h5>
+            <p class="text-white paragraph-lg font-secondary">+880 2544 658 256</p>
+          </div>
+          <div class="col-md-4">
+            <h5 class="text-light">Address</h5>
+            <p class="text-white paragraph-lg font-secondary">125/A, CA Commercial Area, California, USA</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="border-top text-center border-dark py-5">
+      <p class="mb-0 text-light">Copyright ©
+        <script>
+          var CurrentYear = new Date().getFullYear()
+          document.write(CurrentYear)
+        </script> a theme by <a href="https://themefisher.com">themefisher.com</a>
+      </p>
+    </div>
+  </footer>
+  <!-- /footer -->
+  <!-- jQuery -->
+  <script src="plugins/jQuery/jquery.min.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="plugins/bootstrap/bootstrap.min.js"></script>
+  <!-- slick slider -->
+  <script src="plugins/slick/slick.min.js"></script>
+  <!-- filter -->
+  <script src="plugins/shuffle/shuffle.min.js"></script>
+
+  <!-- Main Script -->
+  <script src="js/scriptNonMain.js"></script>
+
+
   <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
   <script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
   <script type="text/javascript"></script>
