@@ -132,6 +132,7 @@ const socketChat = (socket) => {
         // socket.to().emit('receivedMsg')
     })
 
+    // disconnect
     socket.on("disconnect", () => {
         console.log("B9");
         console.log("selfName: ", selfName); 
@@ -141,7 +142,7 @@ const socketChat = (socket) => {
         })
         console.log("after someone disconnect, remaining online users: ", onlineUserList);
         console.log("B10");
-        socket.emit("userDisconnected", (selfName));
+        socket.emit("userDisconnected", (selfName)); // send to self
         socket.to(room).emit("userDisconnected", (selfName)); // send to all in room except sender
         console.log("B11");
     })
