@@ -50,22 +50,22 @@ const socketChat = (socket) => {
         console.log("received receiver, try to get its socket.id");
 
         for (const key in userList){
-            console.log("key: ", key, "receiver: ", receiver);
-            if(key == receiver){ //----------------------------------------- if receiver is online
+            console.log("key: ", key, "receiver.receiver: ", receiver.receiver);
+            if(key == receiver.receiver){ //----------------------------------------- if receiver is online
                 console.log("receiver is online");
-                receiverId = userList[receiver]; //receiverId = socketId
+                receiverId = userList[receiver.receiver]; //receiverId = socketId
                 
             }else{      //----------------------------------------- if receiver is NOT online
                 console.log("receiver is NOT online");
                 receiverId; // receiverId remains undefined
             }
         }
-        console.log("selfName: ",selfName, "receiver: ", receiver);
+        console.log("selfName: ",selfName, "receiver.receiver: ", receiver.receiver);
         // send historical msg to Front-End for later refresh
         async function searchHistory(){
             sql = `SELECT * FROM chat_history 
-            WHERE (sender = '${selfName}' AND receiver = '${receiver}') 
-            OR (sender = '${receiver}' AND receiver = '${selfName}')
+            WHERE ((sender = '${selfName}' AND receiver = '${receiver.receiver}') 
+            OR (sender = '${receiver.receiver}' AND receiver = '${selfName}')) 
             ORDER BY message_time ASC;`
             var sqlquery = await query(sql);
             return sqlquery;

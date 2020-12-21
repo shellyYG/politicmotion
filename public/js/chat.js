@@ -2,7 +2,7 @@ const socket = io();
 
 let buddiesToChat = localStorage.getItem("buddiesToChat");
 buddiesToChat = JSON.parse(buddiesToChat);
-let buddyNames = buddiesToChat.map(element=>element.buddies);
+let buddyNames = buddiesToChat.map(element => element.buddies);
 const chatForm = document.getElementById('chat-form');
 const submitBtn = document.getElementById('sendMsgBtn');
 const msgPlaceHolder = document.getElementById('chatList');
@@ -12,20 +12,25 @@ const sendMsgBtn = document.getElementById('sendMsgBtn');
 let senderNow;
 let receiver;
 let selfNameDiv = document.getElementById('selfName');
+let topicOne = localStorage.getItem('searchTopic1');
+let topicTwo = localStorage.getItem('searchTopic2');
+
+let chatRoomName = topicOne+" & "+ topicTwo;
+console.log(chatRoomName);
 
 const chatList = document.getElementById('chatList');
 
-function unique(value, index, self){
+function unique(value, index, self) {
     return self.indexOf(value) === index;
 }
 
 buddiesToChat = buddiesToChat.filter(unique);
-for (i=0; i<buddiesToChat.length; i++){
+for (i = 0; i < buddiesToChat.length; i++) {
     var singleBuddy = document.createElement('li');
-    singleBuddy.setAttribute("class","active bounceInDown singleBuddy");
-    
+    singleBuddy.setAttribute("class", "active bounceInDown singleBuddy");
+
     var statusDiv = document.createElement('div');
-    statusDiv.setAttribute('class','friend-name');
+    statusDiv.setAttribute('class', 'friend-name');
 
     var statusSmall = document.createElement('small');
     statusSmall.setAttribute('class', 'chat-alert label label-danger');
@@ -39,12 +44,12 @@ for (i=0; i<buddiesToChat.length; i++){
     statusDiv.appendChild(nameStrong);
 
     singleBuddy.appendChild(statusDiv);
-    
+
     partnerContainer.appendChild(singleBuddy);
 }
-const tokenTest = () =>{
-    return new Promise((resolve, reject) =>{
-        let query= {
+const tokenTest = () => {
+    return new Promise((resolve, reject) => {
+        let query = {
             generalToken: localStorage.getItem("generalToken"),
             buddyNames: buddyNames
         }
@@ -56,7 +61,7 @@ socket.on("getToken", () => {
     console.log("F2");
     tokenTest().then(result => {
         console.log(`${result.generalToken} connected.`)
-        socket.emit("verifyToken",(result))
+        socket.emit("verifyToken", (result))
         console.log("F3");
     })
 });
@@ -67,7 +72,7 @@ socket.on("AuthError", (msg) => {
     console.log("F4 Auth Error");
 });
 
-socket.on('Self', (self)=>{
+socket.on('Self', (self) => {
     console.log("F4");
     senderNow = self.self;
     selfNameDiv.innerText = `Welcome to chat, ${self.self}!`;
@@ -80,8 +85,8 @@ socket.on("onlineUsers", (onlineUserList) => {
     console.log("F6");
     var potentialPartners = document.querySelectorAll('partnerName');
     console.log("onlineUsers: ", onlineUserList);
-    for (i=0; i<potentialPartners.length; i++){
-        if(onlineUserList.includes(potentialPartners[i].innerText)){
+    for (i = 0; i < potentialPartners.length; i++) {
+        if (onlineUserList.includes(potentialPartners[i].innerText)) {
             var statusSmall = document.querySelectorAll('small');
             statusSmall[i].setAttribute('class', 'chat-alert label label-success'); // -1 because [0] means Welcome to chat
             statusSmall[i].innerText = 'online';
@@ -94,11 +99,11 @@ socket.on("onlineUsers", (onlineUserList) => {
 var potentialPartners = document.querySelectorAll('partnerName');
 var potentialPartnerDivs = document.querySelectorAll('.singleBuddy');
 
-potentialPartnerDivs.forEach((element)=>{
-    element.addEventListener('click',()=>{
+potentialPartnerDivs.forEach((element) => {
+    element.addEventListener('click', () => {
         // clear all highlights from other elements
         var partnerForClean = document.querySelectorAll('.singleBuddy');
-        partnerForClean.forEach((e)=>{
+        partnerForClean.forEach((e) => {
             console.log("e: ", e);
             e.removeAttribute('id');
         })
@@ -107,37 +112,37 @@ potentialPartnerDivs.forEach((element)=>{
         // set local Storage to send to back-end
         localStorage.setItem('receiver', element.childNodes[0].childNodes[1].innerText);
         receiver = localStorage.getItem("receiver");
-        console.log("receiver: ",receiver);
-        socket.emit('receiver', receiver); //send to all server
-        console.log(`${receiver} sent to back-end!` );
+        console.log("receiver: ", receiver);
+        socket.emit('receiver', {receiver: receiver, topicOne: topicOne, topicTwo: topicTwo}); //send to all server
+        console.log(`${receiver} sent to back-end!`);
     })
 })
 
 // Load the history
-socket.on('history',(data)=>{
+socket.on('history', (data) => {
     console.log("history : ", data);
     // empty history with other people
     msgPlaceHolder.innerHTML = "";
-    
-    
+
+
     // add history with others
-    data.forEach(element=>{
+    data.forEach(element => {
         var singleMessage = document.createElement('li');
 
         // switch sender & receiver based on if it's self
-        if(element.sender == senderNow){ //if its self, add to sender class
+        if (element.sender == senderNow) { //if its self, add to sender class
             console.log("sender is self");
-            singleMessage.setAttribute("class","right clearfix");
+            singleMessage.setAttribute("class", "right clearfix");
             // append sender (self)
             var historySender = document.createElement('span');
-            historySender.setAttribute("class","sender chat-img pull-right");
-            historySender.setAttribute("id","senderNameDisplay");
+            historySender.setAttribute("class", "sender chat-img pull-right");
+            historySender.setAttribute("id", "senderNameDisplay");
             historySender.innerText = "You";
             singleMessage.appendChild(historySender);
 
             // ------ append clearfix for time & message
             var timeContentDiv = document.createElement('div');
-            timeContentDiv.setAttribute('class','chat-body clearfix');
+            timeContentDiv.setAttribute('class', 'chat-body clearfix');
             singleMessage.appendChild(timeContentDiv);
 
             // append time
@@ -146,11 +151,11 @@ socket.on('history',(data)=>{
             var DatePart = pureDatePart[1].split("-");
             var lastDatePart = DatePart[2];
             var timePart = lastDatePart.split(" ")[1];
-            var timingPart = timePart.split(":")[0]+":"+timePart.split(":")[1];
-            var timeToShow = DatePart[1]+"/"+lastDatePart.split(" ")[0]+" "+timingPart;
-            
+            var timingPart = timePart.split(":")[0] + ":" + timePart.split(":")[1];
+            var timeToShow = DatePart[1] + "/" + lastDatePart.split(" ")[0] + " " + timingPart;
+
             var sendTime = document.createElement('div');
-            sendTime.setAttribute("class","sendTime header");
+            sendTime.setAttribute("class", "sendTime header");
             sendTime.innerText = timeToShow;
             timeContentDiv.appendChild(sendTime);
 
@@ -160,31 +165,31 @@ socket.on('history',(data)=>{
             message.innerText = element.message;
             timeContentDiv.appendChild(message);
 
-        }else if(element.receiver == senderNow){ //switch
+        } else if (element.receiver == senderNow) { //switch
             console.log("sender is not self");
-            singleMessage.setAttribute("class","left clearfix");
+            singleMessage.setAttribute("class", "left clearfix");
             // append sender (other people)
             var historySender = document.createElement('span');
-            historySender.setAttribute("class","sender chat-img pull-left");
+            historySender.setAttribute("class", "sender chat-img pull-left");
             historySender.setAttribute("id", "non-self-senderNameDisplay");
             historySender.innerText = element.sender;
             singleMessage.appendChild(historySender);
 
             // ------ append clearfix for time & message
             var timeContentDiv = document.createElement('div');
-            timeContentDiv.setAttribute('class','chat-body clearfix');
+            timeContentDiv.setAttribute('class', 'chat-body clearfix');
             singleMessage.appendChild(timeContentDiv);
-            
+
             // append time
             var re = /([^T]+)/;
             var pureDatePart = element.message_time.split(re);
             var DatePart = pureDatePart[1].split("-");
             var lastDatePart = DatePart[2];
             var timePart = lastDatePart.split(" ")[1];
-            var timingPart = timePart.split(":")[0]+":"+timePart.split(":")[1];
-            var timeToShow = DatePart[1]+"/"+lastDatePart.split(" ")[0]+" "+timingPart;
+            var timingPart = timePart.split(":")[0] + ":" + timePart.split(":")[1];
+            var timeToShow = DatePart[1] + "/" + lastDatePart.split(" ")[0] + " " + timingPart;
             var sendTime = document.createElement('div');
-            sendTime.setAttribute("class","sendTime header");
+            sendTime.setAttribute("class", "sendTime header");
             sendTime.innerText = timeToShow;
             timeContentDiv.appendChild(sendTime);
 
@@ -199,7 +204,7 @@ socket.on('history',(data)=>{
 
         // make scroll bar default to bottom
         var messageBody = document.querySelector('.scroll-message');
-        messageBody.scrollTop = messageBody.scrollHeight-messageBody.clientHeight;
+        messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
 
     })
 })
@@ -215,10 +220,10 @@ submitBtn.addEventListener('click', (e) => { // (e) means event
 
     console.log("msg: ", msg);
 
-    if(!msg){
+    if (!msg) {
         return false;
     }
-    socket.emit('userSendMsg',{
+    socket.emit('userSendMsg', {
         msg: msg,
         sender: senderNow,
         receiver: receiver
@@ -227,30 +232,30 @@ submitBtn.addEventListener('click', (e) => { // (e) means event
 })
 
 // -------------- real time message part
-socket.on('msgToShow',(data)=>{
+socket.on('msgToShow', (data) => {
 
     var singleMessage = document.createElement('li');
 
-    if(data.sender == senderNow){ // --------------------- shown on sender side
-        singleMessage.setAttribute("class","right clearfix");
+    if (data.sender == senderNow) { // --------------------- shown on sender side
+        singleMessage.setAttribute("class", "right clearfix");
 
         // ------ append sender (self)
         var nowSender = document.createElement('span');
-        nowSender.setAttribute("class","sender chat-img pull-right");
-        nowSender.setAttribute("id","senderNameDisplay");
+        nowSender.setAttribute("class", "sender chat-img pull-right");
+        nowSender.setAttribute("id", "senderNameDisplay");
         nowSender.innerText = "You";
         singleMessage.appendChild(nowSender);
 
         // ------ append clearfix for time & message
         var timeContentDiv = document.createElement('div');
-        timeContentDiv.setAttribute('class','chat-body clearfix');
+        timeContentDiv.setAttribute('class', 'chat-body clearfix');
         singleMessage.appendChild(timeContentDiv);
 
         // --------------- append time
         let dateTime = new Date();
-        let DatePart=dateTime.toLocaleDateString('en-US').split("/");
-        DatePart = DatePart[0]+"/"+DatePart[1];
-        
+        let DatePart = dateTime.toLocaleDateString('en-US').split("/");
+        DatePart = DatePart[0] + "/" + DatePart[1];
+
         const timeOptions = {
             hour12: false,
             hour: 'numeric',
@@ -260,11 +265,11 @@ socket.on('msgToShow',(data)=>{
 
         var timing = dateTime.toLocaleDateString('en-US', timeOptions);
         var timingTimePart = timing.split(",")[1].split(":");
-        timingTimePart = timingTimePart[0]+":"+timingTimePart[1];
-        var timeToShow = DatePart + " "+timingTimePart
-        
+        timingTimePart = timingTimePart[0] + ":" + timingTimePart[1];
+        var timeToShow = DatePart + " " + timingTimePart
+
         var sendTime = document.createElement('div');
-        sendTime.setAttribute("class","sendTime header");
+        sendTime.setAttribute("class", "sendTime header");
         sendTime.innerText = timeToShow;
         timeContentDiv.appendChild(sendTime);
 
@@ -273,38 +278,38 @@ socket.on('msgToShow',(data)=>{
         message.innerText = data.msg;
         timeContentDiv.appendChild(message);
 
-        
+
         // add chat
         chatList.appendChild(singleMessage);
 
         // make scroll bar default to bottom
         var messageBody = document.querySelector('.scroll-message');
-        messageBody.scrollTop = messageBody.scrollHeight-messageBody.clientHeight;
-        
+        messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+
         // clear user input box
         var userMsgForClear = document.querySelector('#userMsg');
-        userMsgForClear.value="";
+        userMsgForClear.value = "";
 
-    }else{ // -------------------------------------- shown on receiver side
-        singleMessage.setAttribute("class","left clearfix");
+    } else { // -------------------------------------- shown on receiver side
+        singleMessage.setAttribute("class", "left clearfix");
 
         // ------ append sender (self)
         var nowSender = document.createElement('span');
-        nowSender.setAttribute("class","sender chat-img pull-left");
+        nowSender.setAttribute("class", "sender chat-img pull-left");
         nowSender.setAttribute("id", "non-self-senderNameDisplay");
         nowSender.innerText = data.sender;
         singleMessage.appendChild(nowSender);
 
         // ------ append clearfix for time & message
         var timeContentDiv = document.createElement('div');
-        timeContentDiv.setAttribute('class','chat-body clearfix');
+        timeContentDiv.setAttribute('class', 'chat-body clearfix');
         singleMessage.appendChild(timeContentDiv);
 
         // --------------- append time
         let dateTime = new Date();
-        let DatePart=dateTime.toLocaleDateString('en-US').split("/");
-        DatePart = DatePart[0]+"/"+DatePart[1];
-        
+        let DatePart = dateTime.toLocaleDateString('en-US').split("/");
+        DatePart = DatePart[0] + "/" + DatePart[1];
+
         const timeOptions = {
             hour12: false,
             hour: 'numeric',
@@ -314,11 +319,11 @@ socket.on('msgToShow',(data)=>{
 
         var timing = dateTime.toLocaleDateString('en-US', timeOptions);
         var timingTimePart = timing.split(",")[1].split(":");
-        timingTimePart = timingTimePart[0]+":"+timingTimePart[1];
-        var timeToShow = DatePart + " "+timingTimePart
-        
+        timingTimePart = timingTimePart[0] + ":" + timingTimePart[1];
+        var timeToShow = DatePart + " " + timingTimePart
+
         var sendTime = document.createElement('div');
-        sendTime.setAttribute("class","sendTime header");
+        sendTime.setAttribute("class", "sendTime header");
         sendTime.innerText = timeToShow;
         timeContentDiv.appendChild(sendTime);
 
@@ -326,23 +331,23 @@ socket.on('msgToShow',(data)=>{
         var message = document.createElement('p');
         message.innerText = data.msg;
         timeContentDiv.appendChild(message);
-        
+
         chatList.appendChild(singleMessage);
 
         // make scroll bar default to bottom
         var messageBody = document.querySelector('.scroll-message');
-        messageBody.scrollTop = messageBody.scrollHeight-messageBody.clientHeight;
-       
-        
+        messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+
+
     }
 })
 
 socket.on("userDisconnected", (disconnectUserName) => {
     console.log("F8");
     var potentialPartners = document.querySelectorAll('partnerName');
-    for (i=0; i<potentialPartners.length; i++){
+    for (i = 0; i < potentialPartners.length; i++) {
         console.log("potentialPartners[i].innerText: ", potentialPartners[i].innerText, "disconnectUserName", disconnectUserName);
-        if(potentialPartners[i].innerText == disconnectUserName){
+        if (potentialPartners[i].innerText == disconnectUserName) {
             console.log("remove color");
             var statusSmall = document.querySelectorAll('small');
             statusSmall[i].setAttribute('class', 'chat-alert label label-danger');
@@ -352,3 +357,23 @@ socket.on("userDisconnected", (disconnectUserName) => {
     }
     console.log("disconnectUserName: ", disconnectUserName);
 })
+
+/* When the user clicks on the button,
+toggle between hiding and showing the dropdown content */
+function myFunction() {
+    document.getElementById("myDropdown").classList.toggle("show");
+}
+
+// Close the dropdown menu if the user clicks outside of it
+window.onclick = function (event) {
+    if (!event.target.matches('.dropbtn')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+            }
+        }
+    }
+}
