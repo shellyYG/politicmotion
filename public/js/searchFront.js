@@ -30,19 +30,19 @@ async function searchNews(){
             // ----------------------------------------------------------- get a row container for btn
             const btnRow = document.getElementById('btnRow');
 
-            // ----------------------------------------------------------- append send-button
-            const showNewsBtnCol = document.createElement('div');
-            showNewsBtnCol.innerHTML = 'Show News'
-            showNewsBtnCol.setAttribute("id","showNewsBtnCol");
-            showNewsBtnCol.setAttribute("class","btn btn-xs btn-primary offset-md-3 col-lg-2");
-            btnRow.appendChild(showNewsBtnCol);
-
             // ----------------------------------------------------------- append remove-dots-button
             const reselectBtnCol = document.createElement('div');
             reselectBtnCol.innerHTML = 'Clear Dots'
             reselectBtnCol.setAttribute("id","reselectBtnCol");
             reselectBtnCol.setAttribute("class","btn btn-xs btn-primary offset-md-2 col-lg-2");
             btnRow.appendChild(reselectBtnCol);
+
+            // ----------------------------------------------------------- append send-button
+            const showNewsBtnCol = document.createElement('div');
+            showNewsBtnCol.innerHTML = 'Next Step'
+            showNewsBtnCol.setAttribute("id","showNewsBtnCol");
+            showNewsBtnCol.setAttribute("class","btn btn-xs btn-primary offset-md-3 col-lg-2 active");
+            btnRow.appendChild(showNewsBtnCol);
             
             // ----------------------------------------------------------------- Score of all dots
             const NYSentimentArray = res.data.NYSentimentArray;

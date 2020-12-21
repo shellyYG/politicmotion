@@ -96,6 +96,14 @@ var potentialPartnerDivs = document.querySelectorAll('.singleBuddy');
 
 potentialPartnerDivs.forEach((element)=>{
     element.addEventListener('click',()=>{
+        // clear all highlights from other elements
+        var partnerForClean = document.querySelectorAll('.singleBuddy');
+        partnerForClean.forEach((e)=>{
+            console.log("e: ", e);
+            e.removeAttribute('id');
+        })
+        // add highlight color for partner selected
+        element.setAttribute('id', 'singleBuddySelected');
         // set local Storage to send to back-end
         localStorage.setItem('receiver', element.childNodes[0].childNodes[1].innerText);
         receiver = localStorage.getItem("receiver");
@@ -110,8 +118,7 @@ socket.on('history',(data)=>{
     console.log("history : ", data);
     // empty history with other people
     msgPlaceHolder.innerHTML = "";
-    // var selectedPartnerName = document.createElement('strong');
-    // selectedPartnerName.innerText
+    
     
     // add history with others
     data.forEach(element=>{
