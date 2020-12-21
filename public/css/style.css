@@ -818,6 +818,11 @@ blockquote {
   line-height: 1.5;
 }
 
+#StrongName {
+  font-weight: bolder;
+  box-sizing: border-box;
+}
+
 .page-title-alt {
   padding: 350px 0 70px;
 }

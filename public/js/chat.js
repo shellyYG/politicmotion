@@ -27,11 +27,13 @@ for (i=0; i<buddiesToChat.length; i++){
     var statusDiv = document.createElement('div');
     statusDiv.setAttribute('class','friend-name');
 
-    var nameStrong = document.createElement('strong');
-    nameStrong.innerText = buddiesToChat[i].buddies;
     var statusSmall = document.createElement('small');
     statusSmall.setAttribute('class', 'chat-alert label label-danger');
     statusSmall.innerText = 'offline';
+
+    var nameStrong = document.createElement('partnerName');
+    nameStrong.setAttribute("id", "StrongName");
+    nameStrong.innerText = buddiesToChat[i].buddies;
 
     statusDiv.appendChild(statusSmall);
     statusDiv.appendChild(nameStrong);
@@ -76,20 +78,20 @@ socket.on('Self', (self)=>{
 // change color to green when online
 socket.on("onlineUsers", (onlineUserList) => {
     console.log("F6");
-    var potentialPartners = document.querySelectorAll('strong');
+    var potentialPartners = document.querySelectorAll('partnerName');
     console.log("onlineUsers: ", onlineUserList);
     for (i=0; i<potentialPartners.length; i++){
         if(onlineUserList.includes(potentialPartners[i].innerText)){
             var statusSmall = document.querySelectorAll('small');
-            statusSmall[i-1].setAttribute('class', 'chat-alert label label-success'); // -1 because [0] means Welcome to chat
-            statusSmall[i-1].innerText = 'online';
+            statusSmall[i].setAttribute('class', 'chat-alert label label-success'); // -1 because [0] means Welcome to chat
+            statusSmall[i].innerText = 'online';
         }
     }
     console.log("F7");
 });
 
 // select chat partner //change the element to load historical msg
-var potentialPartners = document.querySelectorAll('strong');
+var potentialPartners = document.querySelectorAll('partnerName');
 console.log("potentialPartners: ", potentialPartners);
 potentialPartners.forEach(element=>{
     element.addEventListener('click',()=>{
@@ -325,8 +327,9 @@ socket.on('msgToShow',(data)=>{
 
 socket.on("userDisconnected", (disconnectUserName) => {
     console.log("F8");
-    var potentialPartners = document.querySelectorAll('strong');
+    var potentialPartners = document.querySelectorAll('partnerName');
     for (i=0; i<potentialPartners.length; i++){
+        console.log("potentialPartners[i].innerText: ", potentialPartners[i].innerText, "disconnectUserName", disconnectUserName);
         if(potentialPartners[i].innerText == disconnectUserName){
             console.log("remove color");
             var statusSmall = document.querySelectorAll('small');
