@@ -272,7 +272,9 @@ socket.on('msgToShow',(data)=>{
         var message = document.createElement('p');
         message.innerText = data.msg;
         timeContentDiv.appendChild(message);
+
         
+        // add chat
         chatList.appendChild(singleMessage);
 
         // make scroll bar default to bottom

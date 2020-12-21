@@ -305,3 +305,9 @@ body {
   border-radius: 15px;
 }
 
+#default-select-user-text {
+  color: white;
+  font-size: 60px;
+  text-align: center;
+}
+

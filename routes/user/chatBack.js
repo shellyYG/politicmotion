@@ -45,7 +45,7 @@ const socketChat = (socket) => {
         })
     });
     
-    socket.on("receiver", (receiver)=>{
+    socket.on("receiver", (receiver)=>{ //sometimes this won't work
         
         console.log("received receiver, try to get its socket.id");
 
