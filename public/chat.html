@@ -54,22 +54,28 @@
       </div>
     </nav>
     <div class="row mb-5 progressBar">
+      <!-- start of new progress bar  -->
       <div class="col-12">
-        <div class="btn-group btn-group-toggle justify-content-center d-flex" data-toggle="buttons">
-          <label class="btn btn-sm btn-primary" onclick="window.location='/shownewsdots.html'">
-            <input type="radio" name="shuffle-filter" value="all" checked="checked" />Select Dots
-          </label>
-          <label class="btn btn-sm btn-primary" onclick="window.location='/shownewscontent.html'">
-            <input type="radio" name="shuffle-filter" value="design" />Click Emotions
-          </label>
-          <label class="btn btn-sm btn-primary" onclick="window.location='/userEmotion.html'">
-            <input type="radio" name="shuffle-filter" value="branding" />Select Chat Partner
-          </label>
-          <label class="btn btn-sm btn-primary active" onclick="window.location='/chat.html'">
-            <input type="radio" name="shuffle-filter" value="illustration" />Chat
-          </label>
+        <div id="stepProgressBar">
+          <div class="step">
+            <p class="step-text">Select Dots</p>
+            <div class="bullet1 completed">1</div>
+          </div>
+          <div class="step">
+            <p class="step-text">Click Emotions</p>
+            <div class="bullet2 completed">2</div>
+          </div>
+          <div class="step">
+            <p class="step-text">Select Chat Partner</p>
+            <div class="bullet3 completed">3</div>
+          </div>
+          <div class="step">
+            <p class="step-text">Chat</p>
+            <div class="bullet4 completed">4</div>
+          </div>
         </div>
       </div>
+      <!-- end of new progress bar  -->
     </div>
   </header>
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">

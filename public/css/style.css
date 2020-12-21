@@ -443,7 +443,7 @@ textarea.form-control {
 /* /card */
 .navigation {
   background-color: #17202A;
-  padding: 40px 130px;
+  padding: 9px 130px;
   transition: .3s ease;
 }
 
@@ -1135,3 +1135,95 @@ img[id^="user_love_"]:hover, img[id^="user_haha_"]:hover, img[id^="user_sad_"]:h
   font-size: 18px;
 }
 
+.new-container {
+  max-width: 400px;
+  margin: 20px auto 0 auto;
+}
+
+#stepProgressBar {
+  display: flex;
+  width: 600px;
+  margin: 0 auto;
+  margin-bottom: 40px;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.step {
+  text-align: center; /*  center the text */
+}
+
+.step-text {
+  margin-bottom: 10px;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.bullet1, .bullet2, .bullet3, .bullet4 {
+  height: 30px;
+  width: 30px;
+  border-radius: 100%;
+  border: 1px solid #1363be;
+  font-weight: bold;
+  color: white;
+  display: inline-block;
+  position: relative;
+  line-height: 30px; /*line-height the same as height will make text vertically centered*/
+}
+
+.bullet1.completed, .bullet2.completed, .bullet3.completed, .bullet4.completed {
+  height: 30px;
+  width: 30px;
+  border-radius: 100%;
+  border: 1px solid #1363be;
+  background-color: #1363be;
+  font-weight: bold;
+  color: white;
+  display: inline-block;
+  position: relative;
+  line-height: 30px; /*line-height the same as height will make text vertically centered*/
+}
+
+.bullet1.completed::after, .bullet2.completed::after{
+  content: '';
+  position: absolute; 
+  height: 10px;
+  width: 160px;
+  background-color:#1363be;
+  right: -160px;
+  bottom: 10px;
+}
+
+.bullet1.justcomp, .bullet2.justcomp, .bullet3.justcomp{
+  height: 30px;
+  width: 30px;
+  border-radius: 100%;
+  border: 1px solid #1363be;
+  background-color: #1363be;
+  font-weight: bold;
+  color: white;
+  display: inline-block;
+  position: relative;
+  line-height: 30px;
+}
+
+.bullet2.completed::after{
+  content: '';
+  position: absolute; 
+  height: 10px;
+  width: 180px;
+  background-color:#1363be;
+  right: -180px;
+  bottom: 10px;
+}
+
+.bullet3.completed::after {
+  content: '';
+  position: absolute; 
+  height: 10px;
+  width: 160px;
+  background-color:#1363be;
+  right: -150px;
+  bottom: 10px;
+}
