@@ -92,16 +92,17 @@ socket.on("onlineUsers", (onlineUserList) => {
 
 // select chat partner //change the element to load historical msg
 var potentialPartners = document.querySelectorAll('partnerName');
-console.log("potentialPartners: ", potentialPartners);
-potentialPartners.forEach(element=>{
+var potentialPartnerDivs = document.querySelectorAll('.singleBuddy');
+
+potentialPartnerDivs.forEach((element)=>{
     element.addEventListener('click',()=>{
-        localStorage.setItem('receiver', element.innerText);
+        // set local Storage to send to back-end
+        localStorage.setItem('receiver', element.childNodes[0].childNodes[1].innerText);
         receiver = localStorage.getItem("receiver");
         console.log("receiver: ",receiver);
         socket.emit('receiver', receiver); //send to all server
-        console.log("receiver sent to back-end!");
+        console.log(`${receiver} sent to back-end!` );
     })
-    
 })
 
 // Load the history
@@ -109,7 +110,9 @@ socket.on('history',(data)=>{
     console.log("history : ", data);
     // empty history with other people
     msgPlaceHolder.innerHTML = "";
-
+    // var selectedPartnerName = document.createElement('strong');
+    // selectedPartnerName.innerText
+    
     // add history with others
     data.forEach(element=>{
         var singleMessage = document.createElement('li');

@@ -292,3 +292,9 @@ body {
     /* border-bottom: 5px solid #1363be; */
 }
 
+.singleBuddy:active {
+    background-color: #005CBF;
+    color: white;
+    border-radius: 15px;
+}
+
