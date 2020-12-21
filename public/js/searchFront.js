@@ -10,6 +10,7 @@ let avgPostSentiment = 0;
 let avgPostMagnitude = 0;
 let avgReactionSentiment = 0;
 let avgReactionMagnitude = 0;
+var d3 = Plotly.d3;
 
 async function searchNews(){
     axios.post(`/searchNews`,{
@@ -63,7 +64,7 @@ async function searchNews(){
                 name: "New York Times",
                 textposition: 'top center',
                 textfont: {
-                    family:  'Raleway, sans-serif'
+                    family:  'BwNistaInt-xBd'
                 },
                 marker: { size: 12, color: 'rgb(255, 255, 255)'}, //, symbol: 'diamond-open'
                 type: 'scatter'
@@ -76,57 +77,79 @@ async function searchNews(){
                 name: "Fox News",
                 textposition: 'top center',
                 textfont: {
-                    family:  'Raleway, sans-serif'
+                    family:  'BwNistaInt-xBd'
                 },
-                marker: { size: 12, color: 'rgb(12, 241, 249)'},
+                marker: { size: 12, color: 'rgb(0,50,255)'},
                 type: 'scatter'
             }
             
             var data = [traceNYT, traceFox];
 
             var layout = {
+                // -------------------------------- add a non-zero horizontal line
+                shapes: [{
+                    type: 'line',
+                    x0: -1,
+                    x1: 1,
+                    y0: 0.75,
+                    y1: 0.75,
+                    line: {
+                        color: 'white',
+                        width: 4
+                    }
+                }
+            ],
                 xaxis: {
                     title: {
                         text: 'Mood',
                         font: {
-                            size: 20,
+                            size: 28,
                             color: "white"
                         }
+
                     },
                     range: [-1, 1],
-                    showgrid: false, // hind non-zero grid
+                    showgrid: false, // hide non-zero grid
                     zerolinecolor: 'white',
                     zerolinewidth: 4,
-                    showticklabels: true,
+                    showticklabels: true, // show axis title
                     tickfont: {
-                    family: 'Old Standard TT, serif',
-                    size: 14,
-                    color: 'white'
-                    }
+                        family: 'BwNistaInt-xBd',
+                        size: 22,
+                        color: 'white'
+                    },
+                    tickvals: [-1, 0, 1],
+                    ticktext:['Negative', 'Neutral', 'Positive']
 
                 },
                 yaxis: {
                     title: {
                         text: 'Intensity',
                         font: {
-                            size: 20,
+                            size: 28,
                             color: "white"
                         }
                     },
+                    range: [-0.1, 1.5],
                     showgrid: false,
-                    zerolinecolor: 'white',
-                    zerolinewidth: 4,
+                    // zerolinecolor: 'white',
+                    // zerolinewidth: 4,
+                    zeroline: false,
                     showticklabels: true,
                     tickfont: {
-                    family: 'Old Standard TT, serif',
-                    size: 14,
-                    color: 'white'
-                    }
+                        family: 'BwNistaInt-xBd',
+                        size: 22,
+                        color: 'white'
+                    },
+                    tickvals: [0.3, 1.3],
+                    ticktext:['Light', 'Strong'],
+                    tickangle: 270
+                    
                 },
                 title: {
                     text: 'News Sentiment & Magnitude Score',
                     font: {
-                        size: 24,
+                        size: 30,
                         color: "white"
                     }
                 },
@@ -150,10 +173,15 @@ async function searchNews(){
 
             // ----------------------remove loading first
             loadingBlock.innerHTML=""
-
-
+            
             // ------------------------------------------------- Create Plot
             Plotly.newPlot(graph, data, layout, config);
+
+            // ------------------------------------------------- Change cursor to pointer
+            dragLayer = document.getElementsByClassName('nsewdrag')[0];
+            graph.on('plotly_hover', function(data){
+                dragLayer.style.cursor = 'pointer'
+            });
 
             // -------------------------------------------------- Build click event & saved it to localStorage     
             graph.on('plotly_click', function(data){
@@ -170,7 +198,7 @@ async function searchNews(){
                     localStorage.setItem("clickedPoints",JSON.stringify(pointArray));
                     
                     // ------------------------------ add annotation
-                    annotate_text = '('+data.points[i].x+", "+data.points[i].y+") selected!";
+                    annotate_text = "News Selected!"; //'('+data.points[i].x+", "+data.points[i].y+") selected!"
                     annotation = {
                         text: annotate_text,
                         x: data.points[i].x,
