@@ -84,13 +84,14 @@ router.post('/', verifyToken, (req, res)=>{
                 // filter to min sentiment distance
                 for (i=0; i<buddies.length; i++){
                     //kickout selfs for finding min. (do not need this when finding opposite because no possibility of finding self)
+                    console.log("sentimentMultiples[buddies[i].buddyIndex].matchedEmail: ", sentimentMultiples[buddies[i].buddyIndex].matchedEmail,"sentimentMultiples[buddies[i].buddyIndex].sentimentDistance: ", sentimentMultiples[buddies[i].buddyIndex].sentimentDistance);
                     if(sentimentMultiples[buddies[i].buddyIndex].matchedEmail !== currentUserEmail){ 
                         filteredSentDistance.push(sentimentMultiples[buddies[i].buddyIndex].sentimentDistance);
                     }
                 }
-                
+                console.log("filteredSentDistance: ", filteredSentDistance);
                 var minSentDistance = Math.min.apply(Math, filteredSentDistance.filter(function(x){return x >= 0})); 
-
+                console.log("minSentDistance: ", minSentDistance);
                 var smallestSentids = [];
                 for (i=0;i<buddies.length;i++){
                     if(buddies[i].sentimentDistance == minSentDistance){
@@ -106,7 +107,7 @@ router.post('/', verifyToken, (req, res)=>{
 
                 var filteredMagnitudes = smallestSentBuddies.map((element)=>{return element.magnitudeDistance});
 
-                var minMagAmongSmallestSent = Math.min.apply(Math, filteredMagnitudes); //avoid finding self
+                var minMagAmongSmallestSent = Math.min.apply(Math, filteredMagnitudes); //avoid finding self. but can't avoid if there is a zero
 
                 var smallestMagids = [];
                 for (i=0; i<buddies.length;i++){
@@ -118,7 +119,7 @@ router.post('/', verifyToken, (req, res)=>{
                 var firstdegreeBuddiesEmails = [];
                 for (i=0; i< smallestSentids.length; i++){
                     for(j=0; j<smallestMagids.length; j++){
-                        if(smallestSentids[i]==smallestMagids[j]){
+                        if(smallestSentids[i]==smallestMagids[j] && buddies[smallestSentids[i]].buddyEmail !==currentUserEmail){
                             firstdegreeBuddies.push(smallestSentids[i]);
                             firstdegreeBuddiesEmails.push(buddies[smallestSentids[i]].buddyEmail);
                         }
@@ -131,7 +132,7 @@ router.post('/', verifyToken, (req, res)=>{
                 var seconddegreeBuddiesEmails = [];
                 
                 for (i=0; i< smallestSentids.length; i++){
-                    if(!firstdegreeBuddies.includes(smallestSentids[i])){
+                    if(!firstdegreeBuddies.includes(smallestSentids[i]) && buddies[smallestSentids[i]].buddyEmail!==currentUserEmail){
                         seconddegreeBuddies.push(smallestSentids[i]);
                         seconddegreeBuddiesEmails.push(buddies[smallestSentids[i]].buddyEmail);
                     }
@@ -185,8 +186,6 @@ router.post('/', verifyToken, (req, res)=>{
                 res.send(buddyNames);
             }
             sendBuddyNames();
-            
-            
            
         }
     })        

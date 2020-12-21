@@ -79,6 +79,7 @@ body {
 
   .scroll-message {
       overflow-y: scroll;
+      overflow-x: hidden;
       scrollbar-color: white #17202A;
       height: 524px;
       margin: 22px 0px 0px 0px;
