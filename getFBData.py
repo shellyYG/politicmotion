@@ -101,6 +101,7 @@ def PostContent(soup, source):
         Time = "No Time"
     try:
         moodInfo = userContent.find('span', {'class':'_1n9r _66lh'})
+        
     except:
         moodInfo = "No moodInfo"
     try:
@@ -112,28 +113,44 @@ def PostContent(soup, source):
         Like = '0'
         print("Failed to load Reactions")
 
+    # add Big title of article
+    print("start big title")
+    try:
+        bigTitle = userContent.find('div', {'class': 'mbs _6m6 _2cnj _5s6c'}).text
+    except:
+        bigTitle = "No Big Title"
+    
+    # add Small title of article
+    try:
+        smallTitle = userContent.find('div', {'class': '_6m7 _3bt9'}).text
+    except:
+        smallTitle = "No Small Title"
+
     FullPost['Link'] = driver.current_url
     FullPost['Time'] = Time
     FullPost['Content'] = Content
     FullPost['Reaction'] = listToString(AllReaction)
     FullPost['Source'] = source
     FullPost['SavedDate'] = date.today()
+    FullPost['bigTitle'] = bigTitle
+    FullPost['smallTitle'] = smallTitle
     
     AllPost.append(FullPost)
     return AllPost
 
 
 #===========================================================================================================================Get New York Time Post
-NYTimeLinks = FindLinks(url='https://www.facebook.com/nytimes/', n = 10)
+NYTimeLinks = FindLinks(url='https://www.facebook.com/nytimes/', n = 1)
 for Link in NYTimeLinks:
     print("At Link: "+Link)
     driver.get(Link) #expand link for soup below to catch
     soup = BeautifulSoup(driver.page_source, "html.parser")
+    
     PostContent(soup, "nytimes")
 
 # transform list of dict to dataframe
 Facebookdf = pd.DataFrame(AllPost)
-Facebookdf.columns = ['post_link','post_time','content','reaction','post_source', 'saved_date']
+Facebookdf.columns = ['post_link','post_time','content','reaction','post_source', 'saved_date', 'title', 'small_title']
 Facebookdf.to_sql(
     'fb_rawdata',
     con=engine,
@@ -144,24 +161,24 @@ Facebookdf.to_sql(
 driver.close()
 
 #===========================================================================================================================Get Fox News Post
-driver = webdriver.Chrome()
-AllPost =[]
-FoxNewsLinks = FindLinks(url='https://www.facebook.com/FoxNews/', n = 10)
-for Link in FoxNewsLinks:
-    print("At Link: "+Link)
-    driver.get(Link) #expand link for soup below to catch
-    soup = BeautifulSoup(driver.page_source, "html.parser")
-    PostContent(soup, "foxnews")
+# driver = webdriver.Chrome()
+# AllPost =[]
+# FoxNewsLinks = FindLinks(url='https://www.facebook.com/FoxNews/', n = 10)
+# for Link in FoxNewsLinks:
+#     print("At Link: "+Link)
+#     driver.get(Link) #expand link for soup below to catch
+#     soup = BeautifulSoup(driver.page_source, "html.parser")
+#     PostContent(soup, "foxnews")
 
-# transform list of dict to dataframe
-Foxnewsdf = pd.DataFrame(AllPost)
-Foxnewsdf.columns = ['post_link','post_time','content','reaction','post_source', 'saved_date']
-Foxnewsdf.to_sql(
-    'fb_rawdata',
-    con=engine,
-    index=False,
-    if_exists = 'append'  #if table exist, then append the rows rather than fail (default is fail)
-)
+# # transform list of dict to dataframe
+# Foxnewsdf = pd.DataFrame(AllPost)
+# Foxnewsdf.columns = ['post_link','post_time','content','reaction','post_source', 'saved_date']
+# Foxnewsdf.to_sql(
+#     'fb_rawdata',
+#     con=engine,
+#     index=False,
+#     if_exists = 'append'  #if table exist, then append the rows rather than fail (default is fail)
+# )
 
-driver.close()
+# driver.close()
 
