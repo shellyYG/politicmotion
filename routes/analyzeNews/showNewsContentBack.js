@@ -210,13 +210,13 @@ router.post('/', (req, res) => {
                 newsIdtoShow.push(allMatched[i].firstArticle);
                 newsIdtoShow.push(allMatched[i].secondString);
             }
-            console.log("newsIdtoShow: ", newsIdtoShow);
+            // console.log("newsIdtoShow: ", newsIdtoShow);
             var uniqueNewsIdtoShow = newsIdtoShow.filter(unique);
             var clickedNews = [];
             clickedNews = allMatched.map((element) => { return element.firstArticle });
         }
 
-        console.log("clickedNews: ", clickedNews);
+        // console.log("clickedNews: ", clickedNews);
 
         async function getRelevantNews() {
             sql = `SELECT id, content, post_date, post_link, reaction, post_source, sentiment_score, magnitude_score, user_sentiment_score, user_magnitude_score
@@ -273,7 +273,7 @@ router.post('/', (req, res) => {
                             matchedId.push(allMatched[j].secondString);
                         }
                     }
-                    console.log("clickedId.length: ", clickedId.length)
+                    // console.log("clickedId.length: ", clickedId.length)
                     if (clickedId.length == 0) {
                         clickedId.push(0);
                         matchedId.push(0);
@@ -285,7 +285,7 @@ router.post('/', (req, res) => {
 
                 
             }
-            console.log("finalNewsPackage: ", finalNewsPackage);
+            // console.log("finalNewsPackage: ", finalNewsPackage);
             res.json(finalNewsPackage);
 
         }
