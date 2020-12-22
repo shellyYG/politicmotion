@@ -31,8 +31,9 @@ axios.post(`showNewsContent`,{
 }).then(res=>{
         var articleRow;
         for (i=0; i<res.data.length; i++){
+            console.log("res.data: ", res.data);
             // ============================================================= Get clicked Articles and create a block
-            if (res.data[i].clickedId !== 0){
+            if (res.data[i].clickedId !== 0){ // has at least 1 news
                 var rawDate = res.data[i].post_date;
                 var re = /([^T]+)/;
                 var pureDatePart = rawDate.split(re);
@@ -146,7 +147,9 @@ axios.post(`showNewsContent`,{
                 iconDiv.appendChild(hahaBtn);
                 iconDiv.appendChild(cryBtn);
                 iconDiv.appendChild(angryBtn);
-
+                
+                var loadingSection = document.getElementById("btnLoader");
+                loadingSection.innerHTML = "";
                 articles.appendChild(articleRow); // append to all articles list
 
             }
@@ -156,6 +159,7 @@ axios.post(`showNewsContent`,{
             var matchedArticleRow;
             // ============================================================= Get matched Articles in same block
             for (j=0;j<res.data.length;j++){
+                console.log("res.data[i].clickedId: ", res.data[i].clickedId);
                 if (res.data[i].clickedId == 0){ //is a matched article
                     if (res.data[j].matchedId == res.data[i].id){ // if a clickedArticle's matched Article == this matched article
                         var rawDate = res.data[i].post_date;
@@ -270,7 +274,7 @@ axios.post(`showNewsContent`,{
 
                         
 
-                        const loadingSection = document.getElementById("btnLoader");
+                        var loadingSection = document.getElementById("btnLoader");
                         loadingSection.innerHTML = "";
 
                         articles.appendChild(matchedArticleRow); // append to all articles list

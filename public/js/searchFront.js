@@ -17,8 +17,8 @@ async function searchNews(){
         'searchTopic1': searchTopic1,
         'searchTopic2': searchTopic2
     }).then(res=>{
-        if(res.data.FBNYNewsContent == 'NA'){
-            alert("No news found!");
+        if(res.data.NYSentimentArray.length == 0){
+            alert("Oops, no news found, please choose another topic!");
             window.location.href="/";
         }else{
             console.log("Has news!");
