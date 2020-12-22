@@ -35,7 +35,6 @@ router.get('/', (req, res)=> {
                     singleNews.push(topics);
                     singleNews.push(saved_date);
 
-
                     // build allNews array
                     allNews.push(singleNews);
                 }
@@ -45,7 +44,51 @@ router.get('/', (req, res)=> {
                 return sqlquery;
             }
             
-            saveData()
+            // saveData()
+
+            async function getLeadParagraph(){
+                sql = `SELECT n.title
+                FROM politicmotion.news_rawdata n
+                LEFT JOIN politicmotion.nyt_details d ON n.title = d.headline
+                WHERE n.news_source = "New York Times" AND d.headline IS NULL
+                ORDER BY n.id DESC;`
+                let sqlquery = await query(sql);
+                return sqlquery;
+            }
+
+            async function matchLeadParagraph(){
+                let titles = await getLeadParagraph();
+                let allDetails = [];
+                for (i=0; i<titles.length; i++){
+                    console.log("i:",i);
+                    try{
+                        var encodedComponent = encodeURIComponent(titles[i].title);
+                        var detailLink = `https://api.nytimes.com/svc/search/v2/articlesearch.json?q="${encodedComponent}"&api-key=${NYTimesToken}`
+                        let NYTresponse = await axios.get(detailLink);
+                        var leadParagraph = NYTresponse.data.response.docs[0].lead_paragraph;
+                        var abstract = NYTresponse.data.response.docs[0].abstract;
+                        var headline = NYTresponse.data.response.docs[0].headline.main;
+                        var savedDetailedDate = new Date();
+                        var singleDetails = [];
+                        
+                        singleDetails.push(headline);
+                        singleDetails.push(abstract);
+                        singleDetails.push(leadParagraph);
+                        singleDetails.push(savedDetailedDate);
+                        
+                        // build allNews array
+                        allDetails.push(singleDetails);
+                    }catch(err){
+                        console.log("sorry, no lead paragraph found")
+                    }
+                }
+                sql = 'INSERT INTO nyt_details (headline, abstract, lead_paragraph, saved_date) VALUES ?'
+                let sqlquery = await query(sql, [allDetails]);
+                console.log("done inserting lead-paragraph");
+                return sqlquery;
+            }
+
+            matchLeadParagraph()
             
             res.send("Successfully got NYTData & saved!");
             console.log("Data successfully saved.")
