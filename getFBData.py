@@ -145,30 +145,30 @@ def PostContent(soup, source):
 
 
 #===========================================================================================================================Get New York Time Post
-# NYTimeLinks = FindLinks(url='https://www.facebook.com/nytimes/', n = 10)
-# for Link in NYTimeLinks:
-#     print("At Link: "+Link)
-#     driver.get(Link) #expand link for soup below to catch
-#     soup = BeautifulSoup(driver.page_source, "html.parser")
+NYTimeLinks = FindLinks(url='https://www.facebook.com/nytimes/', n = 1)
+for Link in NYTimeLinks:
+    print("At Link: "+Link)
+    driver.get(Link) #expand link for soup below to catch
+    soup = BeautifulSoup(driver.page_source, "html.parser")
     
-#     PostContent(soup, "nytimes")
+    PostContent(soup, "nytimes")
 
-# # transform list of dict to dataframe
-# Facebookdf = pd.DataFrame(AllPost)
-# Facebookdf.columns = ['post_link','post_time','content','reaction','post_source', 'saved_date', 'title', 'small_title']
-# Facebookdf.to_sql(
-#     'fb_rawdata',
-#     con=engine,
-#     index=False,
-#     if_exists = 'append'  #if table exist, then append the rows rather than fail (default is fail)
-# )
+# transform list of dict to dataframe
+Facebookdf = pd.DataFrame(AllPost)
+Facebookdf.columns = ['post_link','post_time','content','reaction','post_source', 'saved_date', 'title', 'small_title']
+Facebookdf.to_sql(
+    'fb_rawdata',
+    con=engine,
+    index=False,
+    if_exists = 'append'  #if table exist, then append the rows rather than fail (default is fail)
+)
 
-# driver.close()
+driver.close()
 
 #===========================================================================================================================Get Fox News Post
 driver = webdriver.Chrome()
 AllPost =[]
-FoxNewsLinks = FindLinks(url='https://www.facebook.com/FoxNews/', n = 10)
+FoxNewsLinks = FindLinks(url='https://www.facebook.com/FoxNews/', n = 1)
 for Link in FoxNewsLinks:
     print("At Link: "+Link)
     driver.get(Link) #expand link for soup below to catch
@@ -177,7 +177,7 @@ for Link in FoxNewsLinks:
 
 # transform list of dict to dataframe
 Foxnewsdf = pd.DataFrame(AllPost)
-Foxnewsdf.columns = ['post_link','post_time','content','reaction','post_source', 'saved_date']
+Foxnewsdf.columns = ['post_link','post_time','content','reaction','post_source', 'saved_date', 'title', 'small_title']
 Foxnewsdf.to_sql(
     'fb_rawdata',
     con=engine,
