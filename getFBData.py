@@ -143,7 +143,42 @@ def PostContent(soup, source):
     AllPost.append(FullPost)
     return AllPost
 
+#========================================================= update existing FB data
+def contentToFill(soup, linkToFill):
+    userContent = soup.find('div', {'class':'_5pcr userContentWrapper'})
+    try:
+        Content = userContent.find('div',{'class':'_5pbx userContent _3576'}).text
+        PosterInfo = userContent.find('div', {'class':'l_c3pyo2v0u _5eit i_c3pynyi2f clearfix'})
+    except:
+        Content = "No Content Found"
+        PosterInfo = "No PosterInfo"
+        print("no content found")
+    
 
+    # add Big title of article
+    try:
+        bigTitle = userContent.find('div', {'class': 'mbs _6m6 _2cnj _5s6c'}).text
+        print("has bigTitle")
+        print(bigTitle)
+    except:
+        bigTitle = "No Big Title"
+        print("NO bigTitle")
+    
+    # add Small title of article
+    try:
+        smallTitle = userContent.find('div', {'class': '_6m7 _3bt9'}).text
+        print("has smallTitle")
+        print(smallTitle)
+    except:
+        smallTitle = "No Small Title"
+        print("No Small Title")
+
+    
+    with engine.begin() as conn:
+        results = conn.execute(f'UPDATE politicmotion.fb_rawdata SET title = "{bigTitle}", small_title = "{smallTitle}" WHERE post_link = "{linkToFill}";')
+    print("Done try")
+ 
+    return {bigTitle, smallTitle}
 #===========================================================================================================================Get New York Time Post
 # NYTimeLinks = FindLinks(url='https://www.facebook.com/nytimes/', n = 1)
 
@@ -151,7 +186,7 @@ def PostContent(soup, source):
 # get all post links that does not have paragraph yet
 NYTLinksToFill = []
 with engine.begin() as conn:
-    results = conn.execute('SELECT id, post_link FROM politicmotion.fb_rawdata WHERE post_source = "nytimes" AND title IS NULL AND post_link IS NOT NULL ORDER BY id DESC LIMIT 50;')
+    results = conn.execute('SELECT id, post_link FROM politicmotion.fb_rawdata WHERE post_source = "nytimes" AND (title IS NULL OR title = "NO bigTitle") AND post_link IS NOT NULL ORDER BY id ASC LIMIT 20;')
     rows = results.fetchall()
     for i in rows:
         print(i)
@@ -160,25 +195,17 @@ with engine.begin() as conn:
 print("NYTLinksToFill: ")
 print(NYTLinksToFill)
 
-# Update existing news
+# start update the content
 for Link in NYTLinksToFill:
     print("At Link: "+Link)
-    time.sleep(3)
+    time.sleep(2)
     driver.get(Link) #expand link for soup below to catch
     soup = BeautifulSoup(driver.page_source, "html.parser")
     
-    PostContent(soup, "nytimes")
+    contentToFill(soup,Link)
 
-# transform list of dict to dataframe
-Facebookdf = pd.DataFrame(AllPost)
-Facebookdf.columns = ['post_link','post_time','content','reaction','post_source', 'saved_date', 'title', 'small_title']
-Facebookdf.to_sql(
-    'fb_rawdata',
-    con=engine,
-    index=False,
-    if_exists = 'append'  #if table exist, then append the rows rather than fail (default is fail)
-)
-
+# # transform list of dict to dataframe
+print("done try")
 driver.close()
 
 # # Add new news
