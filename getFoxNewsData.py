@@ -41,7 +41,7 @@ def findArticles(n, topic1, topic2):
     topicString = listToString(topics)
 
     url=f'https://www.foxnews.com/search-results/search?q={topic1}, {topic2}&submit=Search'
-    print("url is: "+url)
+    print("entry url is: "+url)
     driver.get(url)
     time.sleep(3)
 
@@ -77,7 +77,7 @@ def findArticles(n, topic1, topic2):
     Foxdf["news_source"] = "Fox News"
     Foxdf["topics"] = topicString
     Foxdf['SavedDate'] = date.today()
-    print(Foxdf)
+    
 
     print("Start saving to sql")
     Foxdf.columns = ['post_link','published_time','title','abstract','news_id', 'news_source','topics','saved_date']
@@ -91,6 +91,8 @@ def findArticles(n, topic1, topic2):
     print("Finished saving to sql")
     driver.close()
 
+postLinks = []
+
 def getLatestNews(n):
     url='https://www.foxnews.com/politics'
     print("url is: "+url)
@@ -100,7 +102,6 @@ def getLatestNews(n):
     soup = BeautifulSoup(driver.page_source, "html.parser")
 
     for i in range(n): # load n times
-        print(i)
         try: #try to scroll down
             driver.execute_script('window.scrollTo(0, document.body.scrollHeight);') #scroll down
             print('No interstitial, can scroll down.')
@@ -124,7 +125,7 @@ def getLatestNews(n):
         except:
             print("No load button")
 
-    postLinks = []
+    
     postTitles = []
     postTimes = []
     postContent = []
@@ -134,7 +135,17 @@ def getLatestNews(n):
     posts = upperSection.findAll('article',{'class':'article'})
     
     for i in posts:
-        postLinks.append(i.find('a').attrs['href'])
+        rawLink = i.find('a').attrs['href']
+        
+        if(rawLink[0:9]=='/politics'):
+            fullLink = "https://www.foxnews.com"+rawLink
+            print("fullLink is:")
+            print(fullLink)
+        else:
+            fullLink = rawLink
+
+        postLinks.append(fullLink)
+        
         postTimes.append(i.find('span',{'class':'time'}).string)
         try:
             postTitles.append(i.find('h4',{'class':'title'}).string)
@@ -144,6 +155,7 @@ def getLatestNews(n):
             postContent.append(i.find('p',{'class':'dek'}).find('a').string)
         except:
             postContent.append('No Content Found')
+    
 
     Foxdf = pd.DataFrame({'postlink': postLinks,
                           'published_time':postTimes,
@@ -155,17 +167,36 @@ def getLatestNews(n):
     Foxdf['SavedDate'] = date.today()
     print(Foxdf)
 
-    print("Start saving to sql")
-    Foxdf.columns = ['post_link','published_time','title','abstract','news_id', 'news_source','topics','saved_date']
-    Foxdf.to_sql(
-    'news_rawdata',
-    con=engine,
-    index=False,
-    if_exists = 'append'  #if table exist, then append the rows rather than fail (default is fail)
-    )   
 
-    print("Finished saving to sql")
+    # print("Start saving to sql")
+    # Foxdf.columns = ['post_link','published_time','title','abstract','news_id', 'news_source','topics','saved_date']
+    # Foxdf.to_sql(
+    # 'news_rawdata',
+    # con=engine,
+    # index=False,
+    # if_exists = 'append'  #if table exist, then append the rows rather than fail (default is fail)
+    # )   
+    # print("Finished saving to sql")
+
     driver.close()
+
+    # get content in postLinks
+    for i in postLinks:
+        print(i)
+        driver.get(i)
+        time.sleep(3)
+        soupFullArticle = BeautifulSoup(driver.page_source, "html.parser")
+
+        # try: #click on interstital close button
+        #     interstitialsFullArticle = soup.findAll('div',{'class':'fc-dialog-container'})
+        #     for i in interstitialsFullArticle:
+        #         i.find('button',{'class':'fc-close'}).click()
+        #     print('Closed interstitial blocker.')
+        # except:
+        #     print('No interstitial blocker.')
+
+    
+    
 
 
 # findArticles(1, "Biden", "Hong Kong") #n doesnt need to be big because its searching by topics

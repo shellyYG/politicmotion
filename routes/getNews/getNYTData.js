@@ -44,9 +44,11 @@ router.get('/', (req, res)=> {
                 return sqlquery;
             }
             
-            // saveData()
+            
 
             async function getLeadParagraph(){
+                let saveNewNews = await saveData();
+                saveNewNews;
                 sql = `SELECT n.title
                 FROM politicmotion.news_rawdata n
                 LEFT JOIN politicmotion.nyt_details d ON n.title = d.headline
