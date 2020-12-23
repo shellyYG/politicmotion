@@ -184,12 +184,12 @@ def getLatestNews(n):
 
 
 # findArticles(1, "Biden", "Hong Kong") #n doesnt need to be big because its searching by topics
-getLatestNews(1)
+# getLatestNews(1)
 
 # get all post links that does not have paragraph yet
 allLinksToFill = []
 with engine.begin() as conn:
-    results = conn.execute('SELECT n.post_link FROM politicmotion.news_rawdata n LEFT JOIN politicmotion.fox_details f ON n.post_link = f.post_link WHERE f.paragraph IS NULL LIMIT 5;')
+    results = conn.execute('SELECT n.post_link FROM politicmotion.news_rawdata n LEFT JOIN politicmotion.fox_details f ON n.post_link = f.post_link WHERE f.paragraph IS NULL AND n.news_source = "fox news";')
     rows = results.fetchall()
     for i in rows:
         print(i)
@@ -206,42 +206,47 @@ def getDetailedNews():
     
     for i in allLinksToFill: # or postLinks in the future??
         print(i)
-        driver = webdriver.Chrome()  #need to declare driver again
-        time.sleep(3)
-        driver.get(i)
-        time.sleep(3)
-        soupFullArticle = BeautifulSoup(driver.page_source, "html.parser")
-
-        try: #click on interstital close button
-            interstitialsFullArticle = soupFullArticle.findAll('div',{'class':'fc-dialog-container'})
-            for i in interstitialsFullArticle:
-                i.find('button',{'class':'fc-close'}).click()
-            print('Closed interstitial blocker.')
-        except:
-            print('No interstitial blocker.')
-
         try:
-            print("try: ")
-            print(len(allArticleDetails))
-            # articleBody = soupFullArticle.find('main',{'class':'article-body'})
-            paragraphs = soupFullArticle.findAll('p', {'class':'speakable'})
-            
-            concateP=""
-            for paragraph in paragraphs:
-                concateP = concateP + " " + paragraph.text
+            driver = webdriver.Chrome()  #need to declare driver again
+            time.sleep(3)
+        
+            driver.get(i)
+            time.sleep(3)
+            soupFullArticle = BeautifulSoup(driver.page_source, "html.parser")
 
-            print("NOW len(allArticleDetails): ")
+            try: #click on interstital close button
+                interstitialsFullArticle = soupFullArticle.findAll('div',{'class':'fc-dialog-container'})
+                for i in interstitialsFullArticle:
+                    i.find('button',{'class':'fc-close'}).click()
+                print('Closed interstitial blocker.')
+            except:
+                print('No interstitial blocker.')
+
+            try:
+                print("try: ")
+                paragraphs = soupFullArticle.findAll('p', {'class':'speakable'})
+                
+                concateP=""
+                for paragraph in paragraphs:
+                    concateP = concateP + " " + paragraph.text
+
+                print("NOW len(allArticleDetails): ")
+                print(len(allArticleDetails))
+                allArticleDetails.append(concateP)
+            except:
+                print("exception: ")
+                print(len(allArticleDetails))
+                allArticleDetails.append('No Paragraph Found')
+
             print(len(allArticleDetails))
-            allArticleDetails.append(concateP)
+            driver.close()
         except:
-            print("exception: ")
-            print(len(allArticleDetails))
-            allArticleDetails.append('No Paragraph Found')
+            print("link is blank")
+            allArticleDetails.append("No Content Found")
 
-        print(len(allArticleDetails))
-        driver.close()
-
-    print(len(postLinks))
+    print("print(len(allLinksToFill)): ")
+    print(len(allLinksToFill))
+    print("print(len(allArticleDetails)): ")
     print(len(allArticleDetails))
 
     FoxDetaildf = pd.DataFrame({'post_link': allLinksToFill,

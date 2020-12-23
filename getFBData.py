@@ -145,9 +145,25 @@ def PostContent(soup, source):
 
 
 #===========================================================================================================================Get New York Time Post
-NYTimeLinks = FindLinks(url='https://www.facebook.com/nytimes/', n = 1)
-for Link in NYTimeLinks:
+# NYTimeLinks = FindLinks(url='https://www.facebook.com/nytimes/', n = 1)
+
+
+# get all post links that does not have paragraph yet
+NYTLinksToFill = []
+with engine.begin() as conn:
+    results = conn.execute('SELECT id, post_link FROM politicmotion.fb_rawdata WHERE post_source = "nytimes" AND title IS NULL AND post_link IS NOT NULL LIMIT 10;')
+    rows = results.fetchall()
+    for i in rows:
+        print(i)
+        linksToFill = i['post_link']
+        NYTLinksToFill.append(linksToFill)
+print("NYTLinksToFill: ")
+print(NYTLinksToFill)
+
+# Update existing news
+for Link in NYTLinksToFill:
     print("At Link: "+Link)
+    time.sleep(3)
     driver.get(Link) #expand link for soup below to catch
     soup = BeautifulSoup(driver.page_source, "html.parser")
     
@@ -165,25 +181,48 @@ Facebookdf.to_sql(
 
 driver.close()
 
+# # Add new news
+# for Link in NYTimeLinks:
+#     print("At Link: "+Link)
+#     driver.get(Link) #expand link for soup below to catch
+#     soup = BeautifulSoup(driver.page_source, "html.parser")
+    
+#     PostContent(soup, "nytimes")
+
+# # transform list of dict to dataframe
+# Facebookdf = pd.DataFrame(AllPost)
+# Facebookdf.columns = ['post_link','post_time','content','reaction','post_source', 'saved_date', 'title', 'small_title']
+# Facebookdf.to_sql(
+#     'fb_rawdata',
+#     con=engine,
+#     index=False,
+#     if_exists = 'append'  #if table exist, then append the rows rather than fail (default is fail)
+# )
+
+# driver.close()
+
 #===========================================================================================================================Get Fox News Post
-driver = webdriver.Chrome()
-AllPost =[]
-FoxNewsLinks = FindLinks(url='https://www.facebook.com/FoxNews/', n = 1)
-for Link in FoxNewsLinks:
-    print("At Link: "+Link)
-    driver.get(Link) #expand link for soup below to catch
-    soup = BeautifulSoup(driver.page_source, "html.parser")
-    PostContent(soup, "foxnews")
+# driver = webdriver.Chrome()
+# AllPost =[]
+# FoxNewsLinks = FindLinks(url='https://www.facebook.com/FoxNews/', n = 1)
+# for Link in FoxNewsLinks:
+#     print("At Link: "+Link)
+#     driver.get(Link) #expand link for soup below to catch
+#     soup = BeautifulSoup(driver.page_source, "html.parser")
+#     PostContent(soup, "foxnews")
 
-# transform list of dict to dataframe
-Foxnewsdf = pd.DataFrame(AllPost)
-Foxnewsdf.columns = ['post_link','post_time','content','reaction','post_source', 'saved_date', 'title', 'small_title']
-Foxnewsdf.to_sql(
-    'fb_rawdata',
-    con=engine,
-    index=False,
-    if_exists = 'append'  #if table exist, then append the rows rather than fail (default is fail)
-)
+# # transform list of dict to dataframe
+# Foxnewsdf = pd.DataFrame(AllPost)
+# Foxnewsdf.columns = ['post_link','post_time','content','reaction','post_source', 'saved_date', 'title', 'small_title']
+# Foxnewsdf.to_sql(
+#     'fb_rawdata',
+#     con=engine,
+#     index=False,
+#     if_exists = 'append'  #if table exist, then append the rows rather than fail (default is fail)
+# )
 
-driver.close()
+# driver.close()
+
+
+
 
