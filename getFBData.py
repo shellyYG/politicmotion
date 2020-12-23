@@ -151,7 +151,7 @@ def PostContent(soup, source):
 # get all post links that does not have paragraph yet
 NYTLinksToFill = []
 with engine.begin() as conn:
-    results = conn.execute('SELECT id, post_link FROM politicmotion.fb_rawdata WHERE post_source = "nytimes" AND title IS NULL AND post_link IS NOT NULL ORDER BY id DESC LIMIT 10;')
+    results = conn.execute('SELECT id, post_link FROM politicmotion.fb_rawdata WHERE post_source = "nytimes" AND title IS NULL AND post_link IS NOT NULL ORDER BY id DESC LIMIT 50;')
     rows = results.fetchall()
     for i in rows:
         print(i)

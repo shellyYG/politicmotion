@@ -26,7 +26,7 @@ else:
 
 # cal emotion of user
 with engine.begin() as conn:
-    results = conn.execute('SELECT id, reaction FROM fb_rawdata WHERE user_sentiment_score IS NULL OR user_magnitude_score IS NULL ORDER BY id ASC LIMIT 30;')
+    results = conn.execute('SELECT id, reaction FROM fb_rawdata WHERE user_sentiment_score IS NULL OR user_magnitude_score IS NULL ORDER BY id ASC LIMIT 500;')
     rows = results.fetchall()
     for i in rows:
         print(i)

@@ -35,7 +35,7 @@ metadata.reflect()
 
 # get emotion of text
 with engine.begin() as conn:
-    results = conn.execute('SELECT id, content FROM fb_rawdata WHERE sentiment_score IS NULL OR magnitude_score IS NULL LIMIT 10;')
+    results = conn.execute('SELECT id, content FROM fb_rawdata WHERE sentiment_score IS NULL OR magnitude_score IS NULL;')
     rows = results.fetchall()
 
     for i in rows:
