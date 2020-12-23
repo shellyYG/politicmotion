@@ -26,7 +26,7 @@ else:
 
 # cal emotion of user
 with engine.begin() as conn:
-    results = conn.execute('SELECT id, reaction FROM fb_rawdata WHERE user_sentiment_score IS NULL OR user_magnitude_score IS NULL ORDER BY id ASC;')
+    results = conn.execute('SELECT id, reaction FROM fb_rawdata WHERE user_sentiment_score IS NULL OR user_magnitude_score IS NULL ORDER BY id ASC LIMIT 30;')
     rows = results.fetchall()
     for i in rows:
         print(i)
@@ -89,7 +89,9 @@ with engine.begin() as conn:
         
         user_sent = user_sent/user_len
         user_mag = user_mag/user_len
-    
+        print(user_sent)
+        print(user_mag)
+        print(FBid)
         updates = conn.execute(f'UPDATE fb_rawdata SET user_sentiment_score = {user_sent}, user_magnitude_score = {user_mag} WHERE id = {FBid}')
 
 print("Done calculating user emotion scores!")
