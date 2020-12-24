@@ -62,6 +62,7 @@ axios.post(`showNewsContent`,{
 
                 articleBody = document.createElement('div');
                 articleBody.setAttribute("class", "card-body");
+                articleBody.setAttribute("id", `selected_cbody_${articleDBId}`);
                 cardShadow.appendChild(articleBody);
 
                 var articleTitle = document.createElement('h4');
@@ -194,6 +195,7 @@ axios.post(`showNewsContent`,{
 
                         articleBody = document.createElement('div');
                         articleBody.setAttribute("class", "card-body");
+                        articleBody.setAttribute("id", `matched_cbody_${articleDBId}`);
                         cardShadow.appendChild(articleBody);
 
                         var articleTitle = document.createElement('h4');
@@ -287,8 +289,6 @@ axios.post(`showNewsContent`,{
                         iconDiv.appendChild(hahaBtn);
                         iconDiv.appendChild(cryBtn);
                         iconDiv.appendChild(angryBtn);
-
-                        
 
                         var loadingSection = document.getElementById("btnLoader");
                         loadingSection.innerHTML = "";
@@ -390,10 +390,23 @@ axios.post(`showNewsContent`,{
                 if (classToPopUp.includes('btn-selected')){
                     var sectionToPop = document.querySelector(".col_selected_"+idToPopUp);
                     var contentSectionToPop = document.querySelector("#selectedNews_"+idToPopUp);
+                    var bodyToPop = document.querySelector("#selected_cbody_"+idToPopUp);
                     
-                    sectionToPop.setAttribute('class', ' modal');
+                    bodyToPop.childNodes[3].setAttribute('class','btn btn-xs btn-primary btn-selected hiddenc'); // hide "read more btn"
+                    bodyToPop.childNodes[4].setAttribute('class','hiddenc'); // hide emoji btns
+                    
+                    sectionToPop.setAttribute('class', ' modalc');
+                    sectionToPop.removeAttribute('id');
                     contentSectionToPop.setAttribute('class', ' modal-dialog modal-dialog-centered');
-                    
+                    contentSectionToPop.removeAttribute('id');
+                    bodyToPop.setAttribute('class', 'modalc-content');
+
+                    var closeBtn = document.createElement('a');
+                    closeBtn.setAttribute('class', 'btn btn-xs btn-primary btn-selected');
+                    closeBtn.setAttribute('id', 'closeBtn');
+                    closeBtn.innerText = "close";
+                    bodyToPop.appendChild(closeBtn);
+
                 }else{
                     console.log("matched btn")
                 }

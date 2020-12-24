@@ -10,7 +10,8 @@ router.get('/', (req, res)=> {
         try {
             let NYTimeResponse = await axios.get(link);
             console.log("Successfully get NYT Web data!")
-           
+
+            // ---------------------------------------------------------------------- start saving to news (general) table
             let allNews = []; 
             async function saveData (){
                 for (i=0; i<NYTimeResponse.data.results.length;i++){ 
@@ -45,6 +46,7 @@ router.get('/', (req, res)=> {
             }
             
             
+            // ---------------------------------------------------------------------- start saving to news (details) table
 
             async function getLeadParagraph(){
                 let saveNewNews = await saveData();
@@ -58,9 +60,10 @@ router.get('/', (req, res)=> {
                 return sqlquery;
             }
 
+            let allDetails = [];
             async function matchLeadParagraph(){
                 let titles = await getLeadParagraph();
-                let allDetails = [];
+                
                 for (i=0; i<titles.length; i++){
                     console.log("i:",i);
                     try{
@@ -84,10 +87,42 @@ router.get('/', (req, res)=> {
                         console.log("sorry, no lead paragraph found")
                     }
                 }
-                sql = 'INSERT INTO nyt_details (headline, abstract, lead_paragraph, saved_date) VALUES ?'
-                let sqlquery = await query(sql, [allDetails]);
-                console.log("done inserting lead-paragraph");
-                return sqlquery;
+
+                // async function checkExist(){
+                //     var headlines = [];
+                    
+                //     allDetails.forEach((e)=>{
+                //         async function aCheck(){
+                //             sql = `SELECT *
+                //             FROM politicmotion.nyt_details
+                //             WHERE headline = '${e[0]}'
+                //             ORDER BY id DESC;`
+                //             let sqlquery = await query(sql);
+                //             return sqlquery;
+                //         }
+                //         async function executeaCheck(){
+                //             let resCheck = await aCheck();
+                //             console.log("resCheck: ", resCheck);
+
+                //             if(resCheck = 0){
+                //                 headlines.push(e[0])
+                //             }
+                //         }
+                //         executeaCheck()
+                //     })
+                //    console.log("headlines: ", headlines);
+                // }
+
+                // checkExist()
+                try {
+                    sql = 'INSERT INTO nyt_details (headline, abstract, lead_paragraph, saved_date) VALUES ?'
+                    let sqlquery = await query(sql, [allDetails]);
+                    console.log("done inserting lead-paragraph");
+                    return sqlquery;
+                }catch(err){
+                    console.log("Not a single lead-paragraph to insert.")
+                }
+                
             }
 
             matchLeadParagraph()

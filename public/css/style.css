@@ -1298,3 +1298,35 @@ img[id^="user_love_"]:hover, img[id^="user_haha_"]:hover, img[id^="user_sad_"]:h
 .card-srcdate {
   font-size: 14px !important;
 }
+
+.modalc {
+  position: fixed !important;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  z-index: 1050 !important;
+  display: block !important;
+  outline: 0 !important;
+}
+
+.modalc-content {
+  background-clip: padding-box;
+  height: 500px;
+  background-color: #17202A !important;
+  flex: 1 1 auto;
+  padding: 1.25rem;
+}
+
+.hiddenc {
+  display: none;
+}
+
+#closeBtn {
+  margin: 4em 11em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+}

@@ -169,22 +169,23 @@ def getLatestNews(n):
     print(Foxdf)
 
 
-    # print("Start saving to sql")
-    # Foxdf.columns = ['post_link','published_time','title','abstract','news_id', 'news_source','topics','saved_date']
-    # Foxdf.to_sql(
-    # 'news_rawdata',
-    # con=engine,
-    # index=False,
-    # if_exists = 'append'  #if table exist, then append the rows rather than fail (default is fail)
-    # )   
-    # print("Finished saving to sql")
+    print("Start saving to sql")
+    Foxdf.columns = ['post_link','published_time','title','abstract','news_id', 'news_source','topics','saved_date']
+    Foxdf.to_sql(
+    'news_rawdata',
+    con=engine,
+    index=False,
+    if_exists = 'append'  #if table exist, then append the rows rather than fail (default is fail)
+    )   
+    print("Finished saving to sql")
 
     driver.close()
     time.sleep(3)
 
 
 # findArticles(1, "Biden", "Hong Kong") #n doesnt need to be big because its searching by topics
-# getLatestNews(1)
+
+getLatestNews(10)
 
 # get all post links that does not have paragraph yet
 allLinksToFill = []
