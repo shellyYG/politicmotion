@@ -1012,6 +1012,17 @@ article[id^="selectedNews_"] {
   height: 306px;
 }
 
+
+article[id^="pop-up-selected"] {
+  position: relative !important;
+  display: inline-block !important;
+  background-color: #17202A !important;
+  flex-grow: 1 !important;;
+  height: 1000px !important;
+  width: 1000px !important;
+  z-index: 1;
+}
+
 article[id^="matchedNews_"]  {
   background-color: white !important;
   height: 306px;

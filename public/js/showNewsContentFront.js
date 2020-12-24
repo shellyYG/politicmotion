@@ -51,13 +51,13 @@ axios.post(`showNewsContent`,{
                 articleRow.setAttribute("class", "row");
 
                 articleCol = document.createElement('div');
-                articleCol.setAttribute("class", "col-md-6 mb-4");
+                articleCol.setAttribute("class", `col-md-6 mb-4 col_selected_${articleDBId}`);
                 articleCol.setAttribute("id", "No-match-grow");
                 articleRow.appendChild(articleCol);
 
                 cardShadow = document.createElement('article');
                 cardShadow.setAttribute("class", "card shadow");
-                cardShadow.setAttribute("id", "selectedNews_");
+                cardShadow.setAttribute("id", `selectedNews_${articleDBId}`);
                 articleCol.appendChild(cardShadow);
 
                 articleBody = document.createElement('div');
@@ -66,7 +66,7 @@ axios.post(`showNewsContent`,{
 
                 var articleTitle = document.createElement('h4');
                 articleTitle.setAttribute("class","card-title");
-                articleTitle.setAttribute("id",`selectedNewsSrc_${res.data[i].post_source}`);
+                articleTitle.setAttribute("id",`selectedNewsSrc_${articleDBId}`);
                 articleTitle.innerText = res.data[i].title; 
 
                 var articleSrcDate = document.createElement('h5');
@@ -78,8 +78,9 @@ axios.post(`showNewsContent`,{
                 articleContent.setAttribute("id", `selectedNewsContent_${articleDBId}`);
 
                 var articleLink = document.createElement('a');
-                articleLink.setAttribute("class", `btn btn-xs btn-primary`);
-                articleLink.setAttribute("href", `${res.data[i].post_link}`);
+                articleLink.setAttribute("class", `btn btn-xs btn-primary btn-selected`);
+                articleLink.setAttribute("id", `a_${articleDBId}`);
+                // articleLink.setAttribute("href", `${res.data[i].post_link}`);
 
                 var iconDiv = document.createElement('div');
                 iconDiv.setAttribute("id", "icons");
@@ -183,12 +184,12 @@ axios.post(`showNewsContent`,{
                         articleDBId = res.data[i].id;
 
                         articleCol = document.createElement('div');
-                        articleCol.setAttribute("class", "col-lg-6 col-sm-6 mb-4");
+                        articleCol.setAttribute("class", `col-lg-6 col-sm-6 mb-4 col_matched_${articleDBId}`);
                         matchedArticleRow.appendChild(articleCol);
 
                         cardShadow = document.createElement('article');
                         cardShadow.setAttribute("class", "card shadow");
-                        cardShadow.setAttribute("id", "matchedNews_");
+                        cardShadow.setAttribute("id", `matchedNews_${articleDBId}`);
                         articleCol.appendChild(cardShadow);
 
                         articleBody = document.createElement('div');
@@ -197,7 +198,7 @@ axios.post(`showNewsContent`,{
 
                         var articleTitle = document.createElement('h4');
                         articleTitle.setAttribute("class","card-title");
-                        articleTitle.setAttribute("id",`matchedNewsSrc_${res.data[i].post_source}`);
+                        articleTitle.setAttribute("id",`matchedNewsSrc_${articleDBId}`);
                         articleTitle.innerText = res.data[i].title;
 
                         var articleSrcDate = document.createElement('h5');
@@ -209,8 +210,9 @@ axios.post(`showNewsContent`,{
                         articleContent.setAttribute("id", `matchedNewsContent_${articleDBId}`);
 
                         var articleLink = document.createElement('a');
-                        articleLink.setAttribute("class", `btn btn-xs btn-primary`);
-                        articleLink.setAttribute("href", `${res.data[i].post_link}`);
+                        articleLink.setAttribute("class", `btn btn-xs btn-primary btn-matched`);
+                        articleLink.setAttribute("id", `a_${articleDBId}`);
+                        // articleLink.setAttribute("href", `${res.data[i].post_link}`);
 
                         var iconDiv = document.createElement('div');
                         iconDiv.setAttribute("id", "icons");
@@ -375,6 +377,28 @@ axios.post(`showNewsContent`,{
         RowShowEmotionBtn.appendChild(ColShowEmotionBtn);
         ColShowEmotionBtn.appendChild(showEmotionBtn);
         BlockShowEmotionBtn.appendChild(RowShowEmotionBtn);
+
+        // ===================================================================================== pop up news when clicked
+        var readMoresBtns = document.querySelectorAll('[id^="a_"]');
+        console.log("readMoresBtns: ", readMoresBtns)
+        readMoresBtns.forEach((e)=>{
+            e.addEventListener('click',()=>{
+                console.log(e);
+                var idToPopUp = e.getAttribute("id").split("_")[1];
+                var classToPopUp = e.getAttribute("class");
+
+                if (classToPopUp.includes('btn-selected')){
+                    var sectionToPop = document.querySelector(".col_selected_"+idToPopUp);
+                    var contentSectionToPop = document.querySelector("#selectedNews_"+idToPopUp);
+                    
+                    sectionToPop.setAttribute('class', ' modal');
+                    contentSectionToPop.setAttribute('class', ' modal-dialog modal-dialog-centered');
+                    
+                }else{
+                    console.log("matched btn")
+                }
+            })
+        })
 
         const analyzeUserEmotionButton = document.getElementById('btn-analyzeUser');
         analyzeUserEmotionButton.addEventListener('click',()=>{
