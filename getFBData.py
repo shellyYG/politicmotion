@@ -162,7 +162,7 @@ def contentToFill(soup, linkToFill):
         print(bigTitle)
     except:
         bigTitle = "No Big Title"
-        print("NO bigTitle")
+        print("No Big Title")
     
     # add Small title of article
     try:
@@ -183,30 +183,29 @@ def contentToFill(soup, linkToFill):
 # NYTimeLinks = FindLinks(url='https://www.facebook.com/nytimes/', n = 1)
 
 
-# get all post links that does not have paragraph yet
-NYTLinksToFill = []
-with engine.begin() as conn:
-    results = conn.execute('SELECT id, post_link FROM politicmotion.fb_rawdata WHERE post_source = "nytimes" AND (title IS NULL OR title = "NO bigTitle") AND post_link IS NOT NULL ORDER BY id ASC LIMIT 20;')
-    rows = results.fetchall()
-    for i in rows:
-        print(i)
-        linksToFill = i['post_link']
-        NYTLinksToFill.append(linksToFill)
-print("NYTLinksToFill: ")
-print(NYTLinksToFill)
+# # get all post links that does not have paragraph yet
+# NYTLinksToFill = []
+# with engine.begin() as conn:
+#     results = conn.execute('SELECT id, post_link FROM politicmotion.fb_rawdata WHERE post_source = "nytimes" AND (title IS NULL OR title = "No Big Title") AND post_link IS NOT NULL AND id > 4112 ORDER BY id ASC LIMIT 50;')
+#     rows = results.fetchall()
+#     for i in rows:
+#         print(i)
+#         linksToFill = i['post_link']
+#         NYTLinksToFill.append(linksToFill)
+# print("NYTLinksToFill: ")
+# print(NYTLinksToFill)
 
-# start update the content
-for Link in NYTLinksToFill:
-    print("At Link: "+Link)
-    time.sleep(2)
-    driver.get(Link) #expand link for soup below to catch
-    soup = BeautifulSoup(driver.page_source, "html.parser")
+# # start update the content
+# for Link in NYTLinksToFill:
+#     print("At Link: "+Link)
+#     driver.get(Link) #expand link for soup below to catch
+#     soup = BeautifulSoup(driver.page_source, "html.parser")
     
-    contentToFill(soup,Link)
+#     contentToFill(soup,Link)
 
-# # transform list of dict to dataframe
-print("done try")
-driver.close()
+# # # transform list of dict to dataframe
+# print("done try")
+# driver.close()
 
 # # Add new news
 # for Link in NYTimeLinks:
@@ -229,6 +228,39 @@ driver.close()
 # driver.close()
 
 #===========================================================================================================================Get Fox News Post
+
+#get all post links that does not have paragraph yet
+FoxLinksToFill = []
+with engine.begin() as conn:
+    results = conn.execute('SELECT id, post_link FROM politicmotion.fb_rawdata WHERE id> 4118 AND post_source = "foxnews" AND (title IS NULL OR title = "No Big Title") AND post_link IS NOT NULL ORDER BY id ASC LIMIT 50;')
+    rows = results.fetchall()
+    for i in rows:
+        print(i)
+        linksToFill = i['post_link']
+        FoxLinksToFill.append(linksToFill)
+print("FoxLinksToFill: ")
+print(FoxLinksToFill)
+
+# start update the content
+for Link in FoxLinksToFill:
+    print("At Fox Link: "+Link)
+    driver.get(Link) #expand link for soup below to catch
+    soup = BeautifulSoup(driver.page_source, "html.parser")
+    
+    contentToFill(soup,Link)
+
+# # transform list of dict to dataframe
+print("done try (fox)")
+driver.close()
+
+# Add new news
+
+
+
+
+
+
+
 # driver = webdriver.Chrome()
 # AllPost =[]
 # FoxNewsLinks = FindLinks(url='https://www.facebook.com/FoxNews/', n = 1)

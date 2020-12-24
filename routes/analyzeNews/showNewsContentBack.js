@@ -16,8 +16,10 @@ router.post('/', (req, res) => {
         async function getClickedNews() {
             sql = `SELECT id, content, post_date, post_link, reaction, sentiment_score, magnitude_score
             FROM politicmotion.fb_rawdata
-            WHERE content LIKE '%${searchTopic1}%' AND content LIKE '%${searchTopic2}%' 
-                  AND sentiment_score = ${clickedIds[i].Xaxis} AND magnitude_score = ${clickedIds[i].Yaxis}
+            WHERE sentiment_score = ${clickedIds[i].Xaxis} AND magnitude_score = ${clickedIds[i].Yaxis}
+            AND ((content LIKE '%${searchTopic1}%' AND content LIKE '%${searchTopic2}%') 
+                OR (title LIKE '%${searchTopic1}%' AND title LIKE '%${searchTopic2}%')
+                OR (small_title LIKE '%${searchTopic1}%' AND small_title LIKE '%${searchTopic2}%'))
             LIMIT 1;`
             var sqlquery = await query(sql);
             return sqlquery;
@@ -47,8 +49,9 @@ router.post('/', (req, res) => {
     async function searchRelevantNews() {
         sql = `SELECT id, content, post_date, post_link, post_source, reaction,  sentiment_score, magnitude_score 
                 FROM fb_rawdata 
-                WHERE content LIKE '%${searchTopic1}%' 
-                    AND content LIKE '%${searchTopic2}%' 
+                WHERE ((content LIKE '%${searchTopic1}%' AND content LIKE '%${searchTopic2}%') 
+                OR (title LIKE '%${searchTopic1}%' AND title LIKE '%${searchTopic2}%')
+                OR (small_title LIKE '%${searchTopic1}%' AND small_title LIKE '%${searchTopic2}%')) 
                 ORDER BY id ASC
                 ;` // here need to change to not limited
         var sqlquery = await query(sql);
