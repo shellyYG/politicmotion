@@ -1,4 +1,3 @@
-
 let articles = document.querySelector('#articles');
 const searchTopic1 = localStorage.getItem("searchTopic1");
 const searchTopic2 = localStorage.getItem("searchTopic2");
@@ -46,6 +45,7 @@ axios.post(`showNewsContent`,{
                 
                 var articleDBId = res.data[i].id;
 
+                // -------------------------------------------------------------------------- set default classes
                 articleRow = document.createElement('div');
                 articleRow.setAttribute("id", `articleRow_${articleDBId}`);
                 articleRow.setAttribute("class", "row");
@@ -81,7 +81,6 @@ axios.post(`showNewsContent`,{
                 var articleLink = document.createElement('a');
                 articleLink.setAttribute("class", `btn btn-xs btn-primary btn-selected`);
                 articleLink.setAttribute("id", `a_${articleDBId}`);
-                // articleLink.setAttribute("href", `${res.data[i].post_link}`);
 
                 var iconDiv = document.createElement('div');
                 iconDiv.setAttribute("id", "icons");
@@ -109,7 +108,6 @@ axios.post(`showNewsContent`,{
                     var leadParagraph = res.data[i].lead_paragraph;
                 }
 
-                // articleSrcDate.textContent = finalBeutifiedDate;
                 articleContent.textContent = res.data[i].content +" " + leadParagraph;
                 
                 articleLink.textContent = "Read More";
@@ -155,10 +153,62 @@ axios.post(`showNewsContent`,{
                 iconDiv.appendChild(cryBtn);
                 iconDiv.appendChild(angryBtn);
                 
+                // -------------------------------------------------------------------------- set pop up classes
+                articleCol2 = document.createElement('div');
+                articleCol2.setAttribute("class", `hiddenc col-md-6 mb-4 hcol_selected_${articleDBId}`);
+                articleRow.appendChild(articleCol2);
+
+                cardShadow2 = document.createElement('article');
+                cardShadow2.setAttribute("class", `card shadow hselectedNews_${articleDBId}`);
+                articleCol2.appendChild(cardShadow2);
+
+                articleBody2 = document.createElement('div');
+                articleBody2.setAttribute("class", "card-body");
+                articleBody2.setAttribute("id", `hselected_cbody_${articleDBId}`);
+                cardShadow2.appendChild(articleBody2);
+
+                var articleTitle2 = document.createElement('h4');
+                articleTitle2.setAttribute("class","card-title");
+                articleTitle2.setAttribute("id",`selectedNewsSrc_${articleDBId}`);
+                articleTitle2.innerText = res.data[i].title; 
+
+                var articleSrcDate2 = document.createElement('h5');
+                articleSrcDate2.setAttribute("class", `card-srcdate`);
+                articleSrcDate2.setAttribute("id", `selectedNewsDate_${articleDBId}`);
+                
+                var articleContent2 = document.createElement('p');
+                articleContent2.setAttribute("class", "cars-text");
+                articleContent2.setAttribute("id", `selectedNewsContent_${articleDBId}`);
+
+                if(res.data[i].lead_paragraph==null){
+                    var leadParagraph = '';
+                }else{
+                    var leadParagraph = res.data[i].lead_paragraph;
+                }
+
+                articleContent2.textContent = res.data[i].content +" " + leadParagraph;
+                
+                if (res.data[i].post_source == 'nytimes'){
+                    articleSrcDate2.textContent = "New York Times" + " " + finalBeutifiedDate;
+                }else{
+                    articleSrcDate2.textContent = "Fox News"+ " " + finalBeutifiedDate;
+                }
+
+                var closeBtn = document.createElement('a');
+                closeBtn.setAttribute('class', 'btn btn-xs btn-primary btn-selected-close');
+                closeBtn.setAttribute('id', 'closeBtn');
+                closeBtn.innerText = "close";
+                
+                // append single article
+                articleBody2.appendChild(articleTitle2);
+                articleBody2.appendChild(articleSrcDate2);
+                articleBody2.appendChild(articleContent2);
+                articleBody2.appendChild(closeBtn);
+                
+                // -------------------------------------------------------------------------- remove loading section
                 var loadingSection = document.getElementById("btnLoader");
                 loadingSection.innerHTML = "";
                 articles.appendChild(articleRow); // append to all articles list
-
             }
         }
 
@@ -383,33 +433,33 @@ axios.post(`showNewsContent`,{
         console.log("readMoresBtns: ", readMoresBtns)
         readMoresBtns.forEach((e)=>{
             e.addEventListener('click',()=>{
-                console.log(e);
                 var idToPopUp = e.getAttribute("id").split("_")[1];
                 var classToPopUp = e.getAttribute("class");
-
+                
                 if (classToPopUp.includes('btn-selected')){
-                    var sectionToPop = document.querySelector(".col_selected_"+idToPopUp);
-                    var contentSectionToPop = document.querySelector("#selectedNews_"+idToPopUp);
-                    var bodyToPop = document.querySelector("#selected_cbody_"+idToPopUp);
+                    var sectionToPop = document.querySelector(".hcol_selected_"+idToPopUp);
+                    var contentSectionToPop = document.querySelector(".hselectedNews_"+idToPopUp);
+                    console.log("contentSectionToPop: ", contentSectionToPop);
+                    var bodyToPop = document.querySelector("#hselected_cbody_"+idToPopUp);
                     
-                    bodyToPop.childNodes[3].setAttribute('class','btn btn-xs btn-primary btn-selected hiddenc'); // hide "read more btn"
-                    bodyToPop.childNodes[4].setAttribute('class','hiddenc'); // hide emoji btns
-                    
-                    sectionToPop.setAttribute('class', ' modalc');
-                    sectionToPop.removeAttribute('id');
-                    contentSectionToPop.setAttribute('class', ' modal-dialog modal-dialog-centered');
-                    contentSectionToPop.removeAttribute('id');
+                    sectionToPop.setAttribute('class', `modalc hcol_selected_${idToPopUp}`);
+                    contentSectionToPop.setAttribute('class', `modal-dialog modal-dialog-centered hselectedNews_${idToPopUp}`);
+                    contentSectionToPop.setAttribute('id', 'contentSectionToPop');
                     bodyToPop.setAttribute('class', 'modalc-content');
-
-                    var closeBtn = document.createElement('a');
-                    closeBtn.setAttribute('class', 'btn btn-xs btn-primary btn-selected');
-                    closeBtn.setAttribute('id', 'closeBtn');
-                    closeBtn.innerText = "close";
-                    bodyToPop.appendChild(closeBtn);
-
                 }else{
                     console.log("matched btn")
                 }
+            })
+        })
+
+        closeBtns = document.querySelectorAll("#closeBtn");
+        closeBtns.forEach((e)=>{
+            console.log("each close btn:", e);
+            e.addEventListener('click',()=>{
+                var hiddenElements = document.querySelectorAll('[class^="modalc hcol_selected_"]');
+                hiddenElements.forEach((x)=>{
+                    x.setAttribute('class',`hiddenc col-md-6 mb-4 ${x.classList[1]}`);
+                })
             })
         })
 

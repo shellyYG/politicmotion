@@ -1012,6 +1012,11 @@ article[id^="selectedNews_"] {
   height: 306px;
 }
 
+article[class^="hselectedNews_"] {
+  flex-grow: 1;
+  height: 306px;
+}
+
 
 article[id^="pop-up-selected"] {
   position: relative !important;
@@ -1316,6 +1321,8 @@ img[id^="user_love_"]:hover, img[id^="user_haha_"]:hover, img[id^="user_sad_"]:h
   background-color: #17202A !important;
   flex: 1 1 auto;
   padding: 1.25rem;
+  border-radius: 20px;
+  border: 2px solid white;
 }
 
 .hiddenc {
@@ -1329,4 +1336,11 @@ img[id^="user_love_"]:hover, img[id^="user_haha_"]:hover, img[id^="user_sad_"]:h
   justify-content: center;
   cursor: pointer;
   color: white;
+  z-index: 1055 !important;
 }
+
+#contentSectionToPop{
+  pointer-events: all !important; /* make close button clickable*/
+}
+
+
