@@ -221,9 +221,25 @@ router.post('/', (req, res) => {
 
         // console.log("clickedNews: ", clickedNews);
 
+        // async function getRelevantNews() {
+        //     sql = `SELECT id, content, post_date, post_link, reaction, post_source, sentiment_score, magnitude_score, user_sentiment_score, user_magnitude_score
+        //     FROM politicmotion.fb_rawdata
+        //     WHERE id IN (${uniqueNewsIdtoShow});`
+        //     var sqlquery = await query(sql);
+        //     return sqlquery;
+        // }
+
         async function getRelevantNews() {
-            sql = `SELECT id, content, post_date, post_link, reaction, post_source, sentiment_score, magnitude_score, user_sentiment_score, user_magnitude_score
-            FROM politicmotion.fb_rawdata
+            sql = `SELECT DISTINCT fb.id, fb.post_link, fb.content, fb.title
+            , fb.small_title
+            , nyt.lead_paragraph
+            , fb.post_date, fb.post_link, fb.reaction
+            , fb.post_source, fb.sentiment_score, fb.magnitude_score
+            , fb.user_sentiment_score, fb.user_magnitude_score
+            FROM politicmotion.fb_rawdata fb
+            LEFT JOIN politicmotion.news_rawdata big ON fb.title = big.title
+            LEFT JOIN politicmotion.nyt_details nyt ON big.title = nyt.headline
+            LEFT JOIN politicmotion.fox_details fox ON big.post_link = fox.post_link
             WHERE id IN (${uniqueNewsIdtoShow});`
             var sqlquery = await query(sql);
             return sqlquery;
@@ -245,6 +261,9 @@ router.post('/', (req, res) => {
                 singleNews.user_sentiment_score = allNews[0].user_sentiment_score;
                 singleNews.user_magnitude_score = allNews[0].user_magnitude_score;
                 singleNews.post_source = allNews[0].post_source;
+                singleNews.title = allNews[0].title;
+                singleNews.small_title = allNews[0].small_title;
+                singleNews.lead_paragraph = allNews[0].lead_paragraph;
 
                 var clickedId = [];
                 var matchedId = [];

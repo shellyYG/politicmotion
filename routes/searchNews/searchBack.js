@@ -10,7 +10,7 @@ router.post('/', (req, res, next)=>{
     async function searchFBNYNewsDots(){
         sql = `SELECT id, sentiment_score, magnitude_score
         FROM politicmotion.fb_rawdata
-        WHERE post_source = 'nytimes' 
+        WHERE post_source = 'nytimes' AND title IS NOT NULL AND title <> 'No Big Title'
         AND ((content LIKE '%${searchTopic1}%' AND content LIKE '%${searchTopic2}%') 
             OR (title LIKE '%${searchTopic1}%' AND title LIKE '%${searchTopic2}%')
             OR (small_title LIKE '%${searchTopic1}%' AND small_title LIKE '%${searchTopic2}%'))`
@@ -21,7 +21,7 @@ router.post('/', (req, res, next)=>{
     async function searchFBFoxNewsDots(){
         sql = `SELECT id, sentiment_score, magnitude_score
         FROM politicmotion.fb_rawdata
-        WHERE post_source = 'foxnews' 
+        WHERE post_source = 'foxnews' AND title IS NOT NULL AND title <> 'No Big Title'
         AND ((content LIKE '%${searchTopic1}%' AND content LIKE '%${searchTopic2}%') 
             OR (title LIKE '%${searchTopic1}%' AND title LIKE '%${searchTopic2}%')
             OR (small_title LIKE '%${searchTopic1}%' AND small_title LIKE '%${searchTopic2}%'))`

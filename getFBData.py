@@ -232,7 +232,7 @@ def contentToFill(soup, linkToFill):
 #get all post links that does not have paragraph yet
 FoxLinksToFill = []
 with engine.begin() as conn:
-    results = conn.execute('SELECT id, post_link FROM politicmotion.fb_rawdata WHERE id> 4118 AND post_source = "foxnews" AND (title IS NULL OR title = "No Big Title") AND post_link IS NOT NULL ORDER BY id ASC LIMIT 50;')
+    results = conn.execute('SELECT id, post_link FROM politicmotion.fb_rawdata WHERE id> 4164 AND post_source = "foxnews" AND (title IS NULL OR title = "No Big Title") AND post_link IS NOT NULL ORDER BY id ASC LIMIT 50;')
     rows = results.fetchall()
     for i in rows:
         print(i)

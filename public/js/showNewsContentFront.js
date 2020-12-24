@@ -356,7 +356,7 @@ axios.post(`showNewsContent`,{
         var showEmotionBtn = document.createElement('button');
         showEmotionBtn.setAttribute("class","btn btn-lg btn-primary");
         showEmotionBtn.setAttribute("id","btn-analyzeUser");
-        showEmotionBtn.innerText = "Compare my emotion with others";
+        showEmotionBtn.innerText = "Next Step";
 
         RowShowEmotionBtn.appendChild(ColShowEmotionBtn);
         ColShowEmotionBtn.appendChild(showEmotionBtn);
