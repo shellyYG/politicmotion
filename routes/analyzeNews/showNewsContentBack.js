@@ -240,7 +240,7 @@ router.post('/', (req, res) => {
             LEFT JOIN politicmotion.news_rawdata big ON fb.title = big.title
             LEFT JOIN politicmotion.nyt_details nyt ON big.title = nyt.headline
             LEFT JOIN politicmotion.fox_details fox ON big.post_link = fox.post_link
-            WHERE id IN (${uniqueNewsIdtoShow});`
+            WHERE fb.id IN (${uniqueNewsIdtoShow});`
             var sqlquery = await query(sql);
             return sqlquery;
         }
@@ -286,6 +286,9 @@ router.post('/', (req, res) => {
                     singleNews.user_sentiment_score = allNews[i].user_sentiment_score;
                     singleNews.user_magnitude_score = allNews[i].user_magnitude_score;
                     singleNews.post_source = allNews[i].post_source;
+                    singleNews.title = allNews[i].title;
+                    singleNews.small_title = allNews[i].small_title;
+                    singleNews.lead_paragraph = allNews[i].lead_paragraph;
 
                     var clickedId = [];
                     var matchedId = [];

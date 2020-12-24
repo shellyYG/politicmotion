@@ -22,8 +22,6 @@ let avgFoxReactionSentiment = 0;
 let avgFoxReactionMagnitude = 0;
 let FoxLength = 0;
 
-
-
 axios.post(`showNewsContent`,{
     'searchTopic1': searchTopic1,
     'searchTopic2': searchTopic2,
@@ -33,6 +31,7 @@ axios.post(`showNewsContent`,{
         for (i=0; i<res.data.length; i++){
             console.log("res.data: ", res.data);
             // ============================================================= Get clicked Articles and create a block
+            console.log("res.data[i]: ", res.data[i]);
             if (res.data[i].clickedId !== 0){ // has at least 1 news
                 var rawDate = res.data[i].post_date;
                 var re = /([^T]+)/;
@@ -65,14 +64,15 @@ axios.post(`showNewsContent`,{
                 articleBody.setAttribute("class", "card-body");
                 cardShadow.appendChild(articleBody);
 
-                var articleSource = document.createElement('h4');
-                articleSource.setAttribute("class","card-title");
-                articleSource.setAttribute("id",`selectedNewsSrc_${res.data[i].post_source}`);
+                var articleTitle = document.createElement('h4');
+                articleTitle.setAttribute("class","card-title");
+                articleTitle.setAttribute("id",`selectedNewsSrc_${res.data[i].post_source}`);
+                articleTitle.innerText = res.data[i].title; 
 
-                var articleDate = document.createElement('h5');
-                articleDate.setAttribute("class", `card-title`);
-                articleDate.setAttribute("id", `selectedNewsDate_${articleDBId}`);
-
+                var articleSrcDate = document.createElement('h5');
+                articleSrcDate.setAttribute("class", `card-srcdate`);
+                articleSrcDate.setAttribute("id", `selectedNewsDate_${articleDBId}`);
+                
                 var articleContent = document.createElement('p');
                 articleContent.setAttribute("class", "cars-text");
                 articleContent.setAttribute("id", `selectedNewsContent_${articleDBId}`);
@@ -101,15 +101,20 @@ axios.post(`showNewsContent`,{
                 angryBtn.setAttribute("id", `user_angry_${articleDBId}`);
                 angryBtn.setAttribute("src", "imgs/iconx/angry.png");
 
+                if(res.data[i].lead_paragraph==null){
+                    var leadParagraph = '';
+                }else{
+                    var leadParagraph = res.data[i].lead_paragraph;
+                }
 
-                articleDate.textContent = finalBeutifiedDate;
-                articleContent.textContent = res.data[i].content;
+                // articleSrcDate.textContent = finalBeutifiedDate;
+                articleContent.textContent = res.data[i].content +" " + leadParagraph;
                 
                 articleLink.textContent = "Read More";
                 if (res.data[i].post_source == 'nytimes'){
-                    articleSource.textContent = "New York Times";
+                    articleSrcDate.textContent = "New York Times" + " " + finalBeutifiedDate;
                 }else{
-                    articleSource.textContent = "Fox News";
+                    articleSrcDate.textContent = "Fox News"+ " " + finalBeutifiedDate;
                 }
 
                 // ===================================calculate average post emotion
@@ -137,8 +142,8 @@ axios.post(`showNewsContent`,{
                 }
 
                 // append single article
-                articleBody.appendChild(articleSource);
-                articleBody.appendChild(articleDate);
+                articleBody.appendChild(articleTitle);
+                articleBody.appendChild(articleSrcDate);
                 articleBody.appendChild(articleContent);
                 articleBody.appendChild(articleLink);
                 articleBody.appendChild(iconDiv);
@@ -183,20 +188,21 @@ axios.post(`showNewsContent`,{
 
                         cardShadow = document.createElement('article');
                         cardShadow.setAttribute("class", "card shadow");
-                        cardShadow.setAttribute("id", "selectedNews");
+                        cardShadow.setAttribute("id", "matchedNews_");
                         articleCol.appendChild(cardShadow);
 
                         articleBody = document.createElement('div');
                         articleBody.setAttribute("class", "card-body");
                         cardShadow.appendChild(articleBody);
 
-                        var articleSource = document.createElement('h4');
-                        articleSource.setAttribute("class","card-title");
-                        articleSource.setAttribute("id",`matchedNewsSrc_${res.data[i].post_source}`);
+                        var articleTitle = document.createElement('h4');
+                        articleTitle.setAttribute("class","card-title");
+                        articleTitle.setAttribute("id",`matchedNewsSrc_${res.data[i].post_source}`);
+                        articleTitle.innerText = res.data[i].title;
 
-                        var articleDate = document.createElement('h5');
-                        articleDate.setAttribute("class", `card-title`);
-                        articleDate.setAttribute("id", `matchedNewsDate_${articleDBId}`);
+                        var articleSrcDate = document.createElement('h5');
+                        articleSrcDate.setAttribute("class", `card-srcdate`);
+                        articleSrcDate.setAttribute("id", `matchedNewsDate_${articleDBId}`);
 
                         var articleContent = document.createElement('p');
                         articleContent.setAttribute("class", "cars-text");
@@ -225,14 +231,22 @@ axios.post(`showNewsContent`,{
                         angryBtn.setAttribute("id", `user_angry_${articleDBId}`);
                         angryBtn.setAttribute("src", "imgs/iconx/angry.png");
 
-                        articleDate.textContent = finalBeutifiedDate;
-                        articleContent.textContent = res.data[i].content;
+                        articleSrcDate.textContent = finalBeutifiedDate;
+
+                        if(res.data[i].lead_paragraph==null){
+                            var leadParagraph = '';
+                        }else{
+                            var leadParagraph = res.data[i].lead_paragraph;
+                        }
+        
+                        // articleSrcDate.textContent = finalBeutifiedDate;
+                        articleContent.textContent = res.data[i].content +" " + leadParagraph;
                         
                         articleLink.textContent = "Read More";
                         if (res.data[i].post_source == 'nytimes'){
-                            articleSource.textContent = "New York Times";
+                            articleSrcDate.textContent = "New York Times" + " " + finalBeutifiedDate;
                         }else{
-                            articleSource.textContent = "Fox News";
+                            articleSrcDate.textContent = "Fox News"+ " " + finalBeutifiedDate;
                         }
 
                         // ===================================calculate average post emotion
@@ -261,8 +275,8 @@ axios.post(`showNewsContent`,{
 
                         // append single article
                         
-                        articleBody.appendChild(articleSource);
-                        articleBody.appendChild(articleDate);
+                        articleBody.appendChild(articleTitle);
+                        articleBody.appendChild(articleSrcDate);
                         articleBody.appendChild(articleContent);
                         articleBody.appendChild(articleLink);
                         articleBody.appendChild(iconDiv);

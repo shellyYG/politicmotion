@@ -1009,10 +1009,12 @@ blockquote {
 article[id^="selectedNews_"] {
   background-color: #17202A !important;
   flex-grow: 1;
+  height: 306px;
 }
 
 article[id^="matchedNews_"]  {
   background-color: white !important;
+  height: 306px;
 }
 
 article[id^="selectedNewsExample_"] {
@@ -1071,7 +1073,7 @@ p[id^="selectedNewsContent_"] {
   font-size: 15px;
   line-height: 1.8;
   font-family: "Roboto", sans-serif;
-  height: 80px;
+  height: 19%;
   overflow-y: hidden;
 }
 
@@ -1081,7 +1083,7 @@ p[id^="matchedNewsContent_"] {
   font-size: 15px;
   line-height: 1.8;
   font-family: "Roboto", sans-serif;
-  height: 80px;
+  height: 19%;
   overflow-y: hidden;
 }
 
@@ -1277,3 +1279,11 @@ img[id^="user_love_"]:hover, img[id^="user_haha_"]:hover, img[id^="user_sad_"]:h
 
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
 .show {display:block;}
+
+.card-title {
+  font-size: 18px !important;
+}
+
+.card-srcdate {
+  font-size: 14px !important;
+}
