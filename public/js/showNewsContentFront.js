@@ -21,10 +21,19 @@ let avgFoxReactionSentiment = 0;
 let avgFoxReactionMagnitude = 0;
 let FoxLength = 0;
 
+// Link provided
+let NYIds = localStorage.getItem('NYIds');
+let FoxIds = localStorage.getItem('FoxIds');
+
+var NYIdsArray = NYIds.split(",");
+var FoxIdsArray = FoxIds.split(",");
+
 axios.post(`showNewsContent`,{
     'searchTopic1': searchTopic1,
     'searchTopic2': searchTopic2,
-    'clickedIds': finalPointsClicked
+    'clickedIds': finalPointsClicked,
+    'NYIdsArray': NYIdsArray,
+    'FoxIdsArray': FoxIdsArray
 }).then(res=>{
         var articleRow;
         for (i=0; i<res.data.length; i++){
@@ -178,7 +187,7 @@ axios.post(`showNewsContent`,{
                 
                 var articleContent2 = document.createElement('p');
                 articleContent2.setAttribute("class", "cars-text");
-                articleContent2.setAttribute("id", `selectedNewsContent_${articleDBId}`);
+                articleContent2.setAttribute("id", `hselectedNewsContent_${articleDBId}`);
 
                 if(res.data[i].lead_paragraph==null){
                     var leadParagraph = '';
@@ -340,6 +349,58 @@ axios.post(`showNewsContent`,{
                         iconDiv.appendChild(cryBtn);
                         iconDiv.appendChild(angryBtn);
 
+                        // -------------------------------------------------------------------------- set pop up classes
+                        articleCol2 = document.createElement('div');
+                        articleCol2.setAttribute("class", `hiddenc col-md-6 mb-4 hcol_matched_${articleDBId}`);
+                        articleRow.appendChild(articleCol2);
+
+                        cardShadow2 = document.createElement('article');
+                        cardShadow2.setAttribute("class", `card shadow hmatchedNews_${articleDBId}`);
+                        articleCol2.appendChild(cardShadow2);
+
+                        articleBody2 = document.createElement('div');
+                        articleBody2.setAttribute("class", "card-body");
+                        articleBody2.setAttribute("id", `hmatched_cbody_${articleDBId}`);
+                        cardShadow2.appendChild(articleBody2);
+
+                        var articleTitle2 = document.createElement('h4');
+                        articleTitle2.setAttribute("class","card-title");
+                        articleTitle2.setAttribute("id",`matchedNewsSrc_${articleDBId}`);
+                        articleTitle2.innerText = res.data[i].title; 
+
+                        var articleSrcDate2 = document.createElement('h5');
+                        articleSrcDate2.setAttribute("class", `card-srcdate`);
+                        articleSrcDate2.setAttribute("id", `matchedNewsDate_${articleDBId}`);
+                        
+                        var articleContent2 = document.createElement('p');
+                        articleContent2.setAttribute("class", "cars-text");
+                        articleContent2.setAttribute("id", `hmatchedNewsContent_${articleDBId}`);
+
+                        if(res.data[i].lead_paragraph==null){
+                            var leadParagraph = '';
+                        }else{
+                            var leadParagraph = res.data[i].lead_paragraph;
+                        }
+
+                        articleContent2.textContent = res.data[i].content +" " + leadParagraph;
+                        
+                        if (res.data[i].post_source == 'nytimes'){
+                            articleSrcDate2.textContent = "New York Times" + " " + finalBeutifiedDate;
+                        }else{
+                            articleSrcDate2.textContent = "Fox News"+ " " + finalBeutifiedDate;
+                        }
+
+                        var closeMatchedBtn = document.createElement('a');
+                        closeMatchedBtn.setAttribute('class', 'btn btn-xs btn-primary btn-matched-close');
+                        closeMatchedBtn.setAttribute('id', 'closeMatchedBtn');
+                        closeMatchedBtn.innerText = "close";
+                        
+                        // append single article
+                        articleBody2.appendChild(articleTitle2);
+                        articleBody2.appendChild(articleSrcDate2);
+                        articleBody2.appendChild(articleContent2);
+                        articleBody2.appendChild(closeMatchedBtn);
+
                         var loadingSection = document.getElementById("btnLoader");
                         loadingSection.innerHTML = "";
 
@@ -447,11 +508,20 @@ axios.post(`showNewsContent`,{
                     contentSectionToPop.setAttribute('id', 'contentSectionToPop');
                     bodyToPop.setAttribute('class', 'modalc-content');
                 }else{
-                    console.log("matched btn")
+                    console.log("matched btn");
+                    var sectionToPop = document.querySelector(".hcol_matched_"+idToPopUp);
+                    var contentSectionToPop = document.querySelector(".hmatchedNews_"+idToPopUp);
+                    console.log("contentSectionToPop: ", contentSectionToPop);
+                    var bodyToPop = document.querySelector("#hmatched_cbody_"+idToPopUp);
+                    
+                    sectionToPop.setAttribute('class', `modalc hcol_matched_${idToPopUp}`);
+                    contentSectionToPop.setAttribute('class', `modal-dialog modal-dialog-centered hmatchedNews_${idToPopUp}`);
+                    contentSectionToPop.setAttribute('id', 'contentSectionToPop');
+                    bodyToPop.setAttribute('class', 'modalc-content');
                 }
             })
         })
-
+        // when closed the selected read-more section
         closeBtns = document.querySelectorAll("#closeBtn");
         closeBtns.forEach((e)=>{
             console.log("each close btn:", e);
@@ -463,6 +533,20 @@ axios.post(`showNewsContent`,{
             })
         })
 
+        // when closed the matched read-more section
+        closeMatchedBtns = document.querySelectorAll("#closeMatchedBtn");
+        closeMatchedBtns.forEach((e)=>{
+            console.log("each close btn:", e);
+            e.addEventListener('click',()=>{
+                var hiddenElements = document.querySelectorAll('[class^="modalc hcol_matched_"]');
+                hiddenElements.forEach((x)=>{
+                    console.log("x.classList[1]: ", x.classList[1]);
+                    x.setAttribute('class',`hiddenc col-md-6 mb-4 ${x.classList[1]}`);
+                })
+            })
+        })
+
+        // when clicked the next step
         const analyzeUserEmotionButton = document.getElementById('btn-analyzeUser');
         analyzeUserEmotionButton.addEventListener('click',()=>{
             window.location.href = '/userEmotion.html';

@@ -54,11 +54,17 @@ router.post('/', (req, res, next)=>{
         var List = items.magScore;
         return List;
     }
+    function getuniqueId(items){
+        var List = items.uniqueId;
+        return List;
+    }
 
     async function makeSentimentArray(){
         var allDots = await getFBNewsDots();
+        console.log("allDots: ", allDots);
         const NYSentimentScoreArray = allDots[0].map(getsentimentScore);
         const FoxSentimentScoreArray = allDots[1].map(getsentimentScore);
+        
         return [NYSentimentScoreArray,FoxSentimentScoreArray];
     }
     async function makeMagArray(){
@@ -67,17 +73,25 @@ router.post('/', (req, res, next)=>{
         const FoxmagScoreArray = allDots[1].map(getMagScore);
         return [NYmagScoreArray,FoxmagScoreArray];
     }
-    
+    async function makeIds(){
+        var allDots = await getFBNewsDots();
+        const NYTUniqueIds = allDots[0].map(getuniqueId);
+        const FoxUniqueIds = allDots[1].map(getuniqueId);
+        return [NYTUniqueIds,FoxUniqueIds]
+    }
 
     async function pushDataToFront(){
         // ------------------------------------------------ dots
         const sentimentArray = await makeSentimentArray();
         const magnitudeArray = await makeMagArray();
+        const newsIds = await makeIds();
 
         const NYSentimentArray = sentimentArray[0];
         const NYMagnitudeArray = magnitudeArray[0];
+        const NYIds = newsIds[0];
         const FoxSentimentArray = sentimentArray[1];
         const FoxMagnitudeArray = magnitudeArray[1];
+        const FoxIds = newsIds[1];
         
         // ----------------------------Construct final object sent to Front-End
         const finalRes = {};
@@ -87,6 +101,8 @@ router.post('/', (req, res, next)=>{
         finalRes.NYMagnitudeArray = NYMagnitudeArray;
         finalRes.FoxSentimentArray = FoxSentimentArray;
         finalRes.FoxMagnitudeArray = FoxMagnitudeArray;
+        finalRes.NYIds = NYIds;
+        finalRes.FoxIds = FoxIds;
 
         res.json(finalRes);
     }

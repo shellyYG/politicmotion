@@ -7,6 +7,18 @@ router.post('/', (req, res) => {
     //------------------------------------------------------------------------------------------ Finish Algo Part
     const searchTopic1 = req.body.searchTopic1;
     const searchTopic2 = req.body.searchTopic2;
+    const NYIdsArray = req.body.NYIdsArray;
+    const FoxIdsArray = req.body.FoxIdsArray;
+    var allIdsArray = [];
+    FoxIdsArray.forEach((e)=>{
+        allIdsArray.push(e);
+    })
+    NYIdsArray.forEach((e)=>{
+        allIdsArray.push(e);
+    })
+    
+    allIdsArray = allIdsArray.map(element=>parseInt(element,10));
+    
     let clickedIds = req.body.clickedIds;
     clickedIds = JSON.parse(clickedIds);
 
@@ -17,9 +29,7 @@ router.post('/', (req, res) => {
             sql = `SELECT id, content, post_date, post_link, reaction, sentiment_score, magnitude_score
             FROM politicmotion.fb_rawdata
             WHERE sentiment_score = ${clickedIds[i].Xaxis} AND magnitude_score = ${clickedIds[i].Yaxis}
-            AND ((content LIKE '%${searchTopic1}%' AND content LIKE '%${searchTopic2}%') 
-                OR (title LIKE '%${searchTopic1}%' AND title LIKE '%${searchTopic2}%')
-                OR (small_title LIKE '%${searchTopic1}%' AND small_title LIKE '%${searchTopic2}%'))
+            AND id IN (${allIdsArray})
             LIMIT 1;`
             var sqlquery = await query(sql);
             return sqlquery;
@@ -28,7 +38,7 @@ router.post('/', (req, res) => {
             let ClickedNews = await getClickedNews();
             let ClickedNewsId = ClickedNews[0].id;
             allNewsIdClicked.push(ClickedNewsId);
-            console.log("allNewsIdClicked: ", allNewsIdClicked);
+            // console.log("allNewsIdClicked: ", allNewsIdClicked);
         }
         showFirstCLickedNews()
     }
@@ -49,9 +59,7 @@ router.post('/', (req, res) => {
     async function searchRelevantNews() {
         sql = `SELECT id, content, post_date, post_link, post_source, reaction,  sentiment_score, magnitude_score 
                 FROM fb_rawdata 
-                WHERE ((content LIKE '%${searchTopic1}%' AND content LIKE '%${searchTopic2}%') 
-                OR (title LIKE '%${searchTopic1}%' AND title LIKE '%${searchTopic2}%')
-                OR (small_title LIKE '%${searchTopic1}%' AND small_title LIKE '%${searchTopic2}%')) 
+                WHERE id IN (${allIdsArray})
                 ORDER BY id ASC
                 ;` // here need to change to not limited
         var sqlquery = await query(sql);
@@ -199,10 +207,7 @@ router.post('/', (req, res) => {
 
         }
 
-        // console.log("allMatched: ", allMatched);
-
         const newsIdtoShow = [];
-        console.log("allMatched: ", allMatched);
         if (allMatched.length == 0) { // no matched news
             var uniqueNewsIdtoShow = allNewsIdClicked.filter(unique);
             var clickedNews = [];
@@ -247,7 +252,7 @@ router.post('/', (req, res) => {
 
         async function showRelevantNews() {
             let allNews = await getRelevantNews();
-            console.log("allNews: ", allNews);
+            // console.log("allNews: ", allNews);
             if (allMatched.length == 0) {
                
                 var singleNews = {};

@@ -17,6 +17,9 @@ async function searchNews(){
         'searchTopic1': searchTopic1,
         'searchTopic2': searchTopic2
     }).then(res=>{
+        localStorage.setItem('NYIds',res.data.NYIds);
+        localStorage.setItem('FoxIds',res.data.FoxIds);
+        
         if(res.data.NYSentimentArray.length == 0){
             alert("Oops, no news found, please choose another topic!");
             window.location.href="/";
@@ -79,11 +82,13 @@ async function searchNews(){
                 textfont: {
                     family:  'BwNistaInt-xBd'
                 },
-                marker: { size: 12, color: 'rgb(0,50,255)'},
+                marker: { size: 12, color: 'rgb(0,50,255)', symbol: '102'},
                 type: 'scatter'
             }
             
             var data = [traceNYT, traceFox];
+            console.log("traceNYT: ", traceNYT);
+            console.log("traceFox: ", traceFox);
 
             var layout = {
                 // -------------------------------- add a non-zero horizontal line
