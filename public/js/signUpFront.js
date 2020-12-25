@@ -18,7 +18,7 @@ signupT.addEventListener('click',()=>{
     console.log("response data is:", res.data.data);
     window.localStorage.setItem('generalToken',token);
     alert("Successfully signed up! Now you can start to search & chat!")
-    window.location.href=`/`; 
+    window.location.href=`/search.html`; 
   }).catch(err =>{
     console.log(err);
   });

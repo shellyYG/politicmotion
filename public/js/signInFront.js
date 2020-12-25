@@ -19,7 +19,7 @@ signInT.addEventListener('click',()=>{
     console.log("token is:", token);
     window.localStorage.setItem('generalToken',token);
     alert("Successfully signed in!");
-    window.location.href=`/`;
+    window.location.href=`/search.html`;
   }).catch(err =>{
     console.log(err);
   });
