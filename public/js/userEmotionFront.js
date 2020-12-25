@@ -269,59 +269,38 @@ axios.post(`calUserEmotion`, {
                 'secondSearchTopic': searchTopic2
             }, { headers: headers })
                 .then(res => {
-                    const buddyNamesRank = res.data.buddyNames;
-                    const topBuddyNames = res.data.topBuddyNames;
-                    localStorage.setItem("topBuddyNames", topBuddyNames);
-                    
-                    
-                    console.log("buddyNamesRank: ", buddyNamesRank);
-                    var buddiesToChatpreExist = localStorage.removeItem('buddiesToChat');
+                    console.log("res userEmotionFront: ", res);
+                    if (res.data.buddyNames.length == null){
+                        alert("Sorry, we found no one who has searched for the same topics.")
+                    }else{
+                        const buddyNamesRank = res.data.buddyNames;
+                        const topBuddyNames = res.data.topBuddyNames;
+                        localStorage.setItem("topBuddyNames", topBuddyNames);
 
-                    for (i = 0; i < buddyNamesRank.length; i++) {
-                        var buddiesToChat = localStorage.getItem("buddiesToChat");
-                        var buddiesToChatArray = [];
-                        if (buddiesToChat) {
-                            buddiesToChatArray = JSON.parse(buddiesToChat);
+                        for (i = 0; i < buddyNamesRank.length; i++) {
+                            var buddiesToChat = localStorage.getItem("buddiesToChat");
+                            var buddiesToChatArray = [];
+                            if (buddiesToChat) {
+                                buddiesToChatArray = JSON.parse(buddiesToChat);
+                            }
+                            buddiesToChatArray.push({ "buddies": buddyNamesRank[i] });
+                            localStorage.setItem("buddiesToChat", JSON.stringify(buddiesToChatArray));
                         }
-                        buddiesToChatArray.push({ "buddies": buddyNamesRank[i] });
-                        localStorage.setItem("buddiesToChat", JSON.stringify(buddiesToChatArray));
+                        window.location.href = '/chat.html';
                     }
-                    const finalBuddies = localStorage.getItem("buddiesToChat");
-                    window.location.href = '/chat.html';
+                    
+                    
 
                 })
         })
 
-        // find chat-opposites when clicked
-        const ChatWithOppositeBtn = document.getElementById('chat-opposite');
-        ChatWithOppositeBtn.addEventListener('click', () => {
-            axios.post(`findOpposites`, {
-                'firstSearchTopic': searchTopic1,
-                'secondSearchTopic': searchTopic2
-            }, { headers: headers })
-                .then(res => {
-                    console.log("findOpposites res: ", res);
-                    const oppositesNamesRank = res.data;
-                    for (i = 0; i < oppositesNamesRank.length; i++) {
-                        var oppositesToChat = localStorage.getItem("oppositesToChat");
-                        var oppositesToChatArray = [];
-                        if (oppositesToChat) {
-                            oppositesToChatArray = JSON.parse(oppositesToChat);
-                        }
-                        oppositesToChatArray.push({ "opposites": oppositesNamesRank[i] });
-                        localStorage.setItem("oppositesToChat", JSON.stringify(oppositesToChatArray));
-                    }
-                    const finalOpposites = localStorage.getItem("oppositesToChat");
-                    console.log("finalOpposites: ", finalOpposites);
-
-                })
-        })
+        
 
 
     }).catch(err => {
         console.log("err from getting emotion is:", err)
-        // alert("Sorry, you need to sign in to see your score!");
-        // window.location.href = '/signIn.html'
+        alert("Sorry, you need to sign in to see your score!");
+        window.location.href = '/signIn.html'
     })
 
 

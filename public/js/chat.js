@@ -3,6 +3,12 @@ const socket = io();
 let buddiesToChat = localStorage.getItem("buddiesToChat");
 buddiesToChat = JSON.parse(buddiesToChat);
 let topBuddyNames = localStorage.getItem("topBuddyNames");
+
+if(buddiesToChat == null){
+    alert("Sorry, no one has searched for the same topic yet.");
+    window.location.href = '/userEmotion.html';
+}
+
 let buddyNames = buddiesToChat.map(element => element.buddies);
 const chatForm = document.getElementById('chat-form');
 const submitBtn = document.getElementById('sendMsgBtn');
@@ -98,7 +104,7 @@ socket.on("getToken", () => {
 });
 socket.on("AuthError", (msg) => {
     console.log(msg);
-    alert("Please sign in again.")
+    alert("You are too long away. Please sign in again.")
     window.location.replace("/signIn.html")
     // console.log("F4 Auth Error");
 });

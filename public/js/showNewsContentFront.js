@@ -585,7 +585,12 @@ axios.post(`showNewsContent`,{
         // when clicked the next step
         const analyzeUserEmotionButton = document.getElementById('btn-analyzeUser');
         analyzeUserEmotionButton.addEventListener('click',()=>{
-            window.location.href = '/userEmotion.html';
+            var checkedIfHasEmotion = localStorage.getItem('clickedEmotions');
+            if(checkedIfHasEmotion==null){
+                alert("Please click on emotion emojis to proceed.");
+            }else{
+                window.location.href = '/userEmotion.html';
+            }
         })
 }).catch(err => {
     console.log("err from tfidf: ",err);

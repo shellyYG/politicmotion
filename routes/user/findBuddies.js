@@ -19,8 +19,8 @@ router.post('/', verifyToken, (req, res)=>{
                 sql = `SELECT a.username, a.email, AVG(b.user_sentiment_score) AS u_sent, AVG(b.user_magnitude_score) AS u_mag
                     FROM politicmotion.user_basic a
                     INNER JOIN politicmotion.user_emotion b ON a.email = b.email
-                    WHERE (firstSearchTopic LIKE '%${searchTopic1}%' OR firstSearchTopic LIKE '%${searchTopic2}%') 
-                    AND (secondSearchTopic LIKE '%${searchTopic1}%' OR secondSearchTopic LIKE '%${searchTopic2}%')
+                    WHERE (firstSearchTopic = '${searchTopic1}' OR firstSearchTopic = '${searchTopic2}') 
+                    AND (secondSearchTopic = '${searchTopic1}' OR secondSearchTopic = '${searchTopic2}')
                     GROUP BY 1,2
                     ORDER BY u_sent ASC;` // ASC so it will already rank by distance
                 var sqlquery = await query(sql);
@@ -166,10 +166,14 @@ router.post('/', verifyToken, (req, res)=>{
                 console.log("buddyEmails: ", buddyEmails);
                 var formatbuddyEmails = buddyEmails.map(element=>'"'+element+'"');
                 console.log("buddyEmails: ", buddyEmails);
-                sql = `SELECT username FROM politicmotion.user_basic WHERE email IN (${formatbuddyEmails})
+                try{
+                    sql = `SELECT username FROM politicmotion.user_basic WHERE email IN (${formatbuddyEmails})
                         ORDER BY Field(email,${formatbuddyEmails});` // ASC so it will already rank by distance
-                var sqlquery = await query(sql);
-                return sqlquery;
+                    var sqlquery = await query(sql);
+                    return sqlquery;
+                }catch(err){
+                    return []
+                }
             }
 
             async function findTopBuddyNames(){
@@ -178,10 +182,15 @@ router.post('/', verifyToken, (req, res)=>{
                 console.log("topBuddyEmails: ", topBuddyEmails);
                 var formatTopBuddyEmails = topBuddyEmails.map(element=>'"'+element+'"');
                 console.log("formatTopBuddyEmails: ", formatTopBuddyEmails);
-                sql = `SELECT username FROM politicmotion.user_basic WHERE email IN (${formatTopBuddyEmails})
+                try{
+                    sql = `SELECT username FROM politicmotion.user_basic WHERE email IN (${formatTopBuddyEmails})
                         ORDER BY Field(email,${formatTopBuddyEmails});` // ASC so it will already rank by distance
-                var sqlquery = await query(sql);
-                return sqlquery;
+                    var sqlquery = await query(sql);
+                    return sqlquery;
+                }catch(err){
+                    return []
+                }
+                
             }
             
             const rooms = [];

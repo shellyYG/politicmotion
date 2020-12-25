@@ -16,52 +16,57 @@ router.post('/', verifyToken, (req, res)=>{
             let avgUserSentiment = 0;
             let avgUserMagnitude = 0;
             console.log("userEmotion: ",userEmotion);
-            for (i=0; i<userEmotion.length; i++){
-                cleanEmotion.push(userEmotion[i].split("_")[1]);
-                console.log("cleanEmotion: ", cleanEmotion);
-
-                if(cleanEmotion[i] == "love"){
-                    avgUserSentiment += 0.9;
-                    avgUserMagnitude += 0.9;
-                }else if(cleanEmotion[i] =="haha"){
-                    avgUserSentiment += 0.5;
-                    avgUserMagnitude += 0.5;
-                }else if(cleanEmotion[i] == "cry"){
-                    avgUserSentiment += -0.6;
-                    avgUserMagnitude += 0.6;
-                }else if(cleanEmotion[i] == "angry"){
-                    avgUserSentiment += -0.9;
-                    avgUserMagnitude += 0.9;
-                }else{
-                    avgUserSentiment += 0;
-                    avgUserMagnitude += 0;
+            if (userEmotion == null){
+                var combinedUserEmotion = {}
+            }else{
+                for (i=0; i<userEmotion.length; i++){
+                    cleanEmotion.push(userEmotion[i].split("_")[1]);
+                    console.log("cleanEmotion: ", cleanEmotion);
+    
+                    if(cleanEmotion[i] == "love"){
+                        avgUserSentiment += 0.9;
+                        avgUserMagnitude += 0.9;
+                    }else if(cleanEmotion[i] =="haha"){
+                        avgUserSentiment += 0.5;
+                        avgUserMagnitude += 0.5;
+                    }else if(cleanEmotion[i] == "cry"){
+                        avgUserSentiment += -0.6;
+                        avgUserMagnitude += 0.6;
+                    }else if(cleanEmotion[i] == "angry"){
+                        avgUserSentiment += -0.9;
+                        avgUserMagnitude += 0.9;
+                    }else{
+                        avgUserSentiment += 0;
+                        avgUserMagnitude += 0;
+                    }
                 }
-            }
-            avgUserSentiment = avgUserSentiment/userEmotion.length;
-            avgUserMagnitude = avgUserMagnitude/userEmotion.length;
-            combinedUserEmotion = {};
-            combinedUserEmotion.avgUserSentiment = avgUserSentiment.toFixed(2);
-            combinedUserEmotion.avgUserMagnitude = avgUserMagnitude.toFixed(2);
-            
-            // insert user emotion to database
-            const firstSearchTopic = req.body.firstSearchTopic;
-            const secondSearchTopic = req.body.secondSearchTopic;
-            async function insertUserEmotion(){
-                let insertedData = {
-                    firstSearchTopic: firstSearchTopic,
-                    secondSearchTopic: secondSearchTopic,
-                    username: payload.data.name,
-                    email: payload.data.email,
-                    user_sentiment_score: avgUserSentiment.toFixed(2),
-                    user_magnitude_score: avgUserMagnitude.toFixed(2),
+                avgUserSentiment = avgUserSentiment/userEmotion.length;
+                avgUserMagnitude = avgUserMagnitude/userEmotion.length;
+                var combinedUserEmotion = {};
+                combinedUserEmotion.avgUserSentiment = avgUserSentiment.toFixed(2);
+                combinedUserEmotion.avgUserMagnitude = avgUserMagnitude.toFixed(2);
+                
+                // insert user emotion to database
+                const firstSearchTopic = req.body.firstSearchTopic;
+                const secondSearchTopic = req.body.secondSearchTopic;
+                async function insertUserEmotion(){
+                    let insertedData = {
+                        firstSearchTopic: firstSearchTopic,
+                        secondSearchTopic: secondSearchTopic,
+                        username: payload.data.name,
+                        email: payload.data.email,
+                        user_sentiment_score: avgUserSentiment.toFixed(2),
+                        user_magnitude_score: avgUserMagnitude.toFixed(2),
+    
+                        };
+                    let sql = 'INSERT INTO user_emotion SET ?';
+                    let sqlquery = await query(sql, insertedData);
+                    return sqlquery;
+                }
+                insertUserEmotion();
+                console.log("combinedUserEmotion: ", combinedUserEmotion);
 
-                    };
-                let sql = 'INSERT INTO user_emotion SET ?';
-                let sqlquery = await query(sql, insertedData);
-                return sqlquery;
             }
-            insertUserEmotion();
-            console.log("combinedUserEmotion: ", combinedUserEmotion);
 
             res.json(combinedUserEmotion);
         }

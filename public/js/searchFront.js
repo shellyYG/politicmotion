@@ -2,7 +2,8 @@
 // remove news & emotion when user try to find new topics
 localStorage.removeItem("clickedPoints");
 localStorage.removeItem("clickedEmotions");
-
+localStorage.removeItem("buddiesToChat");
+localStorage.removeItem("topBuddyNames");
 
 const searchButton = document.getElementById('btn-search');
 
