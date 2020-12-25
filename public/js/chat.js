@@ -87,24 +87,24 @@ const tokenTest = () => {
         resolve(query)
     })
 }
-console.log("F1");
+// console.log("F1");
 socket.on("getToken", () => {
-    console.log("F2");
+    // console.log("F2");
     tokenTest().then(result => {
         console.log(`${result.generalToken} connected.`)
         socket.emit("verifyToken", (result))
-        console.log("F3");
+        // console.log("F3");
     })
 });
 socket.on("AuthError", (msg) => {
     console.log(msg);
     alert("Please sign in again.")
     window.location.replace("/signIn.html")
-    console.log("F4 Auth Error");
+    // console.log("F4 Auth Error");
 });
 
 socket.on('Self', (self) => {
-    console.log("F4");
+    // console.log("F4");
     senderNow = self.self;
     selfNameDiv.innerText = `Welcome to chat, ${self.self}!`;
 
@@ -118,12 +118,12 @@ socket.on('Self', (self) => {
     instructionStar.setAttribute('id','starIcon');
     instruction.appendChild(instructionStar);
     socket.emit('newUserUser');
-    console.log("F5");
+    // console.log("F5");
 });
 
 // change color to green when online
 socket.on("onlineUsers", (onlineUserList) => {
-    console.log("F6");
+    // console.log("F6");
     var potentialPartners = document.querySelectorAll('partnerName');
     console.log("onlineUsers: ", onlineUserList);
     for (i = 0; i < potentialPartners.length; i++) {
@@ -133,7 +133,7 @@ socket.on("onlineUsers", (onlineUserList) => {
             statusSmall[i].innerText = 'online';
         }
     }
-    console.log("F7");
+    // console.log("F7");
 });
 
 // select chat partner //change the element to load historical msg
@@ -145,7 +145,6 @@ potentialPartnerDivs.forEach((element) => {
         // clear all highlights from other elements
         var partnerForClean = document.querySelectorAll('.singleBuddy');
         partnerForClean.forEach((e) => {
-            console.log("e: ", e);
             e.removeAttribute('id');
         })
         // add highlight color for partner selected
@@ -165,6 +164,12 @@ socket.on('history', (data) => {
     // empty history with other people
     msgPlaceHolder.innerHTML = "";
 
+    if(data.length == 0){
+        var defaultNoHistory = document.createElement('div');
+        defaultNoHistory.setAttribute('class', 'default-no-chat-history-text');
+        defaultNoHistory.innerHTML = "You haven't chat yet! Start chatting by typing something below!"
+        msgPlaceHolder.appendChild(defaultNoHistory);
+    }
 
     // add history with others
     data.forEach(element => {

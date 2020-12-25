@@ -311,7 +311,16 @@ body {
   text-align: center;
 }
 
+.default-no-chat-history-text {
+  color: white;
+  font-size: 51px;
+  text-align: center;
+}
+
 #starIcon {
   width: 13px;
 }
 
+.chat-button {
+  margin-top: 50px !important;
+}

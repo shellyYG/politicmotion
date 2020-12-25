@@ -248,20 +248,18 @@ axios.post(`calUserEmotion`, {
         // ------------------------------------------------- Create Plot
         Plotly.newPlot(graph, data, layout, config);
 
-        var ChatWithBuddy = document.createElement('div');
-        ChatWithBuddy.innerHTML = 'Meet Similar People';
-        ChatWithBuddy.setAttribute('id', 'chat-buddy');
-        ChatWithBuddy.setAttribute('class', 'btn btn-xlarge btn-primary offset-md-3 col-lg-2');
-
-        var ChatWithOpposite = document.createElement('div');
-        ChatWithOpposite.innerHTML = 'Meet Unalike People';
-        ChatWithOpposite.setAttribute('id', 'chat-opposite');
-        ChatWithOpposite.setAttribute('class', 'btn btn-xlarge btn-primary offset-md-2 col-lg-2');
-
         const GoToChat = document.getElementById('GoToChat');
+        
+        var chatBtnRow = document.createElement('div');
+        chatBtnRow.setAttribute('class','col-md-12 text-center chat-button');
+        chatBtnRow.setAttribute('style', 'margin-top: 50px;');
+        GoToChat.appendChild(chatBtnRow);
 
-        GoToChat.appendChild(ChatWithBuddy);
-        GoToChat.appendChild(ChatWithOpposite);
+        var ChatWithBuddy = document.createElement('button');
+        ChatWithBuddy.innerHTML = 'Chat with people who care about the same topics!';
+        ChatWithBuddy.setAttribute('id', 'chat-buddy');
+        ChatWithBuddy.setAttribute('class', 'btn btn-large btn-primary');
+        chatBtnRow.appendChild(ChatWithBuddy);
 
         // find chat-buddies when clicked
         const ChatWithBuddyBtn = document.getElementById('chat-buddy');
@@ -322,8 +320,8 @@ axios.post(`calUserEmotion`, {
 
     }).catch(err => {
         console.log("err from getting emotion is:", err)
-        alert("Sorry, you need to sign in to see your score!");
-        window.location.href = '/signIn.html'
+        // alert("Sorry, you need to sign in to see your score!");
+        // window.location.href = '/signIn.html'
     })
 
 
