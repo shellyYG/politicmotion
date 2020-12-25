@@ -25,8 +25,20 @@ let FoxLength = 0;
 let NYIds = localStorage.getItem('NYIds');
 let FoxIds = localStorage.getItem('FoxIds');
 
-var NYIdsArray = NYIds.split(",");
-var FoxIdsArray = FoxIds.split(",");
+try {
+    var NYIdsArray = NYIds.split(",")
+}catch(err){
+    console.log("No NYT news");
+    var NYIdsArray = [];
+}
+
+try {
+    var FoxIdsArray = FoxIds.split(",");
+}catch(err){
+    console.log("No Fox news");
+    var FoxIdsArray = [];
+}
+
 
 axios.post(`showNewsContent`,{
     'searchTopic1': searchTopic1,
@@ -37,15 +49,18 @@ axios.post(`showNewsContent`,{
 }).then(res=>{
         var articleRow;
         for (i=0; i<res.data.length; i++){
-            console.log("res.data: ", res.data);
+            // console.log("res.data: ", res.data);
             // ============================================================= Get clicked Articles and create a block
             console.log("res.data[i]: ", res.data[i]);
             if (res.data[i].clickedId !== 0){ // has at least 1 news
                 var rawDate = res.data[i].post_date;
                 var re = /([^T]+)/;
+                console.log("rawDate: ", rawDate);
                 var pureDatePart = rawDate.split(re);
+                // console.log("pureDatePart: ", pureDatePart);
                 var datePart = pureDatePart[1];
                 var datePartArray = datePart.split("-");
+                // console.log("datePartArray: ", datePartArray);
                 
                 var beautifyDateYear = datePartArray[0];
                 var beautifyDateMonth = datePartArray[1];
@@ -231,8 +246,10 @@ axios.post(`showNewsContent`,{
                         var rawDate = res.data[i].post_date;
                         var re = /([^T]+)/;
                         var pureDatePart = rawDate.split(re);
+                        console.log("pureDatePart2: ", pureDatePart);
                         var datePart = pureDatePart[1];
                         var datePartArray = datePart.split("-");
+                        console.log("datePartArray2: ", datePartArray)
                         
                         var beautifyDateYear = datePartArray[0];
                         var beautifyDateMonth = datePartArray[1];

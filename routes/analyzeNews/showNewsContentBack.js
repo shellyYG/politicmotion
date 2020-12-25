@@ -16,8 +16,13 @@ router.post('/', (req, res) => {
     NYIdsArray.forEach((e)=>{
         allIdsArray.push(e);
     })
+    console.log("allIdsArray: ", allIdsArray);
+    allIdsArray = allIdsArray.filter(function(value, index, arr){
+        return value !== "";
+    })
     
-    allIdsArray = allIdsArray.map(element=>parseInt(element,10));
+    allIdsArrayNum = allIdsArray.map(element=>parseInt(element,10));
+    
     
     let clickedIds = req.body.clickedIds;
     clickedIds = JSON.parse(clickedIds);
@@ -29,7 +34,7 @@ router.post('/', (req, res) => {
             sql = `SELECT id, content, post_date, post_link, reaction, sentiment_score, magnitude_score
             FROM politicmotion.fb_rawdata
             WHERE sentiment_score = ${clickedIds[i].Xaxis} AND magnitude_score = ${clickedIds[i].Yaxis}
-            AND id IN (${allIdsArray})
+            AND id IN (${allIdsArrayNum})
             LIMIT 1;`
             var sqlquery = await query(sql);
             return sqlquery;
@@ -59,7 +64,7 @@ router.post('/', (req, res) => {
     async function searchRelevantNews() {
         sql = `SELECT id, content, post_date, post_link, post_source, reaction,  sentiment_score, magnitude_score 
                 FROM fb_rawdata 
-                WHERE id IN (${allIdsArray})
+                WHERE id IN (${allIdsArrayNum})
                 ORDER BY id ASC
                 ;` // here need to change to not limited
         var sqlquery = await query(sql);
