@@ -2,6 +2,23 @@ let articles = document.querySelector('#articles');
 const searchTopic1 = localStorage.getItem("searchTopic1");
 const searchTopic2 = localStorage.getItem("searchTopic2");
 var finalPointsClicked = localStorage.getItem("clickedPoints");
+let step1 = document.getElementById('step1');
+let step2 = document.getElementById('step2');
+let step3 = document.getElementById('step3');
+let step4 = document.getElementById('step4');
+step1.addEventListener(('click'), ()=>{
+    window.location.href = '/showNewsDots.html'
+})
+step2.addEventListener(('click'), ()=>{
+    window.location.href = '/showNewsContent.html'
+})
+step3.addEventListener(('click'), ()=>{
+    window.location.href = '/userEmotion.html'
+})
+step4.addEventListener(('click'), ()=>{
+    window.location.href = '/chat.html'
+})
+
 let avgPostSentiment = 0;
 let avgPostMagnitude = 0;
 let avgReactionSentiment = 0;

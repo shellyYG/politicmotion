@@ -12,6 +12,23 @@ let avgReactionSentiment = 0;
 let avgReactionMagnitude = 0;
 var d3 = Plotly.d3;
 
+let step1 = document.getElementById('step1');
+let step2 = document.getElementById('step2');
+let step3 = document.getElementById('step3');
+let step4 = document.getElementById('step4');
+step1.addEventListener(('click'), ()=>{
+    window.location.href = '/showNewsDots.html'
+})
+step2.addEventListener(('click'), ()=>{
+    window.location.href = '/showNewsContent.html'
+})
+step3.addEventListener(('click'), ()=>{
+    window.location.href = '/userEmotion.html'
+})
+step4.addEventListener(('click'), ()=>{
+    window.location.href = '/chat.html'
+})
+
 async function searchNews(){
     axios.post(`/searchNews`,{
         'searchTopic1': searchTopic1,
