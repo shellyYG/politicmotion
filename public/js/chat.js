@@ -107,6 +107,16 @@ socket.on('Self', (self) => {
     console.log("F4");
     senderNow = self.self;
     selfNameDiv.innerText = `Welcome to chat, ${self.self}!`;
+
+    var instruction = document.createElement('div');
+    instruction.innerText = 'Most similar partner is marked with a '
+    instruction.setAttribute('id','instruction-for-star');
+    selfNameDiv.appendChild(instruction);
+    
+    var instructionStar = document.createElement('img');
+    instructionStar.setAttribute('src','imgs/iconx/star.png');
+    instructionStar.setAttribute('id','starIcon');
+    instruction.appendChild(instructionStar);
     socket.emit('newUserUser');
     console.log("F5");
 });

@@ -240,7 +240,7 @@ body {
   }
 
   #row-main-chat-box {
-      margin-top: -6vh;
+      margin-top: -3vh;
   }
 
   #chat-partners {
@@ -309,5 +309,9 @@ body {
   color: white;
   font-size: 60px;
   text-align: center;
+}
+
+#starIcon {
+  width: 13px;
 }
 

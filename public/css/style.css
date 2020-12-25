@@ -989,13 +989,13 @@ blockquote {
 #main-main{
   background-color: #17202A !important;
   background-size: cover;
-  margin: 100px 0px 0px; 
+  margin: 47px 0px 0px; 
 }
 
 #main-main-content{
   background-color: #17202A !important;
   background-size: cover;
-  margin: 198px 0px 0px; /* top leftRight bottom */
+  margin: 190px 0px 0px; /* top leftRight bottom */
 }
 
 .spacer{
@@ -1006,7 +1006,7 @@ blockquote {
 .progressBar{
   background-color: #17202A !important;
   background-size: cover;
-  padding-top: 50px;
+  padding-top: 0px;
 }
 
 
