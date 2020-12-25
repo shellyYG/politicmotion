@@ -1,21 +1,21 @@
-const express = require('express');
-const router = express.Router();
+// const express = require('express');
+// const router = express.Router();
 
-router.post('/', verifyToken, (req, res)=>{
+// router.post('/', verifyToken, (req, res)=>{
 
-})
+// })
 
-function verifyToken(req, res, next){
-    const bearerHeader=req.headers['authorization'];
+// function verifyToken(req, res, next){
+//     const bearerHeader=req.headers['authorization'];
     
-    if(typeof bearerHeader !== 'undefined'){
-        const bearer = bearerHeader.split(' ');
-        const bearerToken = bearer[1];
-        req.token = bearerToken;
-        next()
-    }else{
-        res.sendStatus(403); //forbidden status
-    }
-}
+//     if(typeof bearerHeader !== 'undefined'){
+//         const bearer = bearerHeader.split(' ');
+//         const bearerToken = bearer[1];
+//         req.token = bearerToken;
+//         next()
+//     }else{
+//         res.sendStatus(403); //forbidden status
+//     }
+// }
 
-module.exports = router;
+// module.exports = router;

@@ -2,6 +2,7 @@ const socket = io();
 
 let buddiesToChat = localStorage.getItem("buddiesToChat");
 buddiesToChat = JSON.parse(buddiesToChat);
+let topBuddyNames = localStorage.getItem("topBuddyNames");
 let buddyNames = buddiesToChat.map(element => element.buddies);
 const chatForm = document.getElementById('chat-form');
 const submitBtn = document.getElementById('sendMsgBtn');
@@ -41,7 +42,10 @@ function unique(value, index, self) {
     return self.indexOf(value) === index;
 }
 
+var topBuddyNamesPart = topBuddyNames.split(",");
+
 buddiesToChat = buddiesToChat.filter(unique);
+
 for (i = 0; i < buddiesToChat.length; i++) {
     var singleBuddy = document.createElement('li');
     singleBuddy.setAttribute("class", "active bounceInDown singleBuddy");
@@ -59,6 +63,16 @@ for (i = 0; i < buddiesToChat.length; i++) {
 
     statusDiv.appendChild(statusSmall);
     statusDiv.appendChild(nameStrong);
+
+    // add star for top partner
+    if (topBuddyNamesPart.includes(buddiesToChat[i].buddies)){
+        console.log(`${buddiesToChat[i].buddies} included!`);
+        var star = document.createElement('img');
+        star.setAttribute('src','imgs/iconx/star.png');
+        star.setAttribute('id','starIcon');
+        statusDiv.appendChild(star);
+    }
+
 
     singleBuddy.appendChild(statusDiv);
 

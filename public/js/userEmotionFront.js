@@ -271,7 +271,11 @@ axios.post(`calUserEmotion`, {
                 'secondSearchTopic': searchTopic2
             }, { headers: headers })
                 .then(res => {
-                    const buddyNamesRank = res.data;
+                    const buddyNamesRank = res.data.buddyNames;
+                    const topBuddyNames = res.data.topBuddyNames;
+                    localStorage.setItem("topBuddyNames", topBuddyNames);
+                    
+                    
                     console.log("buddyNamesRank: ", buddyNamesRank);
                     var buddiesToChatpreExist = localStorage.removeItem('buddiesToChat');
 

@@ -17,7 +17,7 @@ const analyzeUserEmotion = require('./routes/analyzeUsers/userEmotionBack');
 const signUpRoutes = require('./routes/user/signUp');
 const signInRoutes = require('./routes/user/signIn');
 const findBuddiesRoutes = require('./routes/user/findBuddies');
-const findOppositesRoutes = require('./routes/user/findOpposites');
+// const findOppositesRoutes = require('./routes/user/findOpposites');
 
 app.use('/NYTimesWeb', NYTWebDataRoutes);
 app.use('/segmentTopic', segmentTopicRoutes);
@@ -28,7 +28,7 @@ app.use('/calUserEmotion', analyzeUserEmotion);
 app.use('/user/signup', signUpRoutes);
 app.use('/user/signin', signInRoutes);
 app.use('/findBuddies', findBuddiesRoutes);
-app.use('/findOpposites', findOppositesRoutes);
+// app.use('/findOpposites', findOppositesRoutes);
 
 
 const server = require("http").createServer(app);
