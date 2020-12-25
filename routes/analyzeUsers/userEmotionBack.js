@@ -66,8 +66,6 @@ router.post('/', verifyToken, (req, res)=>{
             res.json(combinedUserEmotion);
         }
     })
-
-    
 })
 
 function verifyToken(req, res, next){

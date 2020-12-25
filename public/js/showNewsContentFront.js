@@ -66,7 +66,7 @@ axios.post(`showNewsContent`,{
 }).then(res=>{
         var articleRow;
         for (i=0; i<res.data.length; i++){
-            // console.log("res.data: ", res.data);
+            console.log("res.data @showNewsContent: ", res.data); //only news clicked
             // ============================================================= Get clicked Articles and create a block
             console.log("res.data[i]: ", res.data[i]);
             if (res.data[i].clickedId !== 0){ // has at least 1 news
@@ -248,6 +248,7 @@ axios.post(`showNewsContent`,{
                 
                 // -------------------------------------------------------------------------- remove loading section
                 var loadingSection = document.getElementById("btnLoader");
+                loadingSection.setAttribute('class', 'row hiddenc'); // make margin disappear
                 loadingSection.innerHTML = "";
                 articles.appendChild(articleRow); // append to all articles list
             }
@@ -436,6 +437,7 @@ axios.post(`showNewsContent`,{
                         articleBody2.appendChild(closeMatchedBtn);
 
                         var loadingSection = document.getElementById("btnLoader");
+                        loadingSection.setAttribute('class', 'row hiddenc'); // make margin disappear
                         loadingSection.innerHTML = "";
 
                         articles.appendChild(matchedArticleRow); // append to all articles list

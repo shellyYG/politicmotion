@@ -46,7 +46,7 @@ async function searchNews(){
             // ----------------------------------------------------------------- create graph block
             // const graphBlock = document.getElementById("forSentimentBlock");
             const graphBox = document.getElementById("graphBox");
-            const loadingBlock = document.getElementById("loadingBox");
+            const loadingBlock = document.getElementById("btnLoader");
 
             // ----------------------------------------------------------- get a row container for btn
             const btnRow = document.getElementById('btnRow');
@@ -196,6 +196,7 @@ async function searchNews(){
             }
 
             // ----------------------remove loading first
+            loadingBlock.setAttribute('class', 'row hiddenc')
             loadingBlock.innerHTML=""
             
             // ------------------------------------------------- Create Plot

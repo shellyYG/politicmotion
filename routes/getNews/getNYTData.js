@@ -88,32 +88,6 @@ router.get('/', (req, res)=> {
                     }
                 }
 
-                // async function checkExist(){
-                //     var headlines = [];
-                    
-                //     allDetails.forEach((e)=>{
-                //         async function aCheck(){
-                //             sql = `SELECT *
-                //             FROM politicmotion.nyt_details
-                //             WHERE headline = '${e[0]}'
-                //             ORDER BY id DESC;`
-                //             let sqlquery = await query(sql);
-                //             return sqlquery;
-                //         }
-                //         async function executeaCheck(){
-                //             let resCheck = await aCheck();
-                //             console.log("resCheck: ", resCheck);
-
-                //             if(resCheck = 0){
-                //                 headlines.push(e[0])
-                //             }
-                //         }
-                //         executeaCheck()
-                //     })
-                //    console.log("headlines: ", headlines);
-                // }
-
-                // checkExist()
                 try {
                     sql = 'INSERT INTO nyt_details (headline, abstract, lead_paragraph, saved_date) VALUES ?'
                     let sqlquery = await query(sql, [allDetails]);

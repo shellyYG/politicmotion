@@ -1,4 +1,3 @@
-
 finalEmotionClicked = localStorage.getItem("clickedEmotions");
 let generalToken = localStorage.getItem("generalToken");
 let searchTopic1 = localStorage.getItem("searchTopic1");
@@ -80,7 +79,7 @@ axios.post(`calUserEmotion`, {
         // -----------------------------------------------------------------Show userAndPostEmotionShow Scatter Plot
         userAndPostEmotionShow = document.getElementById('userAndPostEmotionShow');
         const graphBox = document.getElementById("graphBox");
-        const loadingBlock = document.getElementById("loadingBox");
+        const loadingBlock = document.getElementById("btnLoader");
         const graph = document.createElement('graph');
         graph.setAttribute("id", "sentimentShowgraph");
         graph.setAttribute("style", "width:1000px;height:500px;");
@@ -243,6 +242,7 @@ axios.post(`calUserEmotion`, {
         }
 
         // ----------------------remove loading first
+        loadingBlock.setAttribute("class", "row hiddenc");
         loadingBlock.innerHTML = ""
 
         // ------------------------------------------------- Create Plot

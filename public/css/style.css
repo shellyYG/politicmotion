@@ -44,7 +44,7 @@ body {
   padding-top: 70px; /*because fixed-top is by default 50px*/
   background-color: #17202A;
   /* overflow-y: hidden; */
-  margin-top: 40px;
+  margin-top: 0px;
 }
 
 p, .paragraph {
@@ -158,7 +158,7 @@ h6, .h6 {
 }
 
 body {
-  background-color: #fff;
+  background-color: #17202A;
   overflow-x: hidden;
 }
 
@@ -447,6 +447,20 @@ textarea.form-control {
   transition: .3s ease;
 }
 
+.navigation-nonMain {
+  background-color: #17202A;
+  padding: 0px 130px;
+  transition: .3s ease;
+  height: 8vh;
+}
+.navigation-nonMain-chat {
+  background-color: #17202A;
+  padding: 0px 130px;
+  transition: .3s ease;
+  height: 8vh;
+  margin: -17px;
+}
+
 .navigation.nav-bg {
   background-color: #17202A;
   padding: 15px 100px;
@@ -480,7 +494,7 @@ textarea.form-control {
 }
 
 .hero-area {
-  padding: 250px 0 200px;
+  padding: 200px 0 200px;
   position: relative;
 }
 
@@ -489,6 +503,10 @@ textarea.form-control {
   position: relative;
 }
 
+.hero-area-nonMain {
+  padding: 57px 0 200px;
+  position: relative;
+}
 
 @media (max-width: 767px) {
   .hero-area {
@@ -977,7 +995,7 @@ blockquote {
 #main-main-content{
   background-color: #17202A !important;
   background-size: cover;
-  margin: 100px 0px 0px; /* top leftRight bottom */
+  margin: 198px 0px 0px; /* top leftRight bottom */
 }
 
 .spacer{
@@ -1286,7 +1304,7 @@ img[id^="user_love_"]:hover, img[id^="user_haha_"]:hover, img[id^="user_sad_"]:h
 .dropdown-content {
   display: none;
   position: absolute;
-  background-color: #f1f1f1;
+  background-color: #17202A;
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
@@ -1302,7 +1320,7 @@ img[id^="user_love_"]:hover, img[id^="user_haha_"]:hover, img[id^="user_sad_"]:h
 }
 
 /* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: #ddd}
+.dropdown-content a:hover {background-color: #17202A}
 
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
 .show {display:block;}
@@ -1375,3 +1393,6 @@ g.pointtext {
   cursor: pointer;
 }
 
+#btnLoader {
+  margin-top: 50px;
+}
