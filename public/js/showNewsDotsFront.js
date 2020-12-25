@@ -70,7 +70,8 @@ async function searchNews(){
                     family:  'BwNistaInt-xBd'
                 },
                 marker: { size: 12, color: 'rgb(255, 255, 255)'}, //, symbol: 'diamond-open'
-                type: 'scatter'
+                type: 'scatter',
+                showlegend: true // still show legend when only one trace
             }
 
             var traceFox = {
@@ -83,7 +84,8 @@ async function searchNews(){
                     family:  'BwNistaInt-xBd'
                 },
                 marker: { size: 12, color: 'rgb(0,50,255)', symbol: '102'},
-                type: 'scatter'
+                type: 'scatter',
+                showlegend: true // still show legend when only one trace
             }
             
             var data = [traceNYT, traceFox];

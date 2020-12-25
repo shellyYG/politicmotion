@@ -1366,4 +1366,8 @@ a[id^="a_"]{
   color: white !important;
 }
 
+g.pointtext {
+  display: none; /* remove Aa from Plotly */
+}
+
 
