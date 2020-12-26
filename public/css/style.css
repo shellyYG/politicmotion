@@ -106,7 +106,7 @@ h6, .h6 {
   background: #E59866;
   color: white;
   padding: 9px 20px;
-  border-radius: 20px;
+  border-radius: 10px;
   font-family: "BwNistaInt-xBd", serif;
 }
 
@@ -340,7 +340,7 @@ a:hover {
 }
 
 .rounded-lg {
-  border-radius: 15px;
+  border-radius: 5px;
 }
 
 .overflow-hidden {
@@ -401,7 +401,7 @@ a:hover {
   width: 12px;
   background: rgba(255, 255, 255, 0.5);
   color: transparent;
-  border-radius: 10px;
+  border-radius: 5px;
   overflow: hidden;
   transition: .2s ease;
   border: 0;
@@ -1360,7 +1360,7 @@ img[id^="user_love_"]:hover, img[id^="user_haha_"]:hover, img[id^="user_sad_"]:h
 }
 
 #closeBtn, #closeMatchedBtn {
-  margin: 4em 11em;
+  margin: 20px auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1379,6 +1379,11 @@ div[id^="hmatched_cbody_"]{
   background-color: white !important;
   border-radius: 20px;
   border: 2px solid #17202A;
+  height: auto;
+}
+
+div[id^="hselected_cbody_"]{
+  height: auto;
 }
 
 a[id^="a_"]{

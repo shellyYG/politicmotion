@@ -142,7 +142,7 @@ socket.on("onlineUsers", (onlineUserList) => {
     // console.log("F7");
 });
 
-// select chat partner //change the element to load historical msg
+// select chat partner 
 var potentialPartners = document.querySelectorAll('partnerName');
 var potentialPartnerDivs = document.querySelectorAll('.singleBuddy');
 

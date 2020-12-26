@@ -33,7 +33,12 @@ router.post('/', verifyToken, (req, res)=>{
                 
                 var allEmails = allUsers.map((element)=>{return element.email});
                 var currentUserEmail = payload.data.email;
-                console.log("currentUserEmail: ", currentUserEmail);
+
+                // exclude self
+                allEmails = allEmails.filter(function(value, index, arr){
+                    return value !== currentUserEmail
+                })
+                console.log("currentUserEmail: ", currentUserEmail, "allEmails: ", allEmails);
                 function findEmailArrayIndex(acc,curr, index){
                     if(curr == currentUserEmail){
                         acc = index;
@@ -99,7 +104,7 @@ router.post('/', verifyToken, (req, res)=>{
                 // console.log("sentimentMultiples: ", sentimentMultiples);
                 // filter to min sentiment distance
                 for (i=0; i<similarBuddies.length; i++){
-                    //kickout selfs for finding min. (do not need this when finding opposite because no possibility of finding self)
+                    //kickout selfs for finding min. 
                     console.log("sentimentMultiples[similarBuddies[i].buddyIndex].matchedEmail: ", sentimentMultiples[similarBuddies[i].buddyIndex].matchedEmail,"sentimentMultiples[buddies[i].buddyIndex].sentimentDistance: ", sentimentMultiples[buddies[i].buddyIndex].sentimentDistance);
                     if(sentimentMultiples[similarBuddies[i].buddyIndex].matchedEmail !== currentUserEmail){ 
                         filteredSentDistance.push(sentimentMultiples[similarBuddies[i].buddyIndex].sentimentDistance);
@@ -163,9 +168,8 @@ router.post('/', verifyToken, (req, res)=>{
             async function findBuddyNames(){
                 var buddiesInfo = await findBuddies();
                 var buddyEmails = buddiesInfo.finalBuddyEmails;
-                console.log("buddyEmails: ", buddyEmails);
                 var formatbuddyEmails = buddyEmails.map(element=>'"'+element+'"');
-                console.log("buddyEmails: ", buddyEmails);
+                
                 try{
                     sql = `SELECT username FROM politicmotion.user_basic WHERE email IN (${formatbuddyEmails})
                         ORDER BY Field(email,${formatbuddyEmails});` // ASC so it will already rank by distance

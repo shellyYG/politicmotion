@@ -146,6 +146,7 @@ body {
     margin-left: 75px;
     width: 535px;
     background-color: #fff;
+    border-radius: 10px;
   }
   
   .chat li .chat-body {
@@ -184,6 +185,7 @@ body {
     -moz-transform: rotate(-45deg);
     -ms-transform: rotate(-45deg);
     -o-transform: rotate(-45deg);
+    border-radius: 10px;
   }
   
   .chat li.right .chat-body:before {
@@ -202,6 +204,7 @@ body {
     -moz-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
     -o-transform: rotate(45deg);
+    border-radius: 10px;
   }
   
   .chat li {
@@ -212,6 +215,7 @@ body {
     margin-right: 40px;
     width: 535px;
     background-color: #fff;
+    border-radius: 10px;
   }
   
   .chat-box {
@@ -280,11 +284,11 @@ body {
 #userMsg {
     font-size: 15px;
     width: 100%;
-    border-radius: 15px;
+    border-radius: 5px;
 }
 
 #sendMsgBtn {
-    border-radius: 20px !important;
+    border-radius: 5px !important;
     margin-top: 5px;
     margin-left: 0px;
 }

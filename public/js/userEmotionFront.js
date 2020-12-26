@@ -215,7 +215,7 @@ axios.post(`calUserEmotion`, {
                 title: {
                     text: 'Mood',
                     font: {
-                        size: 28,
+                        size: 24,
                         color: "white"
                     }
                 },
@@ -236,7 +236,7 @@ axios.post(`calUserEmotion`, {
                 title: {
                     text: 'Intensity',
                     font: {
-                        size: 28,
+                        size: 24,
                         color: "white"
                     }
                 },
@@ -258,7 +258,7 @@ axios.post(`calUserEmotion`, {
             title: {
                 text: `<b>You are ${sentenceNYT} & ${sentenceFox}</b>`,
                 font: {
-                    size: 15,
+                    size: 18,
                     color: "#0ff",
                     
                 },
@@ -297,7 +297,7 @@ axios.post(`calUserEmotion`, {
         GoToChat.appendChild(chatBtnRow);
 
         var ChatWithBuddy = document.createElement('button');
-        ChatWithBuddy.innerHTML = 'Chat with people who care about the same topics!';
+        ChatWithBuddy.innerHTML = 'Meet people who care about the same topic ';
         ChatWithBuddy.setAttribute('id', 'chat-buddy');
         ChatWithBuddy.setAttribute('class', 'btn btn-large btn-primary');
         chatBtnRow.appendChild(ChatWithBuddy);
