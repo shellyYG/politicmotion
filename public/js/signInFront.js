@@ -2,7 +2,7 @@
 let signUpT = document.querySelector("#signUpBtn");
 
 signUpT.addEventListener('click',()=>{
-  window.location.href="/signup.html"
+  window.location.href="/signUp.html"
 })
 
 // use axios post for signup. rather than form
