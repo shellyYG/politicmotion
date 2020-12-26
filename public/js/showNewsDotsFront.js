@@ -100,7 +100,7 @@ async function searchNews(){
                 textfont: {
                     family:  'BwNistaInt-xBd'
                 },
-                marker: { size: 12, color: 'rgb(0,50,255)', symbol: '102'},
+                marker: { size: 18, color: 'rgb(255,204,0)', symbol: '102'},
                 type: 'scatter',
                 showlegend: true // still show legend when only one trace
             }
@@ -223,7 +223,7 @@ async function searchNews(){
                     localStorage.setItem("clickedPoints",JSON.stringify(pointArray));
                     
                     // ------------------------------ add annotation
-                    annotate_text = "News Selected!"; //'('+data.points[i].x+", "+data.points[i].y+") selected!"
+                    annotate_text = "News Selected!";
                     annotation = {
                         text: annotate_text,
                         x: data.points[i].x,

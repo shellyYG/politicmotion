@@ -26,7 +26,7 @@ router.post('/', verifyToken, (req, res)=>{
                     }else if(userEmotion[i] =="haha"){
                         avgUserSentiment += 0.6;
                         avgUserMagnitude += 0.6;
-                    }else if(userEmotion[i] == "cry"){
+                    }else if(userEmotion[i] == "sad"){
                         avgUserSentiment += -0.6;
                         avgUserMagnitude += 0.6;
                     }else if(userEmotion[i] == "angry"){
@@ -37,6 +37,8 @@ router.post('/', verifyToken, (req, res)=>{
                         avgUserMagnitude += 0;
                     }
                 }
+
+                console.log("avgUserSentiment: ", avgUserSentiment, "avgUserMagnitude", avgUserMagnitude);
                 avgUserSentiment = avgUserSentiment/userEmotion.length;
                 avgUserMagnitude = avgUserMagnitude/userEmotion.length;
                 var combinedUserEmotion = {};

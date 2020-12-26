@@ -130,9 +130,9 @@ axios.post(`showNewsContent`,{
                 hahaBtn.setAttribute("id", `user_haha_${articleDBId}`);
                 hahaBtn.setAttribute("src", "imgs/iconx/haha.png");
 
-                var cryBtn = document.createElement("img");
-                cryBtn.setAttribute("id", `user_sad_${articleDBId}`);
-                cryBtn.setAttribute("src", "imgs/iconx/sad.png");
+                var sadBtn = document.createElement("img");
+                sadBtn.setAttribute("id", `user_sad_${articleDBId}`);
+                sadBtn.setAttribute("src", "imgs/iconx/sad.png");
 
                 var angryBtn = document.createElement("img");
                 angryBtn.setAttribute("id", `user_angry_${articleDBId}`);
@@ -186,7 +186,7 @@ axios.post(`showNewsContent`,{
                 
                 iconDiv.appendChild(loveBtn);
                 iconDiv.appendChild(hahaBtn);
-                iconDiv.appendChild(cryBtn);
+                iconDiv.appendChild(sadBtn);
                 iconDiv.appendChild(angryBtn);
                 
                 // -------------------------------------------------------------------------- set pop up classes
@@ -313,9 +313,9 @@ axios.post(`showNewsContent`,{
                         hahaBtn.setAttribute("id", `user_haha_${articleDBId}`);
                         hahaBtn.setAttribute("src", "imgs/iconx/haha.png");
         
-                        var cryBtn = document.createElement("img");
-                        cryBtn.setAttribute("id", `user_sad_${articleDBId}`);
-                        cryBtn.setAttribute("src", "imgs/iconx/sad.png");
+                        var sadBtn = document.createElement("img");
+                        sadBtn.setAttribute("id", `user_sad_${articleDBId}`);
+                        sadBtn.setAttribute("src", "imgs/iconx/sad.png");
         
                         var angryBtn = document.createElement("img");
                         angryBtn.setAttribute("id", `user_angry_${articleDBId}`);
@@ -373,7 +373,7 @@ axios.post(`showNewsContent`,{
                 
                         iconDiv.appendChild(loveBtn);
                         iconDiv.appendChild(hahaBtn);
-                        iconDiv.appendChild(cryBtn);
+                        iconDiv.appendChild(sadBtn);
                         iconDiv.appendChild(angryBtn);
 
                         // -------------------------------------------------------------------------- set pop up classes

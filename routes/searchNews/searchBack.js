@@ -61,7 +61,7 @@ router.post('/', (req, res, next)=>{
 
     async function makeSentimentArray(){
         var allDots = await getFBNewsDots();
-        console.log("allDots: ", allDots);
+        // console.log("allDots: ", allDots);
         const NYSentimentScoreArray = allDots[0].map(getsentimentScore);
         const FoxSentimentScoreArray = allDots[1].map(getsentimentScore);
         
