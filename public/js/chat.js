@@ -21,6 +21,9 @@ let receiver;
 let selfNameDiv = document.getElementById('selfName');
 let topicOne = localStorage.getItem('searchTopic1');
 let topicTwo = localStorage.getItem('searchTopic2');
+let dropdownBtn = document.querySelector('.dropbtn');
+console.log("dropdownBtn: ", dropdownBtn);
+
 let step1 = document.getElementById('step1');
 let step2 = document.getElementById('step2');
 let step3 = document.getElementById('step3');
@@ -412,9 +415,9 @@ socket.on("userDisconnected", (disconnectUserName) => {
 
 /* When the user clicks on the button,
 toggle between hiding and showing the dropdown content */
-function myFunction() {
-    document.getElementById("myDropdown").classList.toggle("show");
-}
+// function myFunction() {
+//     document.getElementById("myDropdown").classList.toggle("show");
+// }
 
 // Close the dropdown menu if the user clicks outside of it
 window.onclick = function (event) {
@@ -429,3 +432,26 @@ window.onclick = function (event) {
         }
     }
 }
+
+// add topics when clicked
+dropdownBtn.addEventListener('click',()=>{
+    console.log("Hihi");
+    myDropdown.setAttribute('class', 'dropdown-content show'); // show the dropdown
+
+    // append the list of topics
+    socket.emit("search topics");
+})
+var dropDownLists = document.getElementById('myDropdown');
+socket.on('allTopics',(topics)=>{
+    topics.forEach((t)=>{
+        topicList = document.createElement('a');
+        topicList.setAttribute('id', `topic_${t}`);
+        topicList.innerText = t;
+        dropDownLists.appendChild(topicList);
+    })
+    var topicForClick = document.querySelectorAll('[id^="topic_"]');
+    console.log("topicForClick: ", topicForClick);
+})
+
+
+

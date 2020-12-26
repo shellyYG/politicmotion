@@ -9,6 +9,7 @@ let room = "public";
 let selfName;
 let buddyNames;
 var receiverId;
+var allTopics = [];
 const socketChat = (socket) => {
     // console.log("B1");
     socket.emit("getToken");
@@ -126,10 +127,28 @@ const socketChat = (socket) => {
                 receiver: data.receiver
             })
         }
-        
+    })
 
-        
-        // socket.to().emit('receivedMsg')
+    // show other topic a user has selected
+    socket.on("search topics", ()=>{
+        console.log("reached search topic backend");
+        async function findtopics(){
+            sql = `SELECT DISTINCT firstSearchTopic, secondSearchTopic
+            FROM politicmotion.user_emotion
+            WHERE username = '${selfName}';`
+            var sqlquery = await query(sql);
+            return sqlquery;
+        }
+        async function showTopics(){
+            var topics = await findtopics();
+            topics.forEach((t)=>{
+                allTopics.push(t.firstSearchTopic + " " + t.secondSearchTopic);
+            })
+            socket.emit('allTopics', allTopics);
+            console.log("allTopics: ", allTopics);
+        }
+        showTopics();
+
     })
 
     // disconnect
