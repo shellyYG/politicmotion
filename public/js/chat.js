@@ -22,7 +22,6 @@ let selfNameDiv = document.getElementById('selfName');
 let topicOne = localStorage.getItem('searchTopic1');
 let topicTwo = localStorage.getItem('searchTopic2');
 let dropdownBtn = document.querySelector('.dropbtn');
-console.log("dropdownBtn: ", dropdownBtn);
 
 let step1 = document.getElementById('step1');
 let step2 = document.getElementById('step2');
@@ -40,10 +39,6 @@ step3.addEventListener(('click'), ()=>{
 step4.addEventListener(('click'), ()=>{
     window.location.href = '/chat.html'
 })
-
-
-let chatRoomName = topicOne+" & "+ topicTwo;
-console.log(chatRoomName);
 
 const chatList = document.getElementById('chatList');
 
@@ -75,7 +70,6 @@ for (i = 0; i < buddiesToChat.length; i++) {
 
     // add star for top partner
     if (topBuddyNamesPart.includes(buddiesToChat[i].buddies)){
-        console.log(`${buddiesToChat[i].buddies} included!`);
         var star = document.createElement('img');
         star.setAttribute('src','imgs/iconx/star.png');
         star.setAttribute('id','starIcon');
@@ -100,13 +94,11 @@ const tokenTest = () => {
 socket.on("getToken", () => {
     // console.log("F2");
     tokenTest().then(result => {
-        console.log(`${result.generalToken} connected.`)
         socket.emit("verifyToken", (result))
         // console.log("F3");
     })
 });
 socket.on("AuthError", (msg) => {
-    console.log(msg);
     alert("You are too long away. Please sign in again.")
     window.location.replace("/signIn.html")
     // console.log("F4 Auth Error");
@@ -134,7 +126,7 @@ socket.on('Self', (self) => {
 socket.on("onlineUsers", (onlineUserList) => {
     // console.log("F6");
     var potentialPartners = document.querySelectorAll('partnerName');
-    console.log("onlineUsers: ", onlineUserList);
+    // console.log("onlineUsers: ", onlineUserList);
     for (i = 0; i < potentialPartners.length; i++) {
         if (onlineUserList.includes(potentialPartners[i].innerText)) {
             var statusSmall = document.querySelectorAll('small');
@@ -401,7 +393,7 @@ socket.on("userDisconnected", (disconnectUserName) => {
     console.log("F8");
     var potentialPartners = document.querySelectorAll('partnerName');
     for (i = 0; i < potentialPartners.length; i++) {
-        console.log("potentialPartners[i].innerText: ", potentialPartners[i].innerText, "disconnectUserName", disconnectUserName);
+        // console.log("potentialPartners[i].innerText: ", potentialPartners[i].innerText, "disconnectUserName", disconnectUserName);
         if (potentialPartners[i].innerText == disconnectUserName) {
             console.log("remove color");
             var statusSmall = document.querySelectorAll('small');
@@ -410,28 +402,8 @@ socket.on("userDisconnected", (disconnectUserName) => {
             // clear localStorage chat partner list
         }
     }
-    console.log("disconnectUserName: ", disconnectUserName);
+    // console.log("disconnectUserName: ", disconnectUserName);
 })
-
-/* When the user clicks on the button,
-toggle between hiding and showing the dropdown content */
-// function myFunction() {
-//     document.getElementById("myDropdown").classList.toggle("show");
-// }
-
-// Close the dropdown menu if the user clicks outside of it
-window.onclick = function (event) {
-    if (!event.target.matches('.dropbtn')) {
-        var dropdowns = document.getElementsByClassName("dropdown-content");
-        var i;
-        for (i = 0; i < dropdowns.length; i++) {
-            var openDropdown = dropdowns[i];
-            if (openDropdown.classList.contains('show')) {
-                openDropdown.classList.remove('show');
-            }
-        }
-    }
-}
 
 // add topics when clicked
 dropdownBtn.addEventListener('click',()=>{
@@ -442,6 +414,7 @@ dropdownBtn.addEventListener('click',()=>{
     socket.emit("search topics");
 })
 var dropDownLists = document.getElementById('myDropdown');
+
 socket.on('allTopics',(topics)=>{
     topics.forEach((t)=>{
         topicList = document.createElement('a');
@@ -449,9 +422,19 @@ socket.on('allTopics',(topics)=>{
         topicList.innerText = t;
         dropDownLists.appendChild(topicList);
     })
-    var topicForClick = document.querySelectorAll('[id^="topic_"]');
-    console.log("topicForClick: ", topicForClick);
+    var historicTopics = document.querySelectorAll('[id^="topic_"]');
+    historicTopics.forEach((topic)=>{
+        topic.addEventListener('click',()=>{
+            var myDropDownToHide = document.getElementById('myDropdown');
+            myDropDownToHide.setAttribute('class', 'dropdown-content');
+            var clickedTopic = topic.getAttribute('id').split("_")[1];
+            socket.emit('topics clicked', clickedTopic);
+        })
+    })
 })
 
+socket.on('other partners', (partnerList)=>{
+    console.log("partnerList: ", partnerList);
+})
 
 

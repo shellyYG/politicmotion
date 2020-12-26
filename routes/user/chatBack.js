@@ -142,13 +142,35 @@ const socketChat = (socket) => {
         async function showTopics(){
             var topics = await findtopics();
             topics.forEach((t)=>{
-                allTopics.push(t.firstSearchTopic + " " + t.secondSearchTopic);
+                allTopics.push(t.firstSearchTopic + " & " + t.secondSearchTopic);
             })
             socket.emit('allTopics', allTopics);
-            console.log("allTopics: ", allTopics);
         }
         showTopics();
 
+    })
+
+    // get topic clicked
+    socket.on('topics clicked',(topics)=>{
+        var firstTopic = topics.split("&")[0].trim(); //remove blank
+        var secondTopic = topics.split("&")[1].trim();
+        async function findOtherPartners(){
+            sql = `SELECT DISTINCT username FROM politicmotion.user_emotion 
+            WHERE firstSearchTopic IN ('${firstTopic}', '${secondTopic}')
+            AND secondSearchTopic IN ('${firstTopic}', '${secondTopic}')
+            `
+            var sqlquery = await query(sql);
+            return sqlquery;
+        }
+        async function showOtherPartners(){
+            var partnerList = [];
+            var otherPartners = await findOtherPartners();
+            otherPartners.forEach((partner)=>{
+                partnerList.push(partner.username);
+            })
+            socket.emit('other partners', partnerList);
+        }
+        showOtherPartners()
     })
 
     // disconnect
