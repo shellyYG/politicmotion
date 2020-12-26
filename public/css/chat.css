@@ -260,8 +260,7 @@ body {
       background-color: #17202A;
       color: white;
       border: 5px solid white;
-      border-radius: 30px;
-      
+      border-radius: 15px;
   }
 
   #chat-boxes {
@@ -269,7 +268,7 @@ body {
     margin-bottom: -1vh !important;
     border: 5px solid white;
     /* border-right: 5px solid #1363be; */
-    border-radius: 30px;
+    border-radius: 15px;
 }
 
 #selfNameDiv {
@@ -311,9 +310,16 @@ body {
 }
 
 #default-select-user-text {
+  border: solid 5px white;
+  background-color: grey;
+  border-radius: 10px;
+}
+
+#default-select-user-inner-text {
   color: white;
-  font-size: 60px;
+  font-size: 40px;
   text-align: center;
+  padding: 0px 10px;
 }
 
 .default-no-chat-history-text {
@@ -335,4 +341,9 @@ a[id^="topic_"]:hover{
   color: white !important;
   border-radius: 15px !important;
 
+}
+
+#info-img {
+  width: 61px;
+  padding: 10px;
 }

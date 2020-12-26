@@ -16,6 +16,7 @@ const msgPlaceHolder = document.getElementById('chatList');
 const partnerContainer = document.getElementById('friend-list');
 const startChatBtn = document.getElementById('startChat');
 const sendMsgBtn = document.getElementById('sendMsgBtn');
+let selfNameForExcl;
 let senderNow;
 let receiver;
 let selfNameDiv = document.getElementById('selfName');
@@ -106,6 +107,7 @@ socket.on("AuthError", (msg) => {
 
 socket.on('Self', (self) => {
     // console.log("F4");
+    selfNameForExcl = self.self;
     senderNow = self.self;
     selfNameDiv.innerText = `Welcome to chat, ${self.self}!`;
 
@@ -166,10 +168,25 @@ socket.on('history', (data) => {
     msgPlaceHolder.innerHTML = "";
 
     if(data.length == 0){
-        var defaultNoHistory = document.createElement('div');
-        defaultNoHistory.setAttribute('class', 'default-no-chat-history-text');
-        defaultNoHistory.innerHTML = "You haven't chat yet! Start chatting by typing something below!"
-        msgPlaceHolder.appendChild(defaultNoHistory);
+        var defaultTextHolder = document.createElement('div');
+        defaultTextHolder.setAttribute('id','default-select-user-text');
+
+        // var defaultNoHistory = document.createElement('p');
+        // defaultNoHistory.setAttribute('class', 'default-no-chat-history-text');
+        // defaultNoHistory.innerHTML = "You haven't chat yet! Start chatting by typing something below!"
+        // msgPlaceHolder.appendChild(defaultNoHistory);
+
+        var infoImg = document.createElement('img');
+        infoImg.setAttribute('id', 'info-img');
+        infoImg.setAttribute('src','imgs/iconx/info.png');
+
+        var defaultSelectUserText = document.createElement('p');
+        defaultSelectUserText.innerText = "You haven't chat yet! Start chatting by typing something below!";
+        defaultSelectUserText.setAttribute('id', 'default-select-user-inner-text');
+
+        defaultTextHolder.appendChild(infoImg);
+        defaultTextHolder.appendChild(defaultSelectUserText);
+        msgPlaceHolder.appendChild(defaultTextHolder);
     }
 
     // add history with others
@@ -407,9 +424,7 @@ socket.on("userDisconnected", (disconnectUserName) => {
 
 // add topics when clicked
 dropdownBtn.addEventListener('click',()=>{
-    console.log("Hihi");
     myDropdown.setAttribute('class', 'dropdown-content show'); // show the dropdown
-
     // append the list of topics
     socket.emit("search topics");
 })
@@ -436,33 +451,52 @@ socket.on('allTopics',(topics)=>{
 socket.on('other partners', (partnerList)=>{
     console.log("partnerList: ", partnerList);
     partnerContainer.innerHTML = ''; // clear all existing buddies
+
     var starDiv = document.getElementById('instruction-for-star');
     starDiv.innerHTML = ''; // clear star default message
+    msgPlaceHolder.innerHTML = ''; // clear chat history
+
+    var defaultTextHolder = document.createElement('div');
+    defaultTextHolder.setAttribute('id','default-select-user-text');
+    
+    var infoImg = document.createElement('img');
+    infoImg.setAttribute('id', 'info-img');
+    infoImg.setAttribute('src','imgs/iconx/info.png');
+
+    var defaultSelectUserText = document.createElement('p');
+    defaultSelectUserText.innerText = 'Select a user on the left side to start chatting!';
+    defaultSelectUserText.setAttribute('id', 'default-select-user-inner-text');
+
+    defaultTextHolder.appendChild(infoImg);
+    defaultTextHolder.appendChild(defaultSelectUserText);
+    msgPlaceHolder.appendChild(defaultTextHolder);
+
     for (i = 0; i < partnerList.length; i++) {
-        var singleBuddy = document.createElement('li');
-        singleBuddy.setAttribute("class", "active bounceInDown singleBuddy");
-    
-        var statusDiv = document.createElement('div');
-        statusDiv.setAttribute('class', 'friend-name');
-    
-        var statusSmall = document.createElement('small');
-        statusSmall.setAttribute('class', 'chat-alert label label-danger');
-        statusSmall.innerText = 'offline';
-    
-        var nameStrong = document.createElement('partnerName');
-        nameStrong.setAttribute("id", "StrongName");
-        nameStrong.innerText = partnerList[i];
-    
-        statusDiv.appendChild(statusSmall);
-        statusDiv.appendChild(nameStrong);
-    
-        singleBuddy.appendChild(statusDiv);
-    
-        partnerContainer.appendChild(singleBuddy);
+        if(partnerList[i] !== selfNameForExcl){
+            var singleBuddy = document.createElement('li');
+            singleBuddy.setAttribute("class", "active bounceInDown singleBuddy");
+        
+            var statusDiv = document.createElement('div');
+            statusDiv.setAttribute('class', 'friend-name');
+        
+            var statusSmall = document.createElement('small');
+            statusSmall.setAttribute('class', 'chat-alert label label-danger');
+            statusSmall.innerText = 'offline';
+        
+            var nameStrong = document.createElement('partnerName');
+            nameStrong.setAttribute("id", "StrongName");
+            nameStrong.innerText = partnerList[i];
+        
+            statusDiv.appendChild(statusSmall);
+            statusDiv.appendChild(nameStrong);
+        
+            singleBuddy.appendChild(statusDiv);
+        
+            partnerContainer.appendChild(singleBuddy);
+        }
     }
 
     // select chat partner 
-    var potentialPartners = document.querySelectorAll('partnerName');
     var potentialPartnerDivs = document.querySelectorAll('.singleBuddy');
 
     potentialPartnerDivs.forEach((element) => {
