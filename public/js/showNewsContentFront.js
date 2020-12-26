@@ -66,18 +66,13 @@ axios.post(`showNewsContent`,{
 }).then(res=>{
         var articleRow;
         for (i=0; i<res.data.length; i++){
-            console.log("res.data @showNewsContent: ", res.data); //only news clicked
             // ============================================================= Get clicked Articles and create a block
-            console.log("res.data[i]: ", res.data[i]);
             if (res.data[i].clickedId !== 0){ // has at least 1 news
                 var rawDate = res.data[i].post_date;
                 var re = /([^T]+)/;
-                console.log("rawDate: ", rawDate);
                 var pureDatePart = rawDate.split(re);
-                // console.log("pureDatePart: ", pureDatePart);
                 var datePart = pureDatePart[1];
                 var datePartArray = datePart.split("-");
-                // console.log("datePartArray: ", datePartArray);
                 
                 var beautifyDateYear = datePartArray[0];
                 var beautifyDateMonth = datePartArray[1];
@@ -124,7 +119,7 @@ axios.post(`showNewsContent`,{
                 articleLink.setAttribute("id", `a_${articleDBId}`);
 
                 var iconDiv = document.createElement('div');
-                iconDiv.setAttribute("id", "icons");
+                iconDiv.setAttribute("id", `icons_${articleDBId}`);
 
 
                 var loveBtn = document.createElement("img");
@@ -258,16 +253,13 @@ axios.post(`showNewsContent`,{
             var matchedArticleRow;
             // ============================================================= Get matched Articles in same block
             for (j=0;j<res.data.length;j++){
-                console.log("res.data[i].clickedId: ", res.data[i].clickedId);
                 if (res.data[i].clickedId == 0){ //is a matched article
                     if (res.data[j].matchedId == res.data[i].id){ // if a clickedArticle's matched Article == this matched article
                         var rawDate = res.data[i].post_date;
                         var re = /([^T]+)/;
                         var pureDatePart = rawDate.split(re);
-                        console.log("pureDatePart2: ", pureDatePart);
                         var datePart = pureDatePart[1];
                         var datePartArray = datePart.split("-");
-                        console.log("datePartArray2: ", datePartArray)
                         
                         var beautifyDateYear = datePartArray[0];
                         var beautifyDateMonth = datePartArray[1];
@@ -311,7 +303,7 @@ axios.post(`showNewsContent`,{
                         // articleLink.setAttribute("href", `${res.data[i].post_link}`);
 
                         var iconDiv = document.createElement('div');
-                        iconDiv.setAttribute("id", "icons");
+                        iconDiv.setAttribute("id", `icons_${articleDBId}`);
 
                         var loveBtn = document.createElement("img");
                         loveBtn.setAttribute("id", `user_love_${articleDBId}`);
@@ -525,9 +517,30 @@ axios.post(`showNewsContent`,{
         ColShowEmotionBtn.appendChild(showEmotionBtn);
         BlockShowEmotionBtn.appendChild(RowShowEmotionBtn);
 
+        // ========================================== Click effect
+        var emojis = document.querySelectorAll('[id^="user_"]');
+        emojis.forEach(emoji=>{
+            emoji.addEventListener('click',()=>{
+                var cId = emoji.getAttribute("id").split("_")[2];
+                var iconsSection = document.querySelector(`#icons_${cId}`);
+                iconsSection.childNodes.forEach((emojiForClick)=>{
+                    var bundledLove = document.querySelector(`#user_love_${cId}`);
+                    var bundledHaha = document.querySelector(`#user_haha_${cId}`);
+                    var bundledSad = document.querySelector(`#user_sad_${cId}`);
+                    var bundledAngry = document.querySelector(`#user_angry_${cId}`);
+                    bundledLove.removeAttribute('class');
+                    bundledHaha.removeAttribute('class');
+                    bundledSad.removeAttribute('class');
+                    bundledAngry.removeAttribute('class');
+                    emoji.setAttribute("class", "userEmotionClicked");
+                    // console.log("emojiForClick: ", emojiForClick); //
+                })
+            })
+        })
+        
+
         // ===================================================================================== pop up news when clicked
         var readMoresBtns = document.querySelectorAll('[id^="a_"]');
-        console.log("readMoresBtns: ", readMoresBtns)
         readMoresBtns.forEach((e)=>{
             e.addEventListener('click',()=>{
                 var idToPopUp = e.getAttribute("id").split("_")[1];
@@ -536,7 +549,6 @@ axios.post(`showNewsContent`,{
                 if (classToPopUp.includes('btn-selected')){
                     var sectionToPop = document.querySelector(".hcol_selected_"+idToPopUp);
                     var contentSectionToPop = document.querySelector(".hselectedNews_"+idToPopUp);
-                    console.log("contentSectionToPop: ", contentSectionToPop);
                     var bodyToPop = document.querySelector("#hselected_cbody_"+idToPopUp);
                     
                     sectionToPop.setAttribute('class', `modalc hcol_selected_${idToPopUp}`);
@@ -544,10 +556,8 @@ axios.post(`showNewsContent`,{
                     contentSectionToPop.setAttribute('id', 'contentSectionToPop');
                     bodyToPop.setAttribute('class', 'modalc-content');
                 }else{
-                    console.log("matched btn");
                     var sectionToPop = document.querySelector(".hcol_matched_"+idToPopUp);
                     var contentSectionToPop = document.querySelector(".hmatchedNews_"+idToPopUp);
-                    console.log("contentSectionToPop: ", contentSectionToPop);
                     var bodyToPop = document.querySelector("#hmatched_cbody_"+idToPopUp);
                     
                     sectionToPop.setAttribute('class', `modalc hcol_matched_${idToPopUp}`);
@@ -560,7 +570,6 @@ axios.post(`showNewsContent`,{
         // when closed the selected read-more section
         closeBtns = document.querySelectorAll("#closeBtn");
         closeBtns.forEach((e)=>{
-            console.log("each close btn:", e);
             e.addEventListener('click',()=>{
                 var hiddenElements = document.querySelectorAll('[class^="modalc hcol_selected_"]');
                 hiddenElements.forEach((x)=>{
@@ -572,11 +581,9 @@ axios.post(`showNewsContent`,{
         // when closed the matched read-more section
         closeMatchedBtns = document.querySelectorAll("#closeMatchedBtn");
         closeMatchedBtns.forEach((e)=>{
-            console.log("each close btn:", e);
             e.addEventListener('click',()=>{
                 var hiddenElements = document.querySelectorAll('[class^="modalc hcol_matched_"]');
                 hiddenElements.forEach((x)=>{
-                    console.log("x.classList[1]: ", x.classList[1]);
                     x.setAttribute('class',`hiddenc col-md-6 mb-4 ${x.classList[1]}`);
                 })
             })

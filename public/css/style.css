@@ -1132,7 +1132,8 @@ p[id^="hmatchedNewsContent_"] {
   overflow-y: hidden;
 }
 
-#icons{
+
+div[id^="icons_"]{
   margin: 20px 0px 0px;
 }
 
