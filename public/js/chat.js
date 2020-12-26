@@ -60,6 +60,7 @@ for (i = 0; i < buddiesToChat.length; i++) {
 
     var statusSmall = document.createElement('small');
     statusSmall.setAttribute('class', 'chat-alert label label-danger');
+    statusSmall.setAttribute('id', 'label-danger');
     statusSmall.innerText = 'offline';
 
     var nameStrong = document.createElement('partnerName');
@@ -133,6 +134,7 @@ socket.on("onlineUsers", (onlineUserList) => {
         if (onlineUserList.includes(potentialPartners[i].innerText)) {
             var statusSmall = document.querySelectorAll('small');
             statusSmall[i].setAttribute('class', 'chat-alert label label-success'); // -1 because [0] means Welcome to chat
+            statusSmall[i].setAttribute('id', 'label-success');
             statusSmall[i].innerText = 'online';
         }
     }

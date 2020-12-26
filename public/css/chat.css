@@ -347,3 +347,11 @@ a[id^="topic_"]:hover{
   width: 61px;
   padding: 10px;
 }
+
+#label-success {
+  background-color: #5cb85c !important;
+}
+
+#label-danger {
+  background-color: #d9534f !important;
+}
