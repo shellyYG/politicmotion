@@ -438,25 +438,7 @@ axios.post(`showNewsContent`,{
                 }
             }
         }
-        var userEmotionButtons = document.querySelectorAll('[id^="user_"]');
-            
-        for (let j = 0; j < userEmotionButtons.length; j++) {
-            let userEmotionButton = userEmotionButtons[j];
-            let userEmotionId = userEmotionButton.getAttribute('id');
-
-            userEmotionButton.addEventListener('click',()=>{
-                userEmotionButton.setAttribute("class", "userEmotionClicked");
-                var emotionClicked = localStorage.getItem("clickedEmotions");
-                var emotionArray = [];
-                if(emotionClicked){
-                    emotionArray = JSON.parse(emotionClicked);
-                }
-                emotionArray.push(userEmotionId);
-                localStorage.setItem('clickedEmotions',JSON.stringify(emotionArray));  
-                finalEmotionClicked = localStorage.getItem("clickedEmotions");
-                
-            })
-        }
+       
         avgPostSentiment = avgPostSentiment/res.data.length;
         avgPostMagnitude = avgPostMagnitude/res.data.length;
         avgPostSentiment = avgPostSentiment.toFixed(2);
@@ -522,8 +504,10 @@ axios.post(`showNewsContent`,{
         emojis.forEach(emoji=>{
             emoji.addEventListener('click',()=>{
                 var cId = emoji.getAttribute("id").split("_")[2];
+                var emotion = emoji.getAttribute("id").split("_")[1];
                 var iconsSection = document.querySelector(`#icons_${cId}`);
-                iconsSection.childNodes.forEach((emojiForClick)=>{
+                iconsSection.childNodes.forEach(()=>{
+                    // remove bigger attributes
                     var bundledLove = document.querySelector(`#user_love_${cId}`);
                     var bundledHaha = document.querySelector(`#user_haha_${cId}`);
                     var bundledSad = document.querySelector(`#user_sad_${cId}`);
@@ -532,8 +516,10 @@ axios.post(`showNewsContent`,{
                     bundledHaha.removeAttribute('class');
                     bundledSad.removeAttribute('class');
                     bundledAngry.removeAttribute('class');
+
+                    // make the one which is clicked bigger
                     emoji.setAttribute("class", "userEmotionClicked");
-                    // console.log("emojiForClick: ", emojiForClick); //
+                    localStorage.setItem(`emotion_${cId}`,emotion);
                 })
             })
         })
@@ -592,6 +578,25 @@ axios.post(`showNewsContent`,{
         // when clicked the next step
         const analyzeUserEmotionButton = document.getElementById('btn-analyzeUser');
         analyzeUserEmotionButton.addEventListener('click',()=>{
+            
+            var keyArr = [];
+            console.log(localStorage.length);
+            for (i=0; i<localStorage.length; i++){
+                if (localStorage.key(i).substring(0,7) == 'emotion'){
+                    keyArr.push(localStorage.key(i));
+                }
+            }
+            console.log("keyArr: ", keyArr);
+
+            var emotionArray = [];
+            for (i=0; i < keyArr.length; i++){
+                emotionArray.push(localStorage.getItem(keyArr[i]))
+            }
+
+            console.log("emotionArray: ", emotionArray);
+            localStorage.setItem('clickedEmotions',JSON.stringify(emotionArray)); 
+
+            // check if there is emotion
             var checkedIfHasEmotion = localStorage.getItem('clickedEmotions');
             if(checkedIfHasEmotion==null){
                 alert("Please click on emotion emojis to proceed.");

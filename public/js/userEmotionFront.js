@@ -2,7 +2,7 @@ finalEmotionClicked = localStorage.getItem("clickedEmotions");
 let generalToken = localStorage.getItem("generalToken");
 let searchTopic1 = localStorage.getItem("searchTopic1");
 let searchTopic2 = localStorage.getItem("searchTopic2");
-
+console.log("finalEmotionClicked: ", finalEmotionClicked);
 let step1 = document.getElementById('step1');
 let step2 = document.getElementById('step2');
 let step3 = document.getElementById('step3');

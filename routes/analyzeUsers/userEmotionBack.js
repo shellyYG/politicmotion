@@ -12,27 +12,24 @@ router.post('/', verifyToken, (req, res)=>{
         }else {
             let userEmotion = req.body.finalEmotionClicked;
             userEmotion = JSON.parse(userEmotion);
-            const cleanEmotion = [];
+            
             let avgUserSentiment = 0;
             let avgUserMagnitude = 0;
-            console.log("userEmotion: ",userEmotion);
+            
             if (userEmotion == null){
                 var combinedUserEmotion = {}
             }else{
                 for (i=0; i<userEmotion.length; i++){
-                    cleanEmotion.push(userEmotion[i].split("_")[1]);
-                    console.log("cleanEmotion: ", cleanEmotion);
-    
-                    if(cleanEmotion[i] == "love"){
+                    if(userEmotion[i] == "love"){
                         avgUserSentiment += 0.9;
                         avgUserMagnitude += 0.9;
-                    }else if(cleanEmotion[i] =="haha"){
+                    }else if(userEmotion[i] =="haha"){
                         avgUserSentiment += 0.5;
                         avgUserMagnitude += 0.5;
-                    }else if(cleanEmotion[i] == "cry"){
+                    }else if(userEmotion[i] == "cry"){
                         avgUserSentiment += -0.6;
                         avgUserMagnitude += 0.6;
-                    }else if(cleanEmotion[i] == "angry"){
+                    }else if(userEmotion[i] == "angry"){
                         avgUserSentiment += -0.9;
                         avgUserMagnitude += 0.9;
                     }else{
