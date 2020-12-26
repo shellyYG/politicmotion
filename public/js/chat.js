@@ -435,6 +435,54 @@ socket.on('allTopics',(topics)=>{
 
 socket.on('other partners', (partnerList)=>{
     console.log("partnerList: ", partnerList);
+    partnerContainer.innerHTML = ''; // clear all existing buddies
+    var starDiv = document.getElementById('instruction-for-star');
+    starDiv.innerHTML = ''; // clear star default message
+    for (i = 0; i < partnerList.length; i++) {
+        var singleBuddy = document.createElement('li');
+        singleBuddy.setAttribute("class", "active bounceInDown singleBuddy");
+    
+        var statusDiv = document.createElement('div');
+        statusDiv.setAttribute('class', 'friend-name');
+    
+        var statusSmall = document.createElement('small');
+        statusSmall.setAttribute('class', 'chat-alert label label-danger');
+        statusSmall.innerText = 'offline';
+    
+        var nameStrong = document.createElement('partnerName');
+        nameStrong.setAttribute("id", "StrongName");
+        nameStrong.innerText = partnerList[i];
+    
+        statusDiv.appendChild(statusSmall);
+        statusDiv.appendChild(nameStrong);
+    
+        singleBuddy.appendChild(statusDiv);
+    
+        partnerContainer.appendChild(singleBuddy);
+    }
+
+    // select chat partner 
+    var potentialPartners = document.querySelectorAll('partnerName');
+    var potentialPartnerDivs = document.querySelectorAll('.singleBuddy');
+
+    potentialPartnerDivs.forEach((element) => {
+        element.addEventListener('click', () => {
+            // clear all highlights from other elements
+            var partnerForClean = document.querySelectorAll('.singleBuddy');
+            partnerForClean.forEach((e) => {
+                e.removeAttribute('id');
+            })
+            // add highlight color for partner selected
+            element.setAttribute('id', 'singleBuddySelected');
+            // set local Storage to send to back-end
+            localStorage.setItem('receiver', element.childNodes[0].childNodes[1].innerText);
+            receiver = localStorage.getItem("receiver");
+            console.log("receiver: ", receiver);
+            socket.emit('receiver', {receiver: receiver, topicOne: topicOne, topicTwo: topicTwo}); //send to all server
+            console.log(`${receiver} sent to back-end!`);
+        })
+    })
+
 })
 
 
