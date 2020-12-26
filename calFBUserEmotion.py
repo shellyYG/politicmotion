@@ -54,8 +54,8 @@ with engine.begin() as conn:
                     reactionDigit = re.findall(r"\d",j)
                     combinedReaction = ''.join(str(k) for k in reactionDigit)
                     combinedReaction = int(combinedReaction)
-                    user_sent += combinedReaction*0.5
-                    user_mag += combinedReaction*0.5
+                    user_sent += combinedReaction*0.6
+                    user_mag += combinedReaction*0.6
                     user_len += combinedReaction
                 elif(j[-1] == "怒"):
                     reactionDigit = re.findall(r"\d",j)

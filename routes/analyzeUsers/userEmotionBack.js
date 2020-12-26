@@ -24,8 +24,8 @@ router.post('/', verifyToken, (req, res)=>{
                         avgUserSentiment += 0.9;
                         avgUserMagnitude += 0.9;
                     }else if(userEmotion[i] =="haha"){
-                        avgUserSentiment += 0.5;
-                        avgUserMagnitude += 0.5;
+                        avgUserSentiment += 0.6;
+                        avgUserMagnitude += 0.6;
                     }else if(userEmotion[i] == "cry"){
                         avgUserSentiment += -0.6;
                         avgUserMagnitude += 0.6;

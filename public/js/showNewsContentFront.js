@@ -598,7 +598,9 @@ axios.post(`showNewsContent`,{
 
             // check if there is emotion
             var checkedIfHasEmotion = localStorage.getItem('clickedEmotions');
-            if(checkedIfHasEmotion==null){
+            console.log("checkedIfHasEmotion: ", checkedIfHasEmotion);
+            console.log("checkedIfHasEmotion.length: ", checkedIfHasEmotion.length);
+            if(checkedIfHasEmotion=="[]"){
                 alert("Please click on emotion emojis to proceed.");
             }else{
                 window.location.href = '/userEmotion.html';
