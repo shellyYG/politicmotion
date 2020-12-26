@@ -350,8 +350,12 @@ a[id^="topic_"]:hover{
 
 #label-success {
   background-color: #5cb85c !important;
+  border-radius: 4px;
+  padding: 4px;
 }
 
 #label-danger {
   background-color: #d9534f !important;
+  border-radius: 4px;
+  padding: 4px;
 }
