@@ -20,6 +20,15 @@ step4.addEventListener(('click'), ()=>{
     window.location.href = '/chat.html'
 })
 
+var usrEmotionDistanceNYT;
+usrEmotionDistanceNYT = 30;
+
+var usrEmotionDistanceFox;
+usrEmotionDistanceFox = 30;
+
+var usrEmotionDirectionNYT;
+var usrEmotionDirectionFox;
+
 const headers = {
     "Content-Type": "application/json",
     Authorization: "Bearer" + " " + generalToken
@@ -85,8 +94,39 @@ axios.post(`calUserEmotion`, {
         graph.setAttribute("style", "width:1000px;height:500px;");
         graphBox.appendChild(graph);
 
-        console.log("userAvgSentEmotionArray: ", userAvgSentEmotionArray, "userAvgMagEmotionArray: ", userAvgMagEmotionArray);
+        console.log("userAvgSentEmotionArray: ", userAvgSentEmotionArray, "reactionAvgNYTSentEmotionArray: ", reactionAvgNYTSentEmotionArray, "reactionAvgFoxSentEmotionArray: ", reactionAvgFoxSentEmotionArray);
+        
+        pureDistanceNYT = userAvgSentEmotionArray[0]-reactionAvgNYTSentEmotionArray[0];
+        pureDistanceFox = userAvgSentEmotionArray[0]-reactionAvgFoxSentEmotionArray[0];
+        usrEmotionDistanceNYT = Math.floor(Math.abs(userAvgSentEmotionArray[0]/reactionAvgNYTSentEmotionArray[0]-1)*100);
+        usrEmotionDistanceFox = Math.floor(Math.abs(userAvgSentEmotionArray[0]/reactionAvgFoxSentEmotionArray[0]-1)*100);
 
+        var sentenceNYT;
+        var sentenceFox;
+
+        if(pureDistanceNYT>0){
+            usrEmotionDirectionNYT = "positive";
+            sentenceNYT = `${usrEmotionDistanceNYT}% more ${usrEmotionDirectionNYT} than NYT reader`;
+        }else if (pureDistanceNYT==0){
+            sentenceNYT = "have the same emotion as NYT reader";
+        }else{
+            usrEmotionDirectionNYT = "negative";
+            sentenceNYT = `${usrEmotionDistanceNYT}% more ${usrEmotionDirectionNYT} than NYT reader`;
+        }
+        console.log("pureDistanceFox: ", pureDistanceFox);
+        if(pureDistanceFox>0){
+            usrEmotionDirectionFox = "positive";
+            sentenceFox = `${usrEmotionDistanceFox}% more ${usrEmotionDirectionFox} than Fox reader on FB.`
+        }else if(pureDistanceFox==0){
+            sentenceFox = "have the same emotion as Fox reader on FB.";
+        }else{
+            usrEmotionDirectionFox = "negative";
+            sentenceFox = `${usrEmotionDistanceFox}% more ${usrEmotionDirectionFox} than Fox reader on FB.`
+        }
+
+        
+
+        
 
         var traceUser = {
             x: userAvgSentEmotionArray,
@@ -97,7 +137,7 @@ axios.post(`calUserEmotion`, {
             textfont: {
                 family: 'Raleway, sans-serif'
             },
-            marker: { size: 40, color: 'rgb(255, 20, 147)', symbol: 'diamond'},
+            marker: { size: 30, color: '#0ff', symbol: 'diamond'},
             type: 'scatter'
         }
 
@@ -137,7 +177,7 @@ axios.post(`calUserEmotion`, {
             textfont: {
                 family: 'Raleway, sans-serif'
             },
-            marker: { size: 20, color: 'rgb(12, 241, 249)', symbol: '105-open' },
+            marker: { size: 20, color: 'rgb(255, 204, 0)', symbol: '105-open' },
             type: 'scatter'
         }
 
@@ -150,7 +190,7 @@ axios.post(`calUserEmotion`, {
             textfont: {
                 family: 'Raleway, sans-serif'
             },
-            marker: { size: 20, color: 'rgb(12, 241, 249)', symbol: 'diamond'  },
+            marker: { size: 20, color: 'rgb(255, 204, 0)', symbol: 'diamond'  },
             type: 'scatter'
         }
 
@@ -216,10 +256,11 @@ axios.post(`calUserEmotion`, {
                 tickangle: 270
             },
             title: {
-                text: 'Your Emotion Compared With Others',
+                text: `<b>You are ${sentenceNYT} & ${sentenceFox}</b>`,
                 font: {
-                    size: 30,
-                    color: "white"
+                    size: 15,
+                    color: "#0ff",
+                    
                 },
             },
             hovermode: 'closest',
