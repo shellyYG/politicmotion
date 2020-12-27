@@ -103,26 +103,73 @@ axios.post(`calUserEmotion`, {
 
         var sentenceNYT;
         var sentenceFox;
-
+        console.log("pureDistanceNYT: ", pureDistanceNYT, " pureDistanceFox: ", pureDistanceFox);
         if(pureDistanceNYT>0){
             usrEmotionDirectionNYT = "positive";
-            sentenceNYT = `${usrEmotionDistanceNYT}% more ${usrEmotionDirectionNYT} than NYT reader`;
-        }else if (pureDistanceNYT==0){
-            sentenceNYT = "have the same emotion as NYT reader";
-        }else{
+            
+            if(pureDistanceFox>0){
+                usrEmotionDirectionFox = "positive";
+                sentenceNYT = `You are ${usrEmotionDistanceNYT}% more ${usrEmotionDirectionNYT} than NYT reader`;
+                sentenceFox = ` & ${usrEmotionDistanceFox}% more ${usrEmotionDirectionFox} than Fox reader on FB.`
+            }else if(pureDistanceFox == 0){
+                sentenceNYT = `You are ${usrEmotionDistanceNYT}% more ${usrEmotionDirectionNYT} than NYT reader`;
+                sentenceFox = " & have the same emotion as Fox reader on FB.";
+            }else if (pureDistanceFox<0){
+                usrEmotionDirectionFox = "negative";
+                sentenceNYT = `You are ${usrEmotionDistanceNYT}% more ${usrEmotionDirectionNYT} than NYT reader`;
+                sentenceFox = ` & ${usrEmotionDistanceFox}% more ${usrEmotionDirectionFox} than Fox reader on FB.`
+            }else{
+                console.log("No Fox news");
+                sentenceNYT = `You are ${usrEmotionDistanceNYT}% more ${usrEmotionDirectionNYT} than NYT reader on FB.`;
+                sentenceFox = "";
+            }
+        }else if (pureDistanceNYT == 0){
+            sentenceNYT = "You have the same emotion as NYT reader";
+            if(pureDistanceFox>0){
+                usrEmotionDirectionFox = "positive";
+                sentenceFox = ` & ${usrEmotionDistanceFox}% more ${usrEmotionDirectionFox} than Fox reader on FB.`
+            }else if(pureDistanceFox == 0){
+                sentenceFox = " & have the same emotion as Fox reader on FB.";
+            }else if (pureDistanceFox<0){
+                usrEmotionDirectionFox = "negative";
+                sentenceFox = ` & ${usrEmotionDistanceFox}% more ${usrEmotionDirectionFox} than Fox reader on FB.`
+            }else{
+                console.log("No Fox news");
+                sentenceFox = ".";
+            }
+        }else if (pureDistanceNYT<0){
             usrEmotionDirectionNYT = "negative";
-            sentenceNYT = `${usrEmotionDistanceNYT}% more ${usrEmotionDirectionNYT} than NYT reader`;
-        }
-        console.log("pureDistanceFox: ", pureDistanceFox);
-        if(pureDistanceFox>0){
-            usrEmotionDirectionFox = "positive";
-            sentenceFox = `${usrEmotionDistanceFox}% more ${usrEmotionDirectionFox} than Fox reader on FB.`
-        }else if(pureDistanceFox==0){
-            sentenceFox = "have the same emotion as Fox reader on FB.";
+            sentenceNYT = `You are ${usrEmotionDistanceNYT}% more ${usrEmotionDirectionNYT} than NYT reader`;
+            if(pureDistanceFox>0){
+                usrEmotionDirectionFox = "positive";
+                sentenceFox = ` & ${usrEmotionDistanceFox}% more ${usrEmotionDirectionFox} than Fox reader on FB.`
+            }else if(pureDistanceFox == 0){
+                sentenceFox = " & have the same emotion as Fox reader on FB.";
+            }else if (pureDistanceFox<0){
+                usrEmotionDirectionFox = "negative";
+                sentenceFox = ` & ${usrEmotionDistanceFox}% more ${usrEmotionDirectionFox} than Fox reader on FB.`
+            }else{
+                console.log("No Fox news");
+                sentenceFox = ".";
+            }
         }else{
-            usrEmotionDirectionFox = "negative";
-            sentenceFox = `${usrEmotionDistanceFox}% more ${usrEmotionDirectionFox} than Fox reader on FB.`
+            console.log("No NYT news");
+            sentenceNYT = "";
+            if(pureDistanceFox>0){
+                usrEmotionDirectionFox = "positive";
+                sentenceFox = `You are ${usrEmotionDistanceFox}% more ${usrEmotionDirectionFox} than Fox reader on FB.`
+            }else if(pureDistanceFox == 0){
+                sentenceFox = "You are have the same emotion as Fox reader on FB.";
+            }else if (pureDistanceFox<0){
+                usrEmotionDirectionFox = "negative";
+                sentenceFox = `You are ${usrEmotionDistanceFox}% more ${usrEmotionDirectionFox} than Fox reader on FB.`
+            }else{
+                console.log("No Fox news");
+                sentenceFox = "";
+            }
         }
+
+        
 
         var traceUser = {
             x: userAvgSentEmotionArray,
@@ -252,7 +299,7 @@ axios.post(`calUserEmotion`, {
                 tickangle: 270
             },
             title: {
-                text: `<b>You are ${sentenceNYT} & ${sentenceFox}</b>`,
+                text: `<b>${sentenceNYT}${sentenceFox}</b>`,
                 font: {
                     size: 18,
                     color: "#0ff",
