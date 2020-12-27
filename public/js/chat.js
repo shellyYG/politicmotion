@@ -6,7 +6,6 @@ let topBuddyNames = localStorage.getItem("topBuddyNames");
 
 if(buddiesToChat == null){
     alert("Sorry, no one has searched for the same topic yet.");
-    window.location.href = '/userEmotion.html';
 }
 
 let buddyNames = buddiesToChat.map(element => element.buddies);

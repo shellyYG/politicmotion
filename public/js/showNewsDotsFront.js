@@ -228,8 +228,11 @@ async function searchNews(){
                         y: data.points[i].y,
                         font: {
                             color: "white",
-                            size: 20
-                        }
+                            size: 12
+                        },
+                        showarrow: true,
+                        arrowhead: 7,
+                        arrowcolor: "white"
                     }
 
                     annotations = self.annotations || [];

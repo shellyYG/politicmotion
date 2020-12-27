@@ -12,7 +12,6 @@ for (i=0; i<localStorage.length; i++){
         keyArr.push(localStorage.key(i));
     }
 }
-console.log("keyArr: ", keyArr);
 
 var emotionArray = [];
 for (i=0; i < keyArr.length; i++){
@@ -20,11 +19,9 @@ for (i=0; i < keyArr.length; i++){
 }
 
 const searchButton = document.getElementById('btn-search');
-
 const chooseSentimentButton = document.getElementById('btn-chooseSentiment');
 
 searchButton.addEventListener('click',()=>{
-    
     const firstSearchTopic = document.querySelector("#userInput1").value;
     const secondSearchTopic = document.querySelector("#userInput2").value;
     if(!firstSearchTopic){
