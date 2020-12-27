@@ -29,7 +29,8 @@ router.post('/', (req, res, next)=>{
             OR (fb.small_title LIKE '%${searchTopic1}%' AND fb.title LIKE '%${searchTopic2}%')
             OR (nyt.lead_paragraph LIKE '%${searchTopic1}%' AND fb.title LIKE '%${searchTopic2}%')
             OR (nyt.lead_paragraph LIKE '%${searchTopic1}%' AND fb.small_title LIKE '%${searchTopic2}%')
-            )`
+            )
+        ORDER BY fb.id DESC LIMIT 20;`
         var sqlquery = await query(sql);
         return sqlquery; 
     }
