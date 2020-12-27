@@ -8,23 +8,55 @@ router.post('/', (req, res, next)=>{
     
     // ------------------------------------------------ Get NY News Dots
     async function searchFBNYNewsDots(){
-        sql = `SELECT id, sentiment_score, magnitude_score
-        FROM politicmotion.fb_rawdata
-        WHERE post_source = 'nytimes' AND title IS NOT NULL AND title <> 'No Big Title' AND post_date IS NOT NULL
-        AND ((content LIKE '%${searchTopic1}%' AND content LIKE '%${searchTopic2}%') 
-            OR (title LIKE '%${searchTopic1}%' AND title LIKE '%${searchTopic2}%')
-            OR (small_title LIKE '%${searchTopic1}%' AND small_title LIKE '%${searchTopic2}%'))`
+        sql = `SELECT fb.id, fb.sentiment_score, fb.magnitude_score
+        FROM politicmotion.fb_rawdata fb
+            LEFT JOIN politicmotion.news_rawdata big ON fb.title = big.title
+            LEFT JOIN politicmotion.nyt_details nyt ON big.title = nyt.headline
+        WHERE fb.post_source = 'nytimes' AND fb.title IS NOT NULL AND fb.title <> 'No Big Title'
+        AND ((fb.content LIKE '%${searchTopic1}%' AND fb.content LIKE '%${searchTopic2}%') 
+            OR (fb.title LIKE '%${searchTopic1}%' AND fb.title LIKE '%${searchTopic2}%')
+            OR (fb.small_title LIKE '%${searchTopic1}%' AND fb.small_title LIKE '%${searchTopic2}%')
+            OR (nyt.lead_paragraph LIKE '%${searchTopic1}%' AND nyt.lead_paragraph LIKE '%${searchTopic2}%')
+            OR (fb.content LIKE '%${searchTopic1}%' AND fb.title LIKE '%${searchTopic2}%')
+            OR (fb.content LIKE '%${searchTopic1}%' AND fb.small_title LIKE '%${searchTopic2}%')
+            OR (fb.content LIKE '%${searchTopic1}%' AND nyt.lead_paragraph LIKE '%${searchTopic2}%')
+            OR (fb.title LIKE '%${searchTopic1}%' AND fb.small_title LIKE '%${searchTopic2}%')
+            OR (fb.title LIKE '%${searchTopic1}%' AND nyt.lead_paragraph LIKE '%${searchTopic2}%')
+            OR (fb.small_title LIKE '%${searchTopic1}%' AND nyt.lead_paragraph LIKE '%${searchTopic2}%')
+            OR (fb.title LIKE '%${searchTopic1}%' AND fb.content LIKE '%${searchTopic2}%')
+            OR (fb.small_title LIKE '%${searchTopic1}%' AND fb.content LIKE '%${searchTopic2}%')
+            OR (nyt.lead_paragraph LIKE '%${searchTopic1}%' AND fb.content LIKE '%${searchTopic2}%')
+            OR (fb.small_title LIKE '%${searchTopic1}%' AND fb.title LIKE '%${searchTopic2}%')
+            OR (nyt.lead_paragraph LIKE '%${searchTopic1}%' AND fb.title LIKE '%${searchTopic2}%')
+            OR (nyt.lead_paragraph LIKE '%${searchTopic1}%' AND fb.small_title LIKE '%${searchTopic2}%')
+            )`
         var sqlquery = await query(sql);
         return sqlquery; 
     }
 
     async function searchFBFoxNewsDots(){
-        sql = `SELECT id, sentiment_score, magnitude_score
-        FROM politicmotion.fb_rawdata
-        WHERE post_source = 'foxnews' AND title IS NOT NULL AND title <> 'No Big Title' AND post_date IS NOT NULL
-        AND ((content LIKE '%${searchTopic1}%' AND content LIKE '%${searchTopic2}%') 
-            OR (title LIKE '%${searchTopic1}%' AND title LIKE '%${searchTopic2}%')
-            OR (small_title LIKE '%${searchTopic1}%' AND small_title LIKE '%${searchTopic2}%'))`
+        sql = `SELECT fb.id, fb.sentiment_score, fb.magnitude_score
+        FROM politicmotion.fb_rawdata fb
+            LEFT JOIN politicmotion.news_rawdata big ON fb.title = big.title
+            LEFT JOIN politicmotion.fox_details fox ON big.post_link = fox.post_link
+        WHERE fb.post_source = 'foxnews' AND fb.title IS NOT NULL AND fb.title <> 'No Big Title'
+                AND ((fb.content LIKE '%${searchTopic1}%' AND fb.content LIKE '%${searchTopic2}%') 
+                    OR (fb.title LIKE '%${searchTopic1}%' AND fb.title LIKE '%${searchTopic2}%')
+                    OR (fb.small_title LIKE '%${searchTopic1}%' AND fb.small_title LIKE '%${searchTopic2}%')
+                    OR (fox.paragraph LIKE '%${searchTopic1}%' AND fox.paragraph LIKE '%${searchTopic2}%')
+                    OR (fb.content LIKE '%${searchTopic1}%' AND fb.title LIKE '%${searchTopic2}%')
+                    OR (fb.content LIKE '%${searchTopic1}%' AND fb.small_title LIKE '%${searchTopic2}%')
+                    OR (fb.content LIKE '%${searchTopic1}%' AND fox.paragraph LIKE '%${searchTopic2}%')
+                    OR (fb.title LIKE '%${searchTopic1}%' AND fb.small_title LIKE '%${searchTopic2}%')
+                    OR (fb.title LIKE '%${searchTopic1}%' AND fox.paragraph LIKE '%${searchTopic2}%')
+                    OR (fb.small_title LIKE '%${searchTopic1}%' AND fox.paragraph LIKE '%${searchTopic2}%')
+                    OR (fb.title LIKE '%${searchTopic1}%' AND fb.content LIKE '%${searchTopic2}%')
+                    OR (fb.small_title LIKE '%${searchTopic1}%' AND fb.content LIKE '%${searchTopic2}%')
+                    OR (fox.paragraph LIKE '%${searchTopic1}%' AND fb.content LIKE '%${searchTopic2}%')
+                    OR (fb.small_title LIKE '%${searchTopic1}%' AND fb.title LIKE '%${searchTopic2}%')
+                    OR (fox.paragraph LIKE '%${searchTopic1}%' AND fb.title LIKE '%${searchTopic2}%')
+                    OR (fox.paragraph LIKE '%${searchTopic1}%' AND fb.small_title LIKE '%${searchTopic2}%')
+                    );`
         var sqlquery = await query(sql);
         return sqlquery; 
     }

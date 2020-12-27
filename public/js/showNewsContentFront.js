@@ -144,14 +144,24 @@ axios.post(`showNewsContent`,{
                     var leadParagraph = res.data[i].lead_paragraph;
                 }
 
-                articleContent.textContent = res.data[i].content +" " + leadParagraph;
-                
+                if(res.data[i].paragraph==null){
+                    var foxParagraph = '';
+                }else{
+                    var foxParagraph = res.data[i].paragraph;
+                }
+                console.log("res.data[i].paragraph: ", foxParagraph);
                 articleLink.textContent = "Read More";
                 if (res.data[i].post_source == 'nytimes'){
+                    console.log("has news from nytimes");
+                    articleContent.textContent = res.data[i].content +" " + leadParagraph;
                     articleSrcDate.textContent = "New York Times" + " " + finalBeutifiedDate;
                 }else{
+                    console.log("has news from fox news");
+                    articleContent.textContent = res.data[i].content +" " + foxParagraph;
                     articleSrcDate.textContent = "Fox News"+ " " + finalBeutifiedDate;
                 }
+
+                console.log("articleContent: ", articleContent);
 
                 // ===================================calculate average post emotion
                 avgPostSentiment += res.data[i].sentiment_score;
@@ -222,13 +232,22 @@ axios.post(`showNewsContent`,{
                     var leadParagraph = res.data[i].lead_paragraph;
                 }
 
-                articleContent2.textContent = res.data[i].content +" " + leadParagraph;
+                if(res.data[i].paragraph==null){
+                    var foxParagraph = '';
+                }else{
+                    var foxParagraph = res.data[i].paragraph;
+                }
                 
                 if (res.data[i].post_source == 'nytimes'){
+                    console.log("has news from nytimes");
                     articleSrcDate2.textContent = "New York Times" + " " + finalBeutifiedDate;
+                    articleContent2.textContent = res.data[i].content +" " + leadParagraph;
                 }else{
+                    console.log("has news from fox news");
                     articleSrcDate2.textContent = "Fox News"+ " " + finalBeutifiedDate;
+                    articleContent2.textContent = res.data[i].content +" " + foxParagraph;
                 }
+
 
                 var closeBtn = document.createElement('a');
                 closeBtn.setAttribute('class', 'btn btn-xs btn-primary btn-selected-close');
@@ -328,15 +347,23 @@ axios.post(`showNewsContent`,{
                         }else{
                             var leadParagraph = res.data[i].lead_paragraph;
                         }
-        
-                        // articleSrcDate.textContent = finalBeutifiedDate;
-                        articleContent.textContent = res.data[i].content +" " + leadParagraph;
-                        
-                        articleLink.textContent = "Read More";
-                        if (res.data[i].post_source == 'nytimes'){
-                            articleSrcDate.textContent = "New York Times" + " " + finalBeutifiedDate;
+
+                        if(res.data[i].paragraph==null){
+                            var foxParagraph = '';
                         }else{
+                            var foxParagraph = res.data[i].paragraph;
+                        }
+
+                        articleLink.textContent = "Read More";
+
+                        if (res.data[i].post_source == 'nytimes'){
+                            console.log("has news from nytimes");
+                            articleSrcDate.textContent = "New York Times" + " " + finalBeutifiedDate;
+                            articleContent.textContent = res.data[i].content +" " + leadParagraph;
+                        }else{
+                            console.log("has news from fox news");
                             articleSrcDate.textContent = "Fox News"+ " " + finalBeutifiedDate;
+                            articleContent.textContent = res.data[i].content +" " + foxParagraph;
                         }
 
                         // ===================================calculate average post emotion
@@ -408,13 +435,18 @@ axios.post(`showNewsContent`,{
                         }else{
                             var leadParagraph = res.data[i].lead_paragraph;
                         }
-
-                        articleContent2.textContent = res.data[i].content +" " + leadParagraph;
+                        if(res.data[i].paragraph==null){
+                            var foxParagraph = '';
+                        }else{
+                            var foxParagraph = res.data[i].paragraph;
+                        }
                         
                         if (res.data[i].post_source == 'nytimes'){
                             articleSrcDate2.textContent = "New York Times" + " " + finalBeutifiedDate;
+                            articleContent2.textContent = res.data[i].content +" " + leadParagraph;
                         }else{
                             articleSrcDate2.textContent = "Fox News"+ " " + finalBeutifiedDate;
+                            articleContent2.textContent = res.data[i].content +" " + foxParagraph;
                         }
 
                         var closeMatchedBtn = document.createElement('a');

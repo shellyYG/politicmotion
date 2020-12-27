@@ -417,6 +417,7 @@ socket.on("userDisconnected", (disconnectUserName) => {
             console.log("remove color");
             var statusSmall = document.querySelectorAll('small');
             statusSmall[i].setAttribute('class', 'chat-alert label label-danger');
+            statusSmall[i].setAttribute('id', 'label-danger');
             statusSmall[i].innerText = 'offline';
             // clear localStorage chat partner list
         }
@@ -483,6 +484,7 @@ socket.on('other partners', (partnerList)=>{
         
             var statusSmall = document.createElement('small');
             statusSmall.setAttribute('class', 'chat-alert label label-danger');
+            statusSmall.setAttribute('id', 'label-danger');
             statusSmall.innerText = 'offline';
         
             var nameStrong = document.createElement('partnerName');

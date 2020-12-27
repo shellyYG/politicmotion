@@ -37,9 +37,9 @@ async function searchNews(){
         localStorage.setItem('NYIds',res.data.NYIds);
         localStorage.setItem('FoxIds',res.data.FoxIds);
         
-        if(res.data.NYSentimentArray.length == 0){
+        if(res.data.NYSentimentArray.length == 0 && res.data.FoxSentimentArray.length == 0){
             alert("Oops, no news found, please choose another topic!");
-            window.location.href="/";
+            window.location.href="/search.html";
         }else{
             console.log("Has news!");
 
@@ -115,8 +115,8 @@ async function searchNews(){
                     type: 'line',
                     x0: -1,
                     x1: 1,
-                    y0: 0.75,
-                    y1: 0.75,
+                    y0: 1.5,
+                    y1: 1.5,
                     line: {
                         color: 'white',
                         width: 4
@@ -142,7 +142,7 @@ async function searchNews(){
                         size: 22,
                         color: 'white'
                     },
-                    tickvals: [-1, 0, 1],
+                    tickvals: [-0.5, 0, 0.5],
                     ticktext:['Negative', 'Neutral', 'Positive']
 
                 },
@@ -154,10 +154,8 @@ async function searchNews(){
                             color: "white"
                         }
                     },
-                    range: [-0.1, 1.5],
+                    range: [-0.1, 3.0],
                     showgrid: false,
-                    // zerolinecolor: 'white',
-                    // zerolinewidth: 4,
                     zeroline: false,
                     showticklabels: true,
                     tickfont: {
@@ -165,13 +163,13 @@ async function searchNews(){
                         size: 22,
                         color: 'white'
                     },
-                    tickvals: [0.3, 1.3],
+                    tickvals: [0.6, 2.2],
                     ticktext:['Light', 'Strong'],
                     tickangle: 270
                     
                 },
                 title: {
-                    text: 'News Sentiment & Magnitude Score',
+                    text: 'News Mood & Intensity Score',
                     font: {
                         size: 30,
                         color: "white"

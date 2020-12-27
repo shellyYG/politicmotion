@@ -229,20 +229,10 @@ router.post('/', (req, res) => {
             clickedNews = allMatched.map((element) => { return element.firstArticle });
         }
 
-        // console.log("clickedNews: ", clickedNews);
-
-        // async function getRelevantNews() {
-        //     sql = `SELECT id, content, post_date, post_link, reaction, post_source, sentiment_score, magnitude_score, user_sentiment_score, user_magnitude_score
-        //     FROM politicmotion.fb_rawdata
-        //     WHERE id IN (${uniqueNewsIdtoShow});`
-        //     var sqlquery = await query(sql);
-        //     return sqlquery;
-        // }
-
         async function getRelevantNews() {
             sql = `SELECT DISTINCT fb.id, fb.post_link, fb.content, fb.title
             , fb.small_title
-            , nyt.lead_paragraph
+            , nyt.lead_paragraph, fox.paragraph
             , fb.post_date, fb.post_link, fb.reaction
             , fb.post_source, fb.sentiment_score, fb.magnitude_score
             , fb.user_sentiment_score, fb.user_magnitude_score
@@ -274,6 +264,7 @@ router.post('/', (req, res) => {
                 singleNews.title = allNews[0].title;
                 singleNews.small_title = allNews[0].small_title;
                 singleNews.lead_paragraph = allNews[0].lead_paragraph;
+                singleNews.paragraph = allNews[0].paragraph;
 
                 var clickedId = [];
                 var matchedId = [];
@@ -299,6 +290,7 @@ router.post('/', (req, res) => {
                     singleNews.title = allNews[i].title;
                     singleNews.small_title = allNews[i].small_title;
                     singleNews.lead_paragraph = allNews[i].lead_paragraph;
+                    singleNews.paragraph = allNews[i].paragraph;
 
                     var clickedId = [];
                     var matchedId = [];

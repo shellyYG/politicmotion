@@ -124,10 +124,6 @@ axios.post(`calUserEmotion`, {
             sentenceFox = `${usrEmotionDistanceFox}% more ${usrEmotionDirectionFox} than Fox reader on FB.`
         }
 
-        
-
-        
-
         var traceUser = {
             x: userAvgSentEmotionArray,
             y: userAvgMagEmotionArray,
@@ -203,8 +199,8 @@ axios.post(`calUserEmotion`, {
                 type: 'line',
                 x0: -1,
                 x1: 1,
-                y0: 0.75,
-                y1: 0.75,
+                y0: 1.5,
+                y1: 1.5,
                 line: {
                     color: 'white',
                     width: 4
@@ -229,7 +225,7 @@ axios.post(`calUserEmotion`, {
                     size: 22,
                     color: 'white'
                 },
-                tickvals: [-1, 0, 1],
+                tickvals: [-0.5, 0, 0.5],
                 ticktext:['Negative', 'Neutral', 'Positive']
             },
             yaxis: {
@@ -240,7 +236,7 @@ axios.post(`calUserEmotion`, {
                         color: "white"
                     }
                 },
-                range: [-0.1, 1.5],
+                range: [-0.1, 3.0],
                 showgrid: false,
                 // zerolinecolor: 'white',
                 // zerolinewidth: 4,
@@ -251,7 +247,7 @@ axios.post(`calUserEmotion`, {
                     size: 22,
                     color: 'white'
                 },
-                tickvals: [0.3, 1.3],
+                tickvals: [0.6, 2.2],
                 ticktext:['Light', 'Strong'],
                 tickangle: 270
             },
