@@ -195,7 +195,7 @@ axios.post(`calUserEmotion`, {
             textfont: {
                 family: 'Raleway, sans-serif'
             },
-            marker: { size: 30, color: '#0ff', symbol: 'diamond'},
+            marker: { size: 30, color: 'rgb(255,167,255)', symbol: 'diamond'},
             type: 'scatter'
         }
 
@@ -209,7 +209,7 @@ axios.post(`calUserEmotion`, {
             textfont: {
                 family: 'Raleway, sans-serif'
             },
-            marker: { size: 20, color: 'rgb(255, 255, 255)', symbol: '105-open'},
+            marker: { size: 20, color: 'rgb(0, 240, 255)', symbol: '105-open'},
             type: 'scatter'
         }
 
@@ -222,7 +222,7 @@ axios.post(`calUserEmotion`, {
             textfont: {
                 family: 'Raleway, sans-serif'
             },
-            marker: { size: 20, color: 'rgb(255, 255, 255)', symbol: 'diamond'},
+            marker: { size: 20, color: 'rgb(0, 240, 255)', symbol: 'diamond'},
             type: 'scatter'
         }
 
@@ -271,10 +271,10 @@ axios.post(`calUserEmotion`, {
         ],
             xaxis: {
                 title: {
-                    text: 'Mood',
+                    text: '<b>Mood</b>',
                     font: {
-                        size: 24,
-                        color: "white"
+                        size: 20,
+                        color: "white",
                     }
                 },
                 range: [-1, 1],
@@ -284,7 +284,7 @@ axios.post(`calUserEmotion`, {
                 showticklabels: true,
                 tickfont: {
                     family: 'BwNistaInt-xBd',
-                    size: 22,
+                    size: 18,
                     color: 'white'
                 },
                 tickvals: [-0.5, 0, 0.5],
@@ -292,45 +292,43 @@ axios.post(`calUserEmotion`, {
             },
             yaxis: {
                 title: {
-                    text: 'Intensity',
+                    text: '<b>Intensity</b>',
                     font: {
-                        size: 24,
+                        size: 20,
                         color: "white"
                     }
                 },
                 range: [-0.1, 3.0],
                 showgrid: false,
-                // zerolinecolor: 'white',
-                // zerolinewidth: 4,
                 zeroline: false,
                 showticklabels: true,
                 tickfont: {
                     family: 'BwNistaInt-xBd',
-                    size: 22,
+                    size: 18,
                     color: 'white'
                 },
                 tickvals: [0.6, 2.2],
                 ticktext:['Light', 'Strong'],
                 tickangle: 270
             },
-            title: {
-                text: `<b>${sentenceNYT}${sentenceFox}</b>`,
-                font: {
-                    size: 18,
-                    color: "#0ff",
+            // title: {
+            //     text: `<b>${sentenceNYT}${sentenceFox}</b>`,
+            //     font: {
+            //         size: 15,
+            //         color: "rgb(255,167,255)",
                     
-                },
-            },
+            //     },
+            // },
             hovermode: 'closest',
             paper_bgcolor: "rgba(0,0,0,0)", //transparent
             plot_bgcolor: "rgba(0,0,0,0)", //transparent
             legend: {
-                x: 0.12,
+                x: 0.2,
                 y: 1.13,
                 orientation: "h", //horizontally placed the legend
                 font: {
                     color: 'white',
-                    size: 20
+                    size: 14
                 }
             }
         }
@@ -343,6 +341,17 @@ axios.post(`calUserEmotion`, {
         // ----------------------remove loading first
         loadingBlock.setAttribute("class", "row hiddenc");
         loadingBlock.innerHTML = ""
+
+        const resultHolderCol = document.getElementById('resultHolderCol');
+        const resultHolder = document.getElementById('resultHolder');
+        resultHolder.setAttribute('class','row');
+        const resultText = document.createElement('b');
+        resultText.setAttribute('id', 'resultText');
+        resultText.innerText = `${sentenceNYT}${sentenceFox}`
+        resultHolderCol.appendChild(resultText);
+       
+        console.log("`${sentenceNYT}${sentenceFox}`: ", `${sentenceNYT}${sentenceFox}`);
+       
 
         // ------------------------------------------------- Create Plot
         Plotly.newPlot(graph, data, layout, config);
@@ -387,9 +396,6 @@ axios.post(`calUserEmotion`, {
                         }
                         window.location.href = '/chat.html';
                     }
-                    
-                    
-
                 })
         })
 

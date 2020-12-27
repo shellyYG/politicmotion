@@ -86,7 +86,7 @@ async function searchNews(){
                 textfont: {
                     family:  'BwNistaInt-xBd'
                 },
-                marker: { size: 12, color: 'rgb(255, 255, 255)'}, //, symbol: 'diamond-open'
+                marker: { size: 12, color: 'rgb(0, 240, 255)'}, //, symbol: 'diamond-open'
                 type: 'scatter',
                 showlegend: true // still show legend when only one trace
             }
@@ -100,7 +100,7 @@ async function searchNews(){
                 textfont: {
                     family:  'BwNistaInt-xBd'
                 },
-                marker: { size: 18, color: 'rgb(255,204,0)', symbol: '102'},
+                marker: { size: 12, color: 'rgb(255,204,0)', symbol: '102'},
                 type: 'scatter',
                 showlegend: true // still show legend when only one trace
             }
@@ -127,7 +127,7 @@ async function searchNews(){
                     title: {
                         text: 'Mood',
                         font: {
-                            size: 28,
+                            size: 26,
                             color: "white"
                         }
 
@@ -139,7 +139,7 @@ async function searchNews(){
                     showticklabels: true, // show axis title
                     tickfont: {
                         family: 'BwNistaInt-xBd',
-                        size: 22,
+                        size: 14,
                         color: 'white'
                     },
                     tickvals: [-0.5, 0, 0.5],
@@ -160,7 +160,7 @@ async function searchNews(){
                     showticklabels: true,
                     tickfont: {
                         family: 'BwNistaInt-xBd',
-                        size: 22,
+                        size: 14,
                         color: 'white'
                     },
                     tickvals: [0.6, 2.2],

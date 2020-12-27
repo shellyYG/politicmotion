@@ -1393,6 +1393,10 @@ g.pointtext {
   display: none; /* remove Aa from Plotly */
 }
 
+text.g-gtitle {
+  background-color: white !important;
+}
+
 
 #step1, #step2, #step3, #step4 {
   cursor: pointer;
@@ -1400,4 +1404,19 @@ g.pointtext {
 
 #btnLoader {
   margin-top: 50px;
+}
+
+#resultHolder {
+  height: 74px;
+  margin: 0px 138px;
+}
+
+#resultHolderCol {
+  margin: 42px 0px;
+}
+
+#resultText {
+  color: black;
+  font-size: 17px;
+  padding: 14px;
 }
