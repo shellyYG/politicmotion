@@ -257,6 +257,7 @@ axios.post(`calUserEmotion`, {
         var data = [traceUser, traceFBNYTPost, traceFBNYTReaction, traceFBFoxPost, traceFBFoxReaction]; //traceFBPost, traceFBReaction, 
 
         var layout = {
+            hovermode: false,
             shapes: [{
                 type: 'line',
                 x0: -1,
@@ -311,15 +312,6 @@ axios.post(`calUserEmotion`, {
                 ticktext:['Light', 'Strong'],
                 tickangle: 270
             },
-            // title: {
-            //     text: `<b>${sentenceNYT}${sentenceFox}</b>`,
-            //     font: {
-            //         size: 15,
-            //         color: "rgb(255,167,255)",
-                    
-            //     },
-            // },
-            hovermode: 'closest',
             paper_bgcolor: "rgba(0,0,0,0)", //transparent
             plot_bgcolor: "rgba(0,0,0,0)", //transparent
             legend: {

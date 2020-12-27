@@ -100,7 +100,7 @@ async function searchNews(){
                 textfont: {
                     family:  'BwNistaInt-xBd'
                 },
-                marker: { size: 12, color: 'rgb(255,204,0)', symbol: '102'},
+                marker: { size: 16, color: 'rgb(255,204,0)', symbol: '102'},
                 type: 'scatter',
                 showlegend: true // still show legend when only one trace
             }
@@ -125,9 +125,9 @@ async function searchNews(){
             ],
                 xaxis: {
                     title: {
-                        text: 'Mood',
+                        text: '<b>Mood</b>',
                         font: {
-                            size: 26,
+                            size: 20,
                             color: "white"
                         }
 
@@ -148,9 +148,9 @@ async function searchNews(){
                 },
                 yaxis: {
                     title: {
-                        text: 'Intensity',
+                        text: '<b>Intensity</b>',
                         font: {
-                            size: 28,
+                            size: 20,
                             color: "white"
                         }
                     },
@@ -171,7 +171,7 @@ async function searchNews(){
                 title: {
                     text: 'News Mood & Intensity Score',
                     font: {
-                        size: 30,
+                        size: 20,
                         color: "white"
                     }
                 },
@@ -184,7 +184,7 @@ async function searchNews(){
                     orientation:"h", //horizontally placed the legend
                     font:{
                         color: 'white',
-                        size: 20
+                        size: 14
                     }
                 }
             }
@@ -221,7 +221,13 @@ async function searchNews(){
                     localStorage.setItem("clickedPoints",JSON.stringify(pointArray));
                     
                     // ------------------------------ add annotation
-                    annotate_text = "News Selected!";
+                    if(data.points[i].data.name == "New York Times"){
+                        newsSource = "NYT"
+                    }else{
+                        newsSource = "Fox"
+                    }
+                    
+                    annotate_text = `${newsSource} selected!`;
                     annotation = {
                         text: annotate_text,
                         x: data.points[i].x,
@@ -239,6 +245,14 @@ async function searchNews(){
                     
                     annotations.push(annotation);
                     Plotly.relayout(graph,{annotations: annotations});
+
+                    // ---------------------------------------------- remove points
+                    var reselectNewsBtn = document.getElementById("reselectBtnCol");
+                    reselectNewsBtn.addEventListener('click',()=>{
+                        annotations = [];
+                        localStorage.removeItem("clickedPoints");
+                        Plotly.relayout(graph,{annotations: []});
+                    })
                 }
             })
 
@@ -253,12 +267,12 @@ async function searchNews(){
                 }
             })
             
-            // ---------------------------------------------- remove points
-            const reselectNewsBtn = document.getElementById("reselectBtnCol");
-            reselectNewsBtn.addEventListener('click',()=>{
-                localStorage.removeItem("clickedPoints");
-                Plotly.relayout(graph,{annotations: []});
-            })
+            // // ---------------------------------------------- remove points
+            // const reselectNewsBtn = document.getElementById("reselectBtnCol");
+            // reselectNewsBtn.addEventListener('click',()=>{
+            //     localStorage.removeItem("clickedPoints");
+            //     Plotly.relayout(graph,{annotations: []});
+            // })
         }
     }).catch(err=>{
         alert("Please select at least one dot!");
