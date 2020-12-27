@@ -12,7 +12,7 @@ router.post('/', (req, res, next)=>{
         FROM politicmotion.fb_rawdata fb
             LEFT JOIN politicmotion.news_rawdata big ON fb.title = big.title
             LEFT JOIN politicmotion.nyt_details nyt ON big.title = nyt.headline
-        WHERE fb.post_source = 'nytimes' AND fb.title IS NOT NULL AND fb.title <> 'No Big Title'
+        WHERE fb.post_source = 'nytimes' AND fb.title IS NOT NULL AND fb.post_date IS NOT NULL AND fb.title <> 'No Big Title'
         AND ((fb.content LIKE '%${searchTopic1}%' AND fb.content LIKE '%${searchTopic2}%') 
             OR (fb.title LIKE '%${searchTopic1}%' AND fb.title LIKE '%${searchTopic2}%')
             OR (fb.small_title LIKE '%${searchTopic1}%' AND fb.small_title LIKE '%${searchTopic2}%')

@@ -11,6 +11,9 @@ let topBuddySignatures = localStorage.getItem("topBuddySignatures");
 
 if(buddiesToChat == null){
     alert("Sorry, no one has searched for the same topic yet.");
+    alert("Why not search another topic?");
+    window.location.href= '/search.html';
+
 }
 
 let buddyNames = buddiesToChat.map(element => element.buddies);
@@ -91,9 +94,7 @@ for (i = 0; i < buddiesToChat.length; i++) {
         statusDiv.appendChild(star);
     }
 
-
     singleBuddy.appendChild(statusDiv);
-
     partnerContainer.appendChild(singleBuddy);
 }
 const tokenTest = () => {
@@ -428,10 +429,8 @@ socket.on("userDisconnected", (disconnectUserName) => {
             statusSmall[i].setAttribute('class', 'chat-alert label label-danger');
             statusSmall[i].setAttribute('id', 'label-danger');
             statusSmall[i].innerText = 'offline';
-            // clear localStorage chat partner list
         }
     }
-    // console.log("disconnectUserName: ", disconnectUserName);
 })
 
 // add topics when clicked
