@@ -171,7 +171,7 @@ router.post('/', verifyToken, (req, res)=>{
                 var formatbuddyEmails = buddyEmails.map(element=>'"'+element+'"');
                 
                 try{
-                    sql = `SELECT username FROM politicmotion.user_basic WHERE email IN (${formatbuddyEmails})
+                    sql = `SELECT username, signature FROM politicmotion.user_basic WHERE email IN (${formatbuddyEmails})
                         ORDER BY Field(email,${formatbuddyEmails});` // ASC so it will already rank by distance
                     var sqlquery = await query(sql);
                     return sqlquery;
@@ -187,7 +187,7 @@ router.post('/', verifyToken, (req, res)=>{
                 var formatTopBuddyEmails = topBuddyEmails.map(element=>'"'+element+'"');
                 console.log("formatTopBuddyEmails: ", formatTopBuddyEmails);
                 try{
-                    sql = `SELECT username FROM politicmotion.user_basic WHERE email IN (${formatTopBuddyEmails})
+                    sql = `SELECT username, signature FROM politicmotion.user_basic WHERE email IN (${formatTopBuddyEmails})
                         ORDER BY Field(email,${formatTopBuddyEmails});` // ASC so it will already rank by distance
                     var sqlquery = await query(sql);
                     return sqlquery;
@@ -196,19 +196,24 @@ router.post('/', verifyToken, (req, res)=>{
                 }
                 
             }
-            
-            const rooms = [];
-            const middleRooms = [];
-            const finalRooms = [];
 
             async function sendBuddyNames(){
-                var buddyNames = await findBuddyNames();
-                var topBuddyNames = await findTopBuddyNames();
-                buddyNames = buddyNames.map(element=>element.username);
-                topBuddyNames = topBuddyNames.map(element=>element.username);
+                var buddies = await findBuddyNames();
+                var topBuddies = await findTopBuddyNames();
+                console.log("buddies: ", buddies);
+                console.log("topBuddies: ", topBuddies);
+                buddyNames = buddies.map(element=>element.username);
+                topBuddyNames = topBuddies.map(element=>element.username);
+                buddySignatures = buddies.map(element=>element.signature);
+                topBuddySignatures = topBuddies.map(element=>element.signature);
 
-                console.log("buddyNames before sent: ", buddyNames);
-                res.send({buddyNames:buddyNames, topBuddyNames:topBuddyNames});
+                console.log("buddyNames: ", buddyNames,"buddySignatures: ", buddySignatures, "topBuddySignatures: ", topBuddySignatures);
+                res.send({
+                    buddyNames: buddyNames, 
+                    topBuddyNames: topBuddyNames,
+                    buddySignatures: buddySignatures,
+                    topBuddySignatures: topBuddySignatures
+                });
             }
             sendBuddyNames();
            

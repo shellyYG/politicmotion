@@ -359,3 +359,9 @@ a[id^="topic_"]:hover{
   border-radius: 4px;
   padding: 4px;
 }
+
+#userSignature {
+  font-size: 15px;
+  color: #DCDCDC;
+  padding: 0px 5px;
+}

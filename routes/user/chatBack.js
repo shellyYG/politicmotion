@@ -29,7 +29,7 @@ const socketChat = (socket) => {
                 // console.log("B4");
                 console.log(`${selfName} joins`)
                 socket.emit('Self', { self: payload.data.name, onlineUsers: onlineUserList});
-                console.log("onlineUserList before pushing from connected users: ", onlineUserList);
+                // console.log("onlineUserList before pushing from connected users: ", onlineUserList);
                 // console.log("B5.");
                 for (const key in userList) {
                     console.log("key: ", key, "|userList: ", userList, "|buddyNames: ", buddyNames) ;
@@ -47,8 +47,7 @@ const socketChat = (socket) => {
     });
     
     socket.on("receiver", (receiver)=>{ //sometimes this won't work
-        
-        console.log("received receiver, try to get its socket.id");
+        // console.log("received receiver");
 
         for (const key in userList){
             console.log("key: ", key, "receiver.receiver: ", receiver.receiver);
@@ -141,6 +140,7 @@ const socketChat = (socket) => {
         }
         async function showTopics(){
             var topics = await findtopics();
+            console.log("topics: ", topics);
             topics.forEach((t)=>{
                 allTopics.push(t.firstSearchTopic + " & " + t.secondSearchTopic);
             })
@@ -155,7 +155,9 @@ const socketChat = (socket) => {
         var firstTopic = topics.split("&")[0].trim(); //remove blank
         var secondTopic = topics.split("&")[1].trim();
         async function findOtherPartners(){
-            sql = `SELECT DISTINCT username FROM politicmotion.user_emotion 
+            sql = `SELECT DISTINCT m.username, b.signature 
+            FROM politicmotion.user_emotion m
+            INNER JOIN politicmotion.user_basic b ON m.username = b.username
             WHERE firstSearchTopic IN ('${firstTopic}', '${secondTopic}')
             AND secondSearchTopic IN ('${firstTopic}', '${secondTopic}')
             `
@@ -164,11 +166,16 @@ const socketChat = (socket) => {
         }
         async function showOtherPartners(){
             var partnerList = [];
+            var signatureList = [];
             var otherPartners = await findOtherPartners();
             otherPartners.forEach((partner)=>{
                 partnerList.push(partner.username);
+                signatureList.push(partner.signature);
             })
-            socket.emit('other partners', partnerList);
+            socket.emit('other partners', {
+                partnerList: partnerList,
+                signatureList: signatureList
+            });
         }
         showOtherPartners()
     })

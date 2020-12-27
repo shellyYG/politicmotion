@@ -2,13 +2,20 @@ const socket = io();
 
 let buddiesToChat = localStorage.getItem("buddiesToChat");
 buddiesToChat = JSON.parse(buddiesToChat);
+
+let buddySignatures = localStorage.getItem("buddySignatures");
+buddySignatures = JSON.parse(buddySignatures);
+
 let topBuddyNames = localStorage.getItem("topBuddyNames");
+let topBuddySignatures = localStorage.getItem("topBuddySignatures");
 
 if(buddiesToChat == null){
     alert("Sorry, no one has searched for the same topic yet.");
 }
 
 let buddyNames = buddiesToChat.map(element => element.buddies);
+buddySignatures = buddySignatures.map(element => element.signatures);
+
 const chatForm = document.getElementById('chat-form');
 const submitBtn = document.getElementById('sendMsgBtn');
 const msgPlaceHolder = document.getElementById('chatList');
@@ -47,8 +54,10 @@ function unique(value, index, self) {
 }
 
 var topBuddyNamesPart = topBuddyNames.split(",");
+var topBuddySignaturesPart = topBuddySignatures.split(",");
 
 buddiesToChat = buddiesToChat.filter(unique);
+buddySignatures = buddySignatures.filter(unique);
 
 for (i = 0; i < buddiesToChat.length; i++) {
     var singleBuddy = document.createElement('li');
@@ -66,8 +75,13 @@ for (i = 0; i < buddiesToChat.length; i++) {
     nameStrong.setAttribute("id", "StrongName");
     nameStrong.innerText = buddiesToChat[i].buddies;
 
+    var signature = document.createElement('signature');
+    signature.setAttribute("id", "userSignature");
+    signature.innerText = buddySignatures[i];
+
     statusDiv.appendChild(statusSmall);
     statusDiv.appendChild(nameStrong);
+    statusDiv.appendChild(signature);
 
     // add star for top partner
     if (topBuddyNamesPart.includes(buddiesToChat[i].buddies)){
@@ -171,11 +185,6 @@ socket.on('history', (data) => {
     if(data.length == 0){
         var defaultTextHolder = document.createElement('div');
         defaultTextHolder.setAttribute('id','default-select-user-text');
-
-        // var defaultNoHistory = document.createElement('p');
-        // defaultNoHistory.setAttribute('class', 'default-no-chat-history-text');
-        // defaultNoHistory.innerHTML = "You haven't chat yet! Start chatting by typing something below!"
-        // msgPlaceHolder.appendChild(defaultNoHistory);
 
         var infoImg = document.createElement('img');
         infoImg.setAttribute('id', 'info-img');
@@ -283,8 +292,6 @@ submitBtn.addEventListener('click', (e) => { // (e) means event
     let msg = document.querySelector("#userMsg").value;
     msg = msg.trim(); //remove white space
 
-    console.log("msg: ", msg);
-
     if (!msg) {
         return false;
     }
@@ -298,6 +305,10 @@ submitBtn.addEventListener('click', (e) => { // (e) means event
 
 // -------------- real time message part
 socket.on('msgToShow', (data) => {
+
+    //clear default text
+    var defaultTextHolder = document.getElementById('default-select-user-text');
+    defaultTextHolder.setAttribute('class', 'hiddenc');
 
     var singleMessage = document.createElement('li');
 
@@ -342,7 +353,6 @@ socket.on('msgToShow', (data) => {
         var message = document.createElement('p');
         message.innerText = data.msg;
         timeContentDiv.appendChild(message);
-
 
         // add chat
         chatList.appendChild(singleMessage);
@@ -433,6 +443,8 @@ dropdownBtn.addEventListener('click',()=>{
 var dropDownLists = document.getElementById('myDropdown');
 
 socket.on('allTopics',(topics)=>{
+    dropDownLists.innerHTML = ''; //clear first the historic topics
+    topics = topics.filter(unique);
     topics.forEach((t)=>{
         topicList = document.createElement('a');
         topicList.setAttribute('id', `topic_${t}`);
@@ -450,8 +462,8 @@ socket.on('allTopics',(topics)=>{
     })
 })
 
-socket.on('other partners', (partnerList)=>{
-    console.log("partnerList: ", partnerList);
+socket.on('other partners', (partners)=>{
+    console.log("partners: ", partners);
     partnerContainer.innerHTML = ''; // clear all existing buddies
 
     var starDiv = document.getElementById('instruction-for-star');
@@ -473,8 +485,10 @@ socket.on('other partners', (partnerList)=>{
     defaultTextHolder.appendChild(defaultSelectUserText);
     msgPlaceHolder.appendChild(defaultTextHolder);
 
-    for (i = 0; i < partnerList.length; i++) {
-        if(partnerList[i] !== selfNameForExcl){
+    for (i = 0; i < partners.partnerList.length; i++) {
+        console.log("partners.partnerList[i]: ", partners.partnerList[i]);
+        console.log("selfNameForExcl: ", selfNameForExcl);
+        if(partners.partnerList[i] !== selfNameForExcl){
             var singleBuddy = document.createElement('li');
             singleBuddy.setAttribute("class", "active bounceInDown singleBuddy");
         
@@ -488,10 +502,16 @@ socket.on('other partners', (partnerList)=>{
         
             var nameStrong = document.createElement('partnerName');
             nameStrong.setAttribute("id", "StrongName");
-            nameStrong.innerText = partnerList[i];
-        
+            nameStrong.innerText = partners.partnerList[i];
+
+            var signature = document.createElement('signature');
+            signature.setAttribute("id", "userSignature");
+            signature.innerText = partners.signatureList[i];
+            console.log("partners.signatureList[i]: ", partners.signatureList[i]);
+
             statusDiv.appendChild(statusSmall);
             statusDiv.appendChild(nameStrong);
+            statusDiv.appendChild(signature);
         
             singleBuddy.appendChild(statusDiv);
         

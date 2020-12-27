@@ -375,7 +375,13 @@ axios.post(`calUserEmotion`, {
                     }else{
                         const buddyNamesRank = res.data.buddyNames;
                         const topBuddyNames = res.data.topBuddyNames;
+                        const buddySignatures = res.data.buddySignatures;
+                        const topBuddySignatures = res.data.topBuddySignatures;
+                        console.log("buddySignatures: ", buddySignatures);
+                        console.log("topBuddySignatures: ",topBuddySignatures);
+                        
                         localStorage.setItem("topBuddyNames", topBuddyNames);
+                        localStorage.setItem("topBuddySignatures", topBuddySignatures);
 
                         for (i = 0; i < buddyNamesRank.length; i++) {
                             var buddiesToChat = localStorage.getItem("buddiesToChat");
@@ -386,6 +392,19 @@ axios.post(`calUserEmotion`, {
                             buddiesToChatArray.push({ "buddies": buddyNamesRank[i] });
                             localStorage.setItem("buddiesToChat", JSON.stringify(buddiesToChatArray));
                         }
+
+                        for (i = 0; i < buddySignatures.length; i++) {
+                            var buddySignaturesToChat = localStorage.getItem("buddySignatures");
+                            var buddySignaturesArray = [];
+                            if (buddySignaturesToChat) {
+                                buddySignaturesArray = JSON.parse(buddySignaturesToChat);
+                            }
+                            buddySignaturesArray.push({ "signatures": buddySignatures[i] });
+                            localStorage.setItem("buddySignatures", JSON.stringify(buddySignaturesArray));
+                        }
+
+                        
+
                         window.location.href = '/chat.html';
                     }
                 })
