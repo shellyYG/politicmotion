@@ -975,9 +975,10 @@ blockquote {
   width: 150px;
 }
 
-.userInput, #userInput1, #userInput2, #signInEmail, #signInPass, #signUpEmail, #signUpPass, #selfIntro, #signUpName{
-  font-size: 27px;
-  width: 180px;
+.userInput, #userInput1, #userInput2, #signature, #signInEmail, #signInPass, #signUpEmail, #signUpPass, #selfIntro, #signUpName{
+  font-size: 22px;
+  padding: 7px;
+  width: 228px;
 }
 
 .bg-main {
