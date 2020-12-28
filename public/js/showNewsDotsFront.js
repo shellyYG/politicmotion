@@ -179,7 +179,7 @@ async function searchNews(){
                 paper_bgcolor: "rgba(0,0,0,0)", //transparent
                 plot_bgcolor: "rgba(0,0,0,0)", //transparent
                 legend:{
-                    x:0.27,
+                    x:0.33,
                     y:1.13,
                     orientation:"h", //horizontally placed the legend
                     font:{
