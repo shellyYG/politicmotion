@@ -45,6 +45,35 @@ const socketChat = (socket) => {
             }
         })
     });
+
+    socket.on('allPartnerNames', (partners)=>{
+        console.log("partners: ", partners);
+        var partnersFormat = [];
+        partners.forEach((p)=>{
+            partnersFormat.push("'"+p+"'");
+        })
+        console.log("partnersFormat", partnersFormat)
+        
+        async function getSignature(){
+            sql = `SELECT username, signature
+            FROM politicmotion.user_basic 
+            WHERE username IN (${partnersFormat}) 
+            ORDER BY FIELD(username,${partnersFormat})`
+            var sqlquery = await query(sql);
+            return sqlquery;
+        }
+        async function sendSignature(){
+            var initialSigs = await getSignature();
+            console.log("initialSigs: ", initialSigs);
+            var signaturesForShow = [];
+            initialSigs.forEach((s)=>{
+                signaturesForShow.push(s.signature);
+            })
+            console.log("signaturesForShow: ", signaturesForShow);
+            socket.emit('signaturesForShow', signaturesForShow);
+        }
+        sendSignature()
+    })
     
     socket.on("receiver", (receiver)=>{ //sometimes this won't work
         // console.log("received receiver");

@@ -15,6 +15,7 @@ signInT.addEventListener('click',()=>{
     'email': document.querySelector("#signInEmail").value,
     'password': document.querySelector("#signInPass").value
   }).then(res =>{
+    console.log(res.data);
     let token = res.data.data.access_token;
     console.log("token is:", token);
     window.localStorage.setItem('generalToken',token);

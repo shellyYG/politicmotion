@@ -78,13 +78,11 @@ for (i = 0; i < buddiesToChat.length; i++) {
     nameStrong.setAttribute("id", "StrongName");
     nameStrong.innerText = buddiesToChat[i].buddies;
 
-    var signature = document.createElement('signature');
-    signature.setAttribute("id", "userSignature");
-    signature.innerText = buddySignatures[i];
+    
 
     statusDiv.appendChild(statusSmall);
     statusDiv.appendChild(nameStrong);
-    statusDiv.appendChild(signature);
+    
 
     // add star for top partner
     if (topBuddyNamesPart.includes(buddiesToChat[i].buddies)){
@@ -97,6 +95,27 @@ for (i = 0; i < buddiesToChat.length; i++) {
     singleBuddy.appendChild(statusDiv);
     partnerContainer.appendChild(singleBuddy);
 }
+
+var directPartnerNames = document.querySelectorAll('#StrongName');
+// console.log("directPartnerNames: ", directPartnerNames);
+var allPartnerNames = [];
+directPartnerNames.forEach((e)=>{
+    allPartnerNames.push(e.innerText);
+})
+console.log("allPartnerNames: ", allPartnerNames);
+socket.emit('allPartnerNames', allPartnerNames);
+socket.on('signaturesForShow', (s)=>{
+    var statusDivs = document.querySelectorAll('.friend-name');
+    console.log("signature: ", s);
+    for(i=0; i<s.length; i++){
+        var signature = document.createElement('signature');
+        signature.setAttribute("id", "userSignature");
+        signature.innerText = s[i];
+        statusDivs[i].appendChild(signature);
+    }
+    
+})
+
 const tokenTest = () => {
     return new Promise((resolve, reject) => {
         let query = {

@@ -18,6 +18,7 @@ function generateAccessToken(user){
 //api to store user sign in data
 router.post('/',(req, res, next)=> {
     const data = req.body;
+    console.log("req.body @signIn Back: ", data);
     //Insert data
     async function insertLoginUser(){
         let email = req.body.email;
@@ -76,7 +77,7 @@ router.post('/',(req, res, next)=> {
 
             dataObject["access_token"] = accessToken;
             dataObject["access_expired"] = 30;
-
+            console.log("finalObject @signIn back: ", finalObject)
             res.send(finalObject);
 
         } else {
