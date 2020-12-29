@@ -29,6 +29,34 @@ step4.addEventListener(("click"), ()=>{
     window.location.href = "/chat.html";
 });
 
+// change login to logout if there is token
+if(localStorage.getItem('generalToken')){
+    const logInNav = document.getElementById('logInNav');
+    logInNav.setAttribute('class', 'hiddenc');
+  
+    const navUl = document.getElementById('navUl');
+    const logoutList = document.createElement('li');
+    const logoutLink = document.createElement('a');
+    
+    logoutList.setAttribute('class', 'nav-item');
+    logoutLink.setAttribute('class', 'nav-link');
+    logoutLink.setAttribute('id', 'logoutLink');
+    logoutLink.innerText = 'LOG OUT';
+  
+    navUl.appendChild(logoutList);
+    logoutList.appendChild(logoutLink);
+}
+  
+// log out section triggered
+var existedLogoutLink = document.getElementById('logoutLink');
+if(existedLogoutLink){
+    existedLogoutLink.addEventListener('click', ()=>{
+        localStorage.removeItem('generalToken');
+        alert("Successfully logged out!");
+    })
+}
+  
+
 async function searchNews(){
     axios.post("/searchNews",{
         "searchTopic1": searchTopic1,

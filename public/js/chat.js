@@ -9,12 +9,50 @@ buddySignatures = JSON.parse(buddySignatures);
 let topBuddyNames = localStorage.getItem("topBuddyNames");
 let topBuddySignatures = localStorage.getItem("topBuddySignatures");
 
-if(buddiesToChat == null){
-    alert("Sorry, no one has searched for the same topic yet.");
-    alert("Why not search another topic?");
-    window.location.href= "/search.html";
-
+if(!localStorage.getItem('generalToken')){
+    alert("Please log in first");
+    window.location.href = "/signIn.html"
+}else{
+    if(!localStorage.getItem('searchTopic1')){
+        alert("Oops! You need to firstly find topics to meet people.");
+        window.location.href= "/search.html";
+    }else{
+        if(buddiesToChat == null){
+            alert("Sorry, no one has searched for the same topic yet.");
+            alert("Why not search another topic?");
+            window.location.href= "/search.html";
+        }
+    }
 }
+
+// change login to logout if there is token
+if(localStorage.getItem('generalToken')){
+    const logInNav = document.getElementById('logInNav');
+    logInNav.setAttribute('class', 'hiddenc');
+  
+    const navUl = document.getElementById('navUl');
+    const logoutList = document.createElement('li');
+    const logoutLink = document.createElement('a');
+    
+    logoutList.setAttribute('class', 'nav-item');
+    logoutLink.setAttribute('class', 'nav-link');
+    logoutLink.setAttribute('id', 'logoutLink');
+    logoutLink.innerText = 'LOG OUT';
+  
+    navUl.appendChild(logoutList);
+    logoutList.appendChild(logoutLink);
+}
+  
+// log out section triggered
+var existedLogoutLink = document.getElementById('logoutLink');
+if(existedLogoutLink){
+    existedLogoutLink.addEventListener('click', ()=>{
+        localStorage.removeItem('generalToken');
+        alert("Successfully logged out!");
+    })
+}
+  
+
 
 let buddyNames = buddiesToChat.map(element => element.buddies);
 buddySignatures = buddySignatures.map(element => element.signatures);

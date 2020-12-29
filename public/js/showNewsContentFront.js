@@ -19,6 +19,35 @@ step4.addEventListener(("click"), ()=>{
     window.location.href = "/chat.html";
 });
 
+// change login to logout if there is token
+if(localStorage.getItem('generalToken')){
+    const logInNav = document.getElementById('logInNav');
+    logInNav.setAttribute('class', 'hiddenc');
+  
+    const navUl = document.getElementById('navUl');
+    const logoutList = document.createElement('li');
+    const logoutLink = document.createElement('a');
+    
+    logoutList.setAttribute('class', 'nav-item');
+    logoutLink.setAttribute('class', 'nav-link');
+    logoutLink.setAttribute('id', 'logoutLink');
+    logoutLink.innerText = 'LOG OUT';
+  
+    navUl.appendChild(logoutList);
+    logoutList.appendChild(logoutLink);
+}
+  
+// log out section triggered
+var existedLogoutLink = document.getElementById('logoutLink');
+if(existedLogoutLink){
+    existedLogoutLink.addEventListener('click', ()=>{
+        localStorage.removeItem('generalToken');
+        alert("Successfully logged out!");
+    })
+}
+  
+
+
 let avgPostSentiment = 0;
 let avgPostMagnitude = 0;
 let avgReactionSentiment = 0;
@@ -65,8 +94,14 @@ axios.post("showNewsContent",{
     "FoxIdsArray": FoxIdsArray
 }).then(res=>{
     if (res.data.length == 0){
-        alert("Sorry, please select news again.");
-        window.location.href = '/showNewsDots.html';
+        if(localStorage.getItem(searchTopic1)){ // has search topics
+            alert("Sorry, please select news again.");
+            window.location.href = '/showNewsDots.html';
+        }else{ // no search topics
+            alert("Sorry, please enter topics to find news.");
+            window.location.href = '/search.html';
+        }
+        
     }
     var articleRow;
     for (i=0; i<res.data.length; i++){
@@ -626,7 +661,7 @@ axios.post("showNewsContent",{
 
         // remove clickedEmotions before creating it
         localStorage.removeItem("clickedEmotions");
-        
+
         // create clickedEmotions
         var emotionArray = [];
         for (i=0; i < keyArr.length; i++){
