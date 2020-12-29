@@ -1,22 +1,22 @@
-require('dotenv').config()
-const express = require('express');
-const bodyParser= require('body-parser');
+require("dotenv").config();
+const express = require("express");
+const bodyParser= require("body-parser");
 const router = express.Router();
-const { query } = require('../../models/query');
+const { query } = require("../../models/query");
 const app = express();
-const crypto = require('crypto');
-const jwt = require('jsonwebtoken'); //create json web token
+const crypto = require("crypto");
+const jwt = require("jsonwebtoken"); //create json web token
 
 app.use(bodyParser.urlencoded({ extended: false})); 
 
 //--------------------------------Define a function to generate user-----------------------------------//
 // create a token that will expire
 function generateAccessToken(user){
-    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10800s' });
+    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "10800s" });
 }
 
 //api to store user sign in data
-router.post('/',(req, res, next)=> {
+router.post("/",(req, res, next)=> {
     const data = req.body;
     console.log("req.body @signIn Back: ", data);
     //Insert data
@@ -34,16 +34,16 @@ router.post('/',(req, res, next)=> {
         
         let password = data.password;
         let key = process.env.ACCESS_TOKEN_KEY;
-        let ivBack = Buffer.from(LoginUserResultivString, 'base64');
-        let cipher = crypto.createCipheriv('aes-256-cbc', key, ivBack);
-        let encryptedLoginPass = cipher.update(password, 'utf-8','hex'); //Input: utf-8, Output: hex
-        encryptedLoginPass += cipher.final('hex');
+        let ivBack = Buffer.from(LoginUserResultivString, "base64");
+        let cipher = crypto.createCipheriv("aes-256-cbc", key, ivBack);
+        let encryptedLoginPass = cipher.update(password, "utf-8","hex"); //Input: utf-8, Output: hex
+        encryptedLoginPass += cipher.final("hex");
         // console.log('encrypted login password is: ', encryptedLoginPass);
 
-        let decipher = crypto.createDecipheriv('aes-256-cbc', key, ivBack);
-        let decryptedLoginpass = decipher.update(encryptedLoginPass, 'hex', 'utf-8');
+        let decipher = crypto.createDecipheriv("aes-256-cbc", key, ivBack);
+        let decryptedLoginpass = decipher.update(encryptedLoginPass, "hex", "utf-8");
 
-        decryptedLoginpass += decipher.final('utf-8');
+        decryptedLoginpass += decipher.final("utf-8");
         // console.log("Login encrypted pass is", encryptedLoginPass);
         return encryptedLoginPass;
     }
@@ -56,10 +56,10 @@ router.post('/',(req, res, next)=> {
         // console.log("Encrypted User pass in database is:", DataBasePass);
         if (userPass == DataBasePass) {
             let userObject = {};
-            userObject['id']= LoginUserResult[0]["id"];
-            userObject['provider']= LoginUserResult[0]["provider"];
-            userObject['name']= LoginUserResult[0]["username"];
-            userObject['email']= LoginUserResult[0]["email"];
+            userObject["id"]= LoginUserResult[0]["id"];
+            userObject["provider"]= LoginUserResult[0]["provider"];
+            userObject["name"]= LoginUserResult[0]["username"];
+            userObject["email"]= LoginUserResult[0]["email"];
             // userObject['picture']= 'http://3.138.56.214'+LoginUserResult[0]["picture"];
             let finalObject = {};
             let dataObject = {};
@@ -77,11 +77,11 @@ router.post('/',(req, res, next)=> {
 
             dataObject["access_token"] = accessToken;
             dataObject["access_expired"] = 30;
-            console.log("finalObject @signIn back: ", finalObject)
+            console.log("finalObject @signIn back: ", finalObject);
             res.send(finalObject);
 
         } else {
-            res.send('Wrong password!');
+            res.send("Wrong password!");
         }
     }
     comparepass();

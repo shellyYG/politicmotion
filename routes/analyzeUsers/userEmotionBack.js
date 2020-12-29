@@ -1,14 +1,14 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const jwt = require('jsonwebtoken');
-const { query } = require('../../models/query');
+const jwt = require("jsonwebtoken");
+const { query } = require("../../models/query");
 
-router.post('/', verifyToken, (req, res)=>{
+router.post("/", verifyToken, (req, res)=>{
 
     jwt.verify(req.token, process.env.ACCESS_TOKEN_SECRET, (err, payload) => {
         if (err) {
             console.log("You are too long away. Please sign in again.");
-            res.status(403).send({message: 'User does not have permission'});
+            res.status(403).send({message: "User does not have permission"});
         }else {
             let userEmotion = req.body.finalEmotionClicked;
             userEmotion = JSON.parse(userEmotion);
@@ -17,7 +17,7 @@ router.post('/', verifyToken, (req, res)=>{
             let avgUserMagnitude = 0;
             
             if (userEmotion == null){
-                var combinedUserEmotion = {}
+                var combinedUserEmotion = {};
             }else{
                 for (i=0; i<userEmotion.length; i++){
                     if(userEmotion[i] == "love"){
@@ -58,7 +58,7 @@ router.post('/', verifyToken, (req, res)=>{
                         user_magnitude_score: avgUserMagnitude.toFixed(2),
     
                         };
-                    let sql = 'INSERT INTO user_emotion SET ?';
+                    let sql = "INSERT INTO user_emotion SET ?";
                     let sqlquery = await query(sql, insertedData);
                     return sqlquery;
                 }
@@ -69,17 +69,17 @@ router.post('/', verifyToken, (req, res)=>{
 
             res.json(combinedUserEmotion);
         }
-    })
-})
+    });
+});
 
 function verifyToken(req, res, next){
-    const bearerHeader=req.headers['authorization'];
+    const bearerHeader=req.headers["authorization"];
     
-    if(typeof bearerHeader !== 'undefined'){
-        const bearer = bearerHeader.split(' ');
+    if(typeof bearerHeader !== "undefined"){
+        const bearer = bearerHeader.split(" ");
         const bearerToken = bearer[1];
         req.token = bearerToken;
-        next()
+        next();
     }else{
         res.sendStatus(403); //forbidden status
     }

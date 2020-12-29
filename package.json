@@ -33,5 +33,8 @@
     "socket.io": "^3.0.4",
     "util.promisify": "^1.0.1",
     "vader-sentiment": "^1.1.3"
+  },
+  "devDependencies": {
+    "eslint": "^7.16.0"
   }
 }

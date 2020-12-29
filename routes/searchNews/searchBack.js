@@ -1,8 +1,8 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { query } = require('../../models/query');
+const { query } = require("../../models/query");
 
-router.post('/', (req, res, next)=>{
+router.post("/", (req, res, next)=>{
     const searchTopic1 = req.body.searchTopic1;
     const searchTopic2 = req.body.searchTopic2;
     
@@ -30,7 +30,7 @@ router.post('/', (req, res, next)=>{
             OR (nyt.lead_paragraph LIKE '%${searchTopic1}%' AND fb.title LIKE '%${searchTopic2}%')
             OR (nyt.lead_paragraph LIKE '%${searchTopic1}%' AND fb.small_title LIKE '%${searchTopic2}%')
             )
-        ORDER BY fb.id DESC LIMIT 20;`
+        ORDER BY fb.id DESC LIMIT 20;`;
         var sqlquery = await query(sql);
         return sqlquery; 
     }
@@ -57,7 +57,7 @@ router.post('/', (req, res, next)=>{
                     OR (fb.small_title LIKE '%${searchTopic1}%' AND fb.title LIKE '%${searchTopic2}%')
                     OR (fox.paragraph LIKE '%${searchTopic1}%' AND fb.title LIKE '%${searchTopic2}%')
                     OR (fox.paragraph LIKE '%${searchTopic1}%' AND fb.small_title LIKE '%${searchTopic2}%')
-                    );`
+                    );`;
         var sqlquery = await query(sql);
         return sqlquery; 
     }
@@ -69,14 +69,14 @@ router.post('/', (req, res, next)=>{
         const finalFoxDotDict = FBFoxNewsDots.map(getDotList);
 
         function getDotList(dots){
-            var dotDict = {}
+            var dotDict = {};
             dotDict.uniqueId = dots.id;
             dotDict.sentimentScore = dots.sentiment_score;
-            dotDict.magScore = dots.magnitude_score
+            dotDict.magScore = dots.magnitude_score;
             return dotDict;
         }
         
-        return [finalNYTDotDict, finalFoxDotDict]
+        return [finalNYTDotDict, finalFoxDotDict];
     }
 
     function getsentimentScore(items){
@@ -110,7 +110,7 @@ router.post('/', (req, res, next)=>{
         var allDots = await getFBNewsDots();
         const NYTUniqueIds = allDots[0].map(getuniqueId);
         const FoxUniqueIds = allDots[1].map(getuniqueId);
-        return [NYTUniqueIds,FoxUniqueIds]
+        return [NYTUniqueIds,FoxUniqueIds];
     }
 
     async function pushDataToFront(){
@@ -139,8 +139,8 @@ router.post('/', (req, res, next)=>{
 
         res.json(finalRes);
     }
-    pushDataToFront()
-})
+    pushDataToFront();
+});
 
 
 

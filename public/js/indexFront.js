@@ -1,10 +1,10 @@
-const discoverBtn = document.getElementById('btn-discover');
-const logInBtn = document.getElementById('home-login');
+const discoverBtn = document.getElementById("btn-discover");
+const logInBtn = document.getElementById("home-login");
 
-logInBtn.addEventListener('click',()=>{
+logInBtn.addEventListener("click",()=>{
     window.location.href = "/signIn.html";
-})
+});
 
-discoverBtn.addEventListener('click',()=>{
+discoverBtn.addEventListener("click",()=>{
     window.location.href = "/search.html";
-})
+});

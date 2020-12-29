@@ -1,12 +1,12 @@
-const moment = require('moment');
+const moment = require("moment");
 const users = [];
 
 function formatMessage(username, text){
     return{
         username,
         text,
-        time: moment().format('h:mm a') //am
-    }
+        time: moment().format("h:mm a") //am
+    };
 }
 
 // ----------------------------------------------------Join user to chat

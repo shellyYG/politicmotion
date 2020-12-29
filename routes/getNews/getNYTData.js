@@ -1,15 +1,15 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { query } = require('../../models/query');
-const axios = require('axios');
-const NYTimesToken = process.env.NYTimeToken
+const { query } = require("../../models/query");
+const axios = require("axios");
+const NYTimesToken = process.env.NYTimeToken;
 
-router.get('/', (req, res)=> {
-    let link = `https://api.nytimes.com/svc/mostpopular/v2/shared/1/facebook.json?api-key=${NYTimesToken}` //get last 1 day data from facebook
+router.get("/", (req, res)=> {
+    let link = `https://api.nytimes.com/svc/mostpopular/v2/shared/1/facebook.json?api-key=${NYTimesToken}`; //get last 1 day data from facebook
     async function getNYTimesWebData(){
         try {
             let NYTimeResponse = await axios.get(link);
-            console.log("Successfully get NYT Web data!")
+            console.log("Successfully get NYT Web data!");
 
             // ---------------------------------------------------------------------- start saving to news (general) table
             let allNews = []; 
@@ -40,7 +40,7 @@ router.get('/', (req, res)=> {
                     allNews.push(singleNews);
                 }
 
-                sql = 'INSERT INTO news_rawdata (news_id, post_link, news_source, published_date, title, abstract, topics, saved_date) VALUES ?'
+                sql = "INSERT INTO news_rawdata (news_id, post_link, news_source, published_date, title, abstract, topics, saved_date) VALUES ?";
                 let sqlquery = await query(sql, [allNews]);
                 return sqlquery;
             }
@@ -55,7 +55,7 @@ router.get('/', (req, res)=> {
                 FROM politicmotion.news_rawdata n
                 LEFT JOIN politicmotion.nyt_details d ON n.title = d.headline
                 WHERE n.news_source = "New York Times" AND d.headline IS NULL
-                ORDER BY n.id DESC;`
+                ORDER BY n.id DESC;`;
                 let sqlquery = await query(sql);
                 return sqlquery;
             }
@@ -68,7 +68,7 @@ router.get('/', (req, res)=> {
                     console.log("i:",i);
                     try{
                         var encodedComponent = encodeURIComponent(titles[i].title);
-                        var detailLink = `https://api.nytimes.com/svc/search/v2/articlesearch.json?q="${encodedComponent}"&api-key=${NYTimesToken}`
+                        var detailLink = `https://api.nytimes.com/svc/search/v2/articlesearch.json?q="${encodedComponent}"&api-key=${NYTimesToken}`;
                         let NYTresponse = await axios.get(detailLink);
                         var leadParagraph = NYTresponse.data.response.docs[0].lead_paragraph;
                         var abstract = NYTresponse.data.response.docs[0].abstract;
@@ -84,25 +84,25 @@ router.get('/', (req, res)=> {
                         // build allNews array
                         allDetails.push(singleDetails);
                     }catch(err){
-                        console.log("sorry, no lead paragraph found")
+                        console.log("sorry, no lead paragraph found");
                     }
                 }
 
                 try {
-                    sql = 'INSERT INTO nyt_details (headline, abstract, lead_paragraph, saved_date) VALUES ?'
+                    sql = "INSERT INTO nyt_details (headline, abstract, lead_paragraph, saved_date) VALUES ?";
                     let sqlquery = await query(sql, [allDetails]);
                     console.log("done inserting lead-paragraph");
                     return sqlquery;
                 }catch(err){
-                    console.log("Not a single lead-paragraph to insert.")
+                    console.log("Not a single lead-paragraph to insert.");
                 }
                 
             }
 
-            matchLeadParagraph()
+            matchLeadParagraph();
             
             res.send("Successfully got NYTData & saved!");
-            console.log("Data successfully saved.")
+            console.log("Data successfully saved.");
             return NYTimeResponse.data;
         }catch(err){
             console.log("Can't get NYT Web data!");
@@ -110,6 +110,6 @@ router.get('/', (req, res)=> {
     }
     getNYTimesWebData();
     
-})
+});
 
 module.exports = router;

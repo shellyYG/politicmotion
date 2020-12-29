@@ -1,6 +1,6 @@
-const jwt = require('jsonwebtoken');
-const { unique } = require('../../models/tfidf');
-const { query } = require('../../models/query');
+const jwt = require("jsonwebtoken");
+const { unique } = require("../../models/tfidf");
+const { query } = require("../../models/query");
 
 
 var userList = {};
@@ -14,21 +14,21 @@ const socketChat = (socket) => {
     // console.log("B1");
     socket.emit("getToken");
     // console.log("B2");
-    socket.on('verifyToken', (query)=>{
+    socket.on("verifyToken", (query)=>{
         // console.log("B3");
         let {generalToken} = query;
         buddyNames = query.buddyNames;
         jwt.verify(generalToken, process.env.ACCESS_TOKEN_SECRET, (err, payload)=>{
             if(err) {
-                socket.emit("AuthError", "invalid token")
+                socket.emit("AuthError", "invalid token");
                 // console.log("B4 invalid, 跳9");
             }else{
                 selfName = payload.data.name;
                 userList[payload.data.name] = socket.id;
                 socket.join(room);
                 // console.log("B4");
-                console.log(`${selfName} joins`)
-                socket.emit('Self', { self: payload.data.name, onlineUsers: onlineUserList});
+                console.log(`${selfName} joins`);
+                socket.emit("Self", { self: payload.data.name, onlineUsers: onlineUserList});
                 // console.log("onlineUserList before pushing from connected users: ", onlineUserList);
                 // console.log("B5.");
                 for (const key in userList) {
@@ -43,22 +43,22 @@ const socketChat = (socket) => {
                 socket.emit("onlineUsers", onlineUserList); //emit to self the latest online user list
                 console.log("B7, onlineUsers: ", onlineUserList);
             }
-        })
+        });
     });
 
-    socket.on('allPartnerNames', (partners)=>{
+    socket.on("allPartnerNames", (partners)=>{
         console.log("partners: ", partners);
         var partnersFormat = [];
         partners.forEach((p)=>{
             partnersFormat.push("'"+p+"'");
-        })
-        console.log("partnersFormat", partnersFormat)
+        });
+        console.log("partnersFormat", partnersFormat);
         
         async function getSignature(){
             sql = `SELECT username, signature
             FROM politicmotion.user_basic 
             WHERE username IN (${partnersFormat}) 
-            ORDER BY FIELD(username,${partnersFormat})`
+            ORDER BY FIELD(username,${partnersFormat})`;
             var sqlquery = await query(sql);
             return sqlquery;
         }
@@ -68,12 +68,12 @@ const socketChat = (socket) => {
             var signaturesForShow = [];
             initialSigs.forEach((s)=>{
                 signaturesForShow.push(s.signature);
-            })
+            });
             console.log("signaturesForShow: ", signaturesForShow);
-            socket.emit('signaturesForShow', signaturesForShow);
+            socket.emit("signaturesForShow", signaturesForShow);
         }
-        sendSignature()
-    })
+        sendSignature();
+    });
     
     socket.on("receiver", (receiver)=>{ //sometimes this won't work
         // console.log("received receiver");
@@ -95,22 +95,22 @@ const socketChat = (socket) => {
             sql = `SELECT * FROM chat_history 
             WHERE ((sender = '${selfName}' AND receiver = '${receiver.receiver}') 
             OR (sender = '${receiver.receiver}' AND receiver = '${selfName}')) 
-            ORDER BY message_time ASC;`
+            ORDER BY message_time ASC;`;
             var sqlquery = await query(sql);
             return sqlquery;
         }
         async function showHistory(){
             let history = await searchHistory();
             // console.log("history: ", history);
-            socket.emit('history', history); // emit history to self
+            socket.emit("history", history); // emit history to self
         }
-        showHistory()
+        showHistory();
         
-    })
+    });
 
     console.log("receiverId: ", receiverId); // emit to that socketId
         
-    socket.on('userSendMsg',(data)=>{
+    socket.on("userSendMsg",(data)=>{
         // console.log("userSendMsg: ", data.msg, "sender: ", data.sender, "receiver: ", data.receiver);
         let dateTime = new Date();
         let msgPackage = {};
@@ -123,39 +123,39 @@ const socketChat = (socket) => {
 
         async function saveMsg(){
             // save to DB
-            sql = 'INSERT INTO chat_history SET ?'
+            sql = "INSERT INTO chat_history SET ?";
             let sqlquery = await query(sql, msgPackage);
             return sqlquery;
         }
-        saveMsg()
+        saveMsg();
 
         // emit received msg to selected user's front-end & self's front-end
         //--------get receiver's socket id
         let receiverSocketId = userList[data.receiver];
-        console.log('receiver: ', data.receiver, 'receiver socket id: ', receiverSocketId);
+        console.log("receiver: ", data.receiver, "receiver socket id: ", receiverSocketId);
         if(!receiverSocketId){
             //------------if no receiveer, push to self's front-end only
             console.log("receiver is not online!");
-            socket.emit('msgToShow',{ //emit to self
+            socket.emit("msgToShow",{ //emit to self
                 msg: data.msg,
                 sender: data.sender,
                 receiver: data.receiver
-            })
+            });
         }else{
             //------------if yes receiveer, push to self's + receiver's front-end
             console.log("receiver is online!");
-            socket.emit('msgToShow',{ //emit to self
+            socket.emit("msgToShow",{ //emit to self
                 msg: data.msg,
                 sender: data.sender,
                 receiver: data.receiver
-            })
-            socket.to(receiverSocketId).emit('msgToShow',{ //emit to receiver
+            });
+            socket.to(receiverSocketId).emit("msgToShow",{ //emit to receiver
                 msg: data.msg,
                 sender: data.sender,
                 receiver: data.receiver
-            })
+            });
         }
-    })
+    });
 
     // show other topic a user has selected
     socket.on("search topics", ()=>{
@@ -163,7 +163,7 @@ const socketChat = (socket) => {
         async function findtopics(){
             sql = `SELECT DISTINCT firstSearchTopic, secondSearchTopic
             FROM politicmotion.user_emotion
-            WHERE username = '${selfName}';`
+            WHERE username = '${selfName}';`;
             var sqlquery = await query(sql);
             return sqlquery;
         }
@@ -172,15 +172,15 @@ const socketChat = (socket) => {
             console.log("topics: ", topics);
             topics.forEach((t)=>{
                 allTopics.push(t.firstSearchTopic + " & " + t.secondSearchTopic);
-            })
-            socket.emit('allTopics', allTopics);
+            });
+            socket.emit("allTopics", allTopics);
         }
         showTopics();
 
-    })
+    });
 
     // get topic clicked
-    socket.on('topics clicked',(topics)=>{
+    socket.on("topics clicked",(topics)=>{
         var firstTopic = topics.split("&")[0].trim(); //remove blank
         var secondTopic = topics.split("&")[1].trim();
         async function findOtherPartners(){
@@ -189,7 +189,7 @@ const socketChat = (socket) => {
             INNER JOIN politicmotion.user_basic b ON m.username = b.username
             WHERE firstSearchTopic IN ('${firstTopic}', '${secondTopic}')
             AND secondSearchTopic IN ('${firstTopic}', '${secondTopic}')
-            `
+            `;
             var sqlquery = await query(sql);
             return sqlquery;
         }
@@ -200,14 +200,14 @@ const socketChat = (socket) => {
             otherPartners.forEach((partner)=>{
                 partnerList.push(partner.username);
                 signatureList.push(partner.signature);
-            })
-            socket.emit('other partners', {
+            });
+            socket.emit("other partners", {
                 partnerList: partnerList,
                 signatureList: signatureList
             });
         }
-        showOtherPartners()
-    })
+        showOtherPartners();
+    });
 
     // disconnect
     socket.on("disconnect", () => {
@@ -215,15 +215,15 @@ const socketChat = (socket) => {
         console.log("selfName: ", selfName); 
         console.log("disconnected:", "socket.id: ", socket.id, "onlineUserList: ", onlineUserList);
         onlineUserList = onlineUserList.filter(function(value, index, arr){
-            return value !== selfName
-        })
+            return value !== selfName;
+        });
 
         console.log(`after ${selfName} disconnect, remaining online users: `, onlineUserList);
         console.log("B10");
         socket.emit("userDisconnected", (selfName)); // send to self
         socket.to(room).emit("userDisconnected", (selfName)); // send to all in room except sender
         console.log("B11");
-    })
-}
+    });
+};
 
 module.exports = socketChat;

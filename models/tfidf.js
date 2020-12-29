@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 
 let tokenize = (text)=>text.toLowerCase().split(/[.,?!\s’]+/g);
 
@@ -7,14 +7,14 @@ let makeDictionary = (tokens, array)=>{
         if(!array.includes(token)){
             array.push(token);
         }
-    })
+    });
     return array;
-}
+};
 
 function vsm(eachWord, endArray){
     return endArray.map(getEachWordCount);
     function getEachWordCount(singleWord){
-        const wordCount = eachWord.reduce(reducer,0) //starting value = 0
+        const wordCount = eachWord.reduce(reducer,0); //starting value = 0
         function reducer(acc, curr){
             if(curr==singleWord){
                 acc = acc +1;
@@ -55,7 +55,7 @@ function idf(n,newsWords,wordBags){
 }
 
 function tfidf(tf, idf){
-    return tf.map(combinedCal)
+    return tf.map(combinedCal);
     function combinedCal(element,index){
         return element*idf[index];
     }

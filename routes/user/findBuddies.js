@@ -1,11 +1,11 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const jwt = require('jsonwebtoken');
-const { query } = require('../../models/query');
+const jwt = require("jsonwebtoken");
+const { query } = require("../../models/query");
 var firstdegreeBuddies = [];
 var firstdegreeBuddiesEmails = [];
 
-router.post('/', verifyToken, (req, res)=>{
+router.post("/", verifyToken, (req, res)=>{
     
     const searchTopic1 = req.body.firstSearchTopic;
     const searchTopic2 = req.body.secondSearchTopic;
@@ -13,7 +13,7 @@ router.post('/', verifyToken, (req, res)=>{
     jwt.verify(req.token, process.env.ACCESS_TOKEN_SECRET, (err, payload) => {
         if (err) {
             console.log("You are too long away. Please sign in again.");
-            res.status(403).send({message: 'User does not have permission'});
+            res.status(403).send({message: "User does not have permission"});
         }else {
             async function getAllUsers(){
                 sql = `SELECT a.username, a.email, AVG(b.user_sentiment_score) AS u_sent, AVG(b.user_magnitude_score) AS u_mag
@@ -22,7 +22,7 @@ router.post('/', verifyToken, (req, res)=>{
                     WHERE (firstSearchTopic = '${searchTopic1}' OR firstSearchTopic = '${searchTopic2}') 
                     AND (secondSearchTopic = '${searchTopic1}' OR secondSearchTopic = '${searchTopic2}')
                     GROUP BY 1,2
-                    ORDER BY u_sent ASC;` // ASC so it will already rank by distance
+                    ORDER BY u_sent ASC;`; // ASC so it will already rank by distance
                 var sqlquery = await query(sql);
                 return sqlquery;
             }
@@ -31,13 +31,13 @@ router.post('/', verifyToken, (req, res)=>{
                 var allUsers = await getAllUsers();
                 // console.log("allUsers (findBuddies): ", allUsers);
                 
-                var allEmails = allUsers.map((element)=>{return element.email});
+                var allEmails = allUsers.map((element)=>{return element.email;});
                 var currentUserEmail = payload.data.email;
 
                 // exclude self
                 allEmails = allEmails.filter(function(value, index, arr){
-                    return value !== currentUserEmail
-                })
+                    return value !== currentUserEmail;
+                });
                 console.log("currentUserEmail: ", currentUserEmail, "allEmails: ", allEmails);
                 function findEmailArrayIndex(acc,curr, index){
                     if(curr == currentUserEmail){
@@ -80,11 +80,11 @@ router.post('/', verifyToken, (req, res)=>{
                         singleBuddy.buddyEmail = sentimentMultiples[i].matchedEmail;
                         singleBuddy.sentimentMultiple = sentimentMultiples[i].sentimentMultiple;
                         singleBuddy.sentimentDistance = sentimentMultiples[i].sentimentDistance;
-                        singleBuddy.magnitudeDistance = sentimentMultiples[i].magnitudeDistance
+                        singleBuddy.magnitudeDistance = sentimentMultiples[i].magnitudeDistance;
                         similarBuddies.push(singleBuddy);
                     }
                 }
-                console.log("similarBuddies.length: ", similarBuddies.length)
+                console.log("similarBuddies.length: ", similarBuddies.length);
                 // get all buddies
                 const buddies = [];
                 for (i=0; i<sentimentMultiples.length; i++){    
@@ -94,11 +94,11 @@ router.post('/', verifyToken, (req, res)=>{
                     singleBuddy.buddyEmail = sentimentMultiples[i].matchedEmail;
                     singleBuddy.sentimentMultiple = sentimentMultiples[i].sentimentMultiple;
                     singleBuddy.sentimentDistance = sentimentMultiples[i].sentimentDistance;
-                    singleBuddy.magnitudeDistance = sentimentMultiples[i].magnitudeDistance
+                    singleBuddy.magnitudeDistance = sentimentMultiples[i].magnitudeDistance;
                     buddies.push(singleBuddy);
                 }
 
-                console.log("buddies.length: ", buddies.length)
+                console.log("buddies.length: ", buddies.length);
 
                 const filteredSentDistance = [];
                 // console.log("sentimentMultiples: ", sentimentMultiples);
@@ -111,7 +111,7 @@ router.post('/', verifyToken, (req, res)=>{
                     }
                 }
                 console.log("filteredSentDistance: ", filteredSentDistance);
-                var minSentDistance = Math.min.apply(Math, filteredSentDistance.filter(function(x){return x >= 0})); 
+                var minSentDistance = Math.min.apply(Math, filteredSentDistance.filter(function(x){return x >= 0;})); 
                 console.log("minSentDistance: ", minSentDistance);
                 var smallestSentids = [];
                 for (i=0;i<similarBuddies.length;i++){
@@ -126,7 +126,7 @@ router.post('/', verifyToken, (req, res)=>{
                     smallestSentBuddies.push(similarBuddies[smallestSentids[i]]);
                 }
 
-                var filteredMagnitudes = smallestSentBuddies.map((element)=>{return element.magnitudeDistance});
+                var filteredMagnitudes = smallestSentBuddies.map((element)=>{return element.magnitudeDistance;});
 
                 var minMagAmongSmallestSent = Math.min.apply(Math, filteredMagnitudes); //avoid finding self. but can't avoid if there is a zero
 
@@ -168,15 +168,15 @@ router.post('/', verifyToken, (req, res)=>{
             async function findBuddyNames(){
                 var buddiesInfo = await findBuddies();
                 var buddyEmails = buddiesInfo.finalBuddyEmails;
-                var formatbuddyEmails = buddyEmails.map(element=>'"'+element+'"');
+                var formatbuddyEmails = buddyEmails.map(element=>"\""+element+"\"");
                 
                 try{
                     sql = `SELECT username, signature FROM politicmotion.user_basic WHERE email IN (${formatbuddyEmails})
-                        ORDER BY Field(email,${formatbuddyEmails});` // ASC so it will already rank by distance
+                        ORDER BY Field(email,${formatbuddyEmails});`; // ASC so it will already rank by distance
                     var sqlquery = await query(sql);
                     return sqlquery;
                 }catch(err){
-                    return []
+                    return [];
                 }
             }
 
@@ -184,15 +184,15 @@ router.post('/', verifyToken, (req, res)=>{
                 var buddiesInfo = await findBuddies();
                 var topBuddyEmails = buddiesInfo.firstdegreeBuddiesEmails;
                 console.log("topBuddyEmails: ", topBuddyEmails);
-                var formatTopBuddyEmails = topBuddyEmails.map(element=>'"'+element+'"');
+                var formatTopBuddyEmails = topBuddyEmails.map(element=>"\""+element+"\"");
                 console.log("formatTopBuddyEmails: ", formatTopBuddyEmails);
                 try{
                     sql = `SELECT username, signature FROM politicmotion.user_basic WHERE email IN (${formatTopBuddyEmails})
-                        ORDER BY Field(email,${formatTopBuddyEmails});` // ASC so it will already rank by distance
+                        ORDER BY Field(email,${formatTopBuddyEmails});`; // ASC so it will already rank by distance
                     var sqlquery = await query(sql);
                     return sqlquery;
                 }catch(err){
-                    return []
+                    return [];
                 }
                 
             }
@@ -218,17 +218,17 @@ router.post('/', verifyToken, (req, res)=>{
             sendBuddyNames();
            
         }
-    })        
-})
+    });        
+});
 
 function verifyToken(req, res, next){
-    const bearerHeader=req.headers['authorization'];
+    const bearerHeader=req.headers["authorization"];
     
-    if(typeof bearerHeader !== 'undefined'){
-        const bearer = bearerHeader.split(' ');
+    if(typeof bearerHeader !== "undefined"){
+        const bearer = bearerHeader.split(" ");
         const bearerToken = bearer[1];
         req.token = bearerToken;
-        next()
+        next();
     }else{
         res.sendStatus(403); //forbidden status
     }

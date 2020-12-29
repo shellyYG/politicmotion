@@ -1,8 +1,8 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { query } = require('../../models/query');
+const { query } = require("../../models/query");
 
-router.post('/', (req, res)=> {
+router.post("/", (req, res)=> {
     const finalPointsClicked = req.body.finalPointsClicked;
     const searchTopic1 = req.body.searchTopic1;
     const searchTopic2 = req.body.searchTopic2;
@@ -21,7 +21,7 @@ router.post('/', (req, res)=> {
                      AND content LIKE '%${searchTopic2}%' 
                      AND sentiment_score = ${lastPoint.Xaxis}
                      AND magnitude_score = ${lastPoint.Yaxis}
-               LIMIT 1;`
+               LIMIT 1;`;
         var sqlquery = await query(sql);
         return sqlquery;
     }
@@ -32,7 +32,7 @@ router.post('/', (req, res)=> {
                      AND content LIKE '%${searchTopic2}%' 
                      AND sentiment_score = ${secondLastPoint.Xaxis}
                      AND magnitude_score = ${secondLastPoint.Yaxis}
-               LIMIT 1;`
+               LIMIT 1;`;
         var sqlquery = await query(sql);
         return sqlquery;
     }
@@ -53,7 +53,7 @@ router.post('/', (req, res)=> {
                 SecondLastReaction: secondLastNews[0].reaction,
                 SecondLastSentScore: secondLastNews[0].sentiment_score,
                 SecondLastMagScore: secondLastNews[0].magnitude_score
-            }
+            };
 
     }
 
@@ -62,9 +62,9 @@ router.post('/', (req, res)=> {
         console.log(newsToPush);
         res.send(newsToPush);
     }
-    pushToFrontEnd()
+    pushToFrontEnd();
     
 
-})
+});
 
 module.exports = router;

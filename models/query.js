@@ -1,13 +1,13 @@
-require('dotenv').config();
-const express = require('express');
-const mysql = require('mysql');
+require("dotenv").config();
+const express = require("express");
+const mysql = require("mysql");
 
 const db = mysql.createPool({
     host : process.env.DBHOST,
     user : process.env.DBUSER,
     password : process.env.DBPASS,
     database : process.env.DBDATABASE
-})
+});
 
 let query = function(sql, values){
     return new Promise((resolve, reject)=> {
@@ -23,14 +23,14 @@ let query = function(sql, values){
                     }else{
                         resolve(rows);
                     }
-                    connection.release() 
-                })
+                    connection.release(); 
+                });
 
             }
-        })
-    })
-}
+        });
+    });
+};
 
 
 
-module.exports = { query }
+module.exports = { query };

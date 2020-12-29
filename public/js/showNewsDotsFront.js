@@ -1,5 +1,5 @@
-const searchButton = document.getElementById('btn-search');
-const analyzeUserEmotionButton = document.getElementById('btn-analyzeUser');
+const searchButton = document.getElementById("btn-search");
+const analyzeUserEmotionButton = document.getElementById("btn-analyzeUser");
 
 console.log("search button clicked!!");
 const searchTopic1 = localStorage.getItem("searchTopic1");
@@ -12,30 +12,30 @@ let avgReactionSentiment = 0;
 let avgReactionMagnitude = 0;
 var d3 = Plotly.d3;
 
-let step1 = document.getElementById('step1');
-let step2 = document.getElementById('step2');
-let step3 = document.getElementById('step3');
-let step4 = document.getElementById('step4');
-step1.addEventListener(('click'), ()=>{
-    window.location.href = '/showNewsDots.html'
-})
-step2.addEventListener(('click'), ()=>{
-    window.location.href = '/showNewsContent.html'
-})
-step3.addEventListener(('click'), ()=>{
-    window.location.href = '/userEmotion.html'
-})
-step4.addEventListener(('click'), ()=>{
-    window.location.href = '/chat.html'
-})
+let step1 = document.getElementById("step1");
+let step2 = document.getElementById("step2");
+let step3 = document.getElementById("step3");
+let step4 = document.getElementById("step4");
+step1.addEventListener(("click"), ()=>{
+    window.location.href = "/showNewsDots.html";
+});
+step2.addEventListener(("click"), ()=>{
+    window.location.href = "/showNewsContent.html";
+});
+step3.addEventListener(("click"), ()=>{
+    window.location.href = "/userEmotion.html";
+});
+step4.addEventListener(("click"), ()=>{
+    window.location.href = "/chat.html";
+});
 
 async function searchNews(){
-    axios.post(`/searchNews`,{
-        'searchTopic1': searchTopic1,
-        'searchTopic2': searchTopic2
+    axios.post("/searchNews",{
+        "searchTopic1": searchTopic1,
+        "searchTopic2": searchTopic2
     }).then(res=>{
-        localStorage.setItem('NYIds',res.data.NYIds);
-        localStorage.setItem('FoxIds',res.data.FoxIds);
+        localStorage.setItem("NYIds",res.data.NYIds);
+        localStorage.setItem("FoxIds",res.data.FoxIds);
         
         if(res.data.NYSentimentArray.length == 0 && res.data.FoxSentimentArray.length == 0){
             alert("Oops, no news found, please choose another topic!");
@@ -49,18 +49,18 @@ async function searchNews(){
             const loadingBlock = document.getElementById("btnLoader");
 
             // ----------------------------------------------------------- get a row container for btn
-            const btnRow = document.getElementById('btnRow');
+            const btnRow = document.getElementById("btnRow");
 
             // ----------------------------------------------------------- append remove-dots-button
-            const reselectBtnCol = document.createElement('div');
-            reselectBtnCol.innerHTML = 'Clear Dots'
+            const reselectBtnCol = document.createElement("div");
+            reselectBtnCol.innerHTML = "Clear Dots";
             reselectBtnCol.setAttribute("id","reselectBtnCol");
             reselectBtnCol.setAttribute("class","btn btn-xs btn-primary offset-md-2 col-lg-2");
             btnRow.appendChild(reselectBtnCol);
 
             // ----------------------------------------------------------- append send-button
-            const showNewsBtnCol = document.createElement('div');
-            showNewsBtnCol.innerHTML = 'Next Step'
+            const showNewsBtnCol = document.createElement("div");
+            showNewsBtnCol.innerHTML = "Next Step";
             showNewsBtnCol.setAttribute("id","showNewsBtnCol");
             showNewsBtnCol.setAttribute("class","btn btn-xs btn-primary offset-md-3 col-lg-2 active");
             btnRow.appendChild(showNewsBtnCol);
@@ -72,7 +72,7 @@ async function searchNews(){
             const FoxMagnitudeArray = res.data.FoxMagnitudeArray;
 
             // ----------------------------------------------------------------- Show Sentiment Scatter Plot
-            const graph = document.createElement('graph');
+            const graph = document.createElement("graph");
             graph.setAttribute("id","sentimentShowgraph");
             graph.setAttribute("style","width:1000px;height:500px;");
             graphBox.appendChild(graph);
@@ -80,30 +80,30 @@ async function searchNews(){
             var traceNYT = {
                 x : NYSentimentArray,
                 y : NYMagnitudeArray,
-                mode: 'markers+text',
+                mode: "markers+text",
                 name: "New York Times",
-                textposition: 'top center',
+                textposition: "top center",
                 textfont: {
-                    family:  'BwNistaInt-xBd'
+                    family:  "BwNistaInt-xBd"
                 },
-                marker: { size: 12, color: 'rgb(0, 240, 255)'}, //, symbol: 'diamond-open'
-                type: 'scatter',
+                marker: { size: 12, color: "rgb(0, 240, 255)"}, //, symbol: 'diamond-open'
+                type: "scatter",
                 showlegend: true // still show legend when only one trace
-            }
+            };
 
             var traceFox = {
                 x : FoxSentimentArray,
                 y : FoxMagnitudeArray,
-                mode: 'markers+text',
+                mode: "markers+text",
                 name: "Fox News",
-                textposition: 'top center',
+                textposition: "top center",
                 textfont: {
-                    family:  'BwNistaInt-xBd'
+                    family:  "BwNistaInt-xBd"
                 },
-                marker: { size: 16, color: 'rgb(255,204,0)', symbol: '102'},
-                type: 'scatter',
+                marker: { size: 16, color: "rgb(255,204,0)", symbol: "102"},
+                type: "scatter",
                 showlegend: true // still show legend when only one trace
-            }
+            };
             
             var data = [traceNYT, traceFox];
             console.log("traceNYT: ", traceNYT);
@@ -112,20 +112,20 @@ async function searchNews(){
             var layout = {
                 // -------------------------------- add a non-zero horizontal line
                 shapes: [{
-                    type: 'line',
+                    type: "line",
                     x0: -1,
                     x1: 1,
                     y0: 1.5,
                     y1: 1.5,
                     line: {
-                        color: 'white',
+                        color: "white",
                         width: 4
                     }
                 }
             ],
                 xaxis: {
                     title: {
-                        text: '<b>Mood</b>',
+                        text: "<b>Mood</b>",
                         font: {
                             size: 20,
                             color: "white"
@@ -134,21 +134,21 @@ async function searchNews(){
                     },
                     range: [-1, 1],
                     showgrid: false, // hide non-zero grid
-                    zerolinecolor: 'white',
+                    zerolinecolor: "white",
                     zerolinewidth: 4,
                     showticklabels: true, // show axis title
                     tickfont: {
-                        family: 'BwNistaInt-xBd',
+                        family: "BwNistaInt-xBd",
                         size: 14,
-                        color: 'white'
+                        color: "white"
                     },
                     tickvals: [-0.5, 0, 0.5],
-                    ticktext:['Negative', 'Neutral', 'Positive']
+                    ticktext:["Negative", "Neutral", "Positive"]
 
                 },
                 yaxis: {
                     title: {
-                        text: '<b>Intensity</b>',
+                        text: "<b>Intensity</b>",
                         font: {
                             size: 20,
                             color: "white"
@@ -159,23 +159,23 @@ async function searchNews(){
                     zeroline: false,
                     showticklabels: true,
                     tickfont: {
-                        family: 'BwNistaInt-xBd',
+                        family: "BwNistaInt-xBd",
                         size: 14,
-                        color: 'white'
+                        color: "white"
                     },
                     tickvals: [0.6, 2.2],
-                    ticktext:['Light', 'Strong'],
+                    ticktext:["Light", "Strong"],
                     tickangle: 270
                     
                 },
                 title: {
-                    text: 'News Mood & Intensity Score',
+                    text: "News Mood & Intensity Score",
                     font: {
                         size: 20,
                         color: "white"
                     }
                 },
-                hovermode: 'closest',
+                hovermode: "closest",
                 paper_bgcolor: "rgba(0,0,0,0)", //transparent
                 plot_bgcolor: "rgba(0,0,0,0)", //transparent
                 legend:{
@@ -183,31 +183,31 @@ async function searchNews(){
                     y:1.13,
                     orientation:"h", //horizontally placed the legend
                     font:{
-                        color: 'white',
+                        color: "white",
                         size: 14
                     }
                 }
-            }
+            };
 
             var config = {
                 displayModeBar: false
-            }
+            };
 
             // ----------------------remove loading first
-            loadingBlock.setAttribute('class', 'row hiddenc')
-            loadingBlock.innerHTML=""
+            loadingBlock.setAttribute("class", "row hiddenc");
+            loadingBlock.innerHTML="";
             
             // ------------------------------------------------- Create Plot
             Plotly.newPlot(graph, data, layout, config);
 
             // ------------------------------------------------- Change cursor to pointer
-            dragLayer = document.getElementsByClassName('nsewdrag')[0];
-            graph.on('plotly_hover', function(data){
-                dragLayer.style.cursor = 'pointer'
+            dragLayer = document.getElementsByClassName("nsewdrag")[0];
+            graph.on("plotly_hover", function(data){
+                dragLayer.style.cursor = "pointer";
             });
 
             // -------------------------------------------------- Build click event & saved it to localStorage     
-            graph.on('plotly_click', function(data){
+            graph.on("plotly_click", function(data){
                 for(var i=0; i < data.points.length; i++){
                     // ------------------------------save localstorage
                     Xaxis = data.points[i].x;
@@ -222,9 +222,9 @@ async function searchNews(){
                     
                     // ------------------------------ add annotation
                     if(data.points[i].data.name == "New York Times"){
-                        newsSource = "NYT"
+                        newsSource = "NYT";
                     }else{
-                        newsSource = "Fox"
+                        newsSource = "Fox";
                     }
                     
                     annotate_text = `${newsSource} selected!`;
@@ -239,7 +239,7 @@ async function searchNews(){
                         showarrow: true,
                         arrowhead: 7,
                         arrowcolor: "white"
-                    }
+                    };
 
                     annotations = self.annotations || [];
                     
@@ -248,24 +248,24 @@ async function searchNews(){
 
                     // ---------------------------------------------- remove points
                     var reselectNewsBtn = document.getElementById("reselectBtnCol");
-                    reselectNewsBtn.addEventListener('click',()=>{
+                    reselectNewsBtn.addEventListener("click",()=>{
                         annotations = [];
                         localStorage.removeItem("clickedPoints");
                         Plotly.relayout(graph,{annotations: []});
-                    })
+                    });
                 }
-            })
+            });
 
             // ---------------------------------------------- show news button
             const chooseDotsBtn = document.getElementById("showNewsBtnCol");
-            chooseDotsBtn.addEventListener('click',()=>{
+            chooseDotsBtn.addEventListener("click",()=>{
                 if(!localStorage.getItem("clickedPoints")){
                     console.log("no clicked point!");
                     alert("Please select at least one point.");
                 }else{
                     window.location.href = "/showNewsContent.html";
                 }
-            })
+            });
             
             // // ---------------------------------------------- remove points
             // const reselectNewsBtn = document.getElementById("reselectBtnCol");
@@ -278,7 +278,7 @@ async function searchNews(){
         alert("Please select at least one dot!");
         console.log("Please select at least one dot!");
         console.log(err);
-    })
+    });
     return allUserEmotions; 
 }
 

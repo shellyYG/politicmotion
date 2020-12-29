@@ -1,9 +1,9 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { query } = require('../../models/query');
-const { tokenize, makeDictionary, vsm, termFrequency, idf, tfidf, cosine, unique } = require('../../models/tfidf');
+const { query } = require("../../models/query");
+const { tokenize, makeDictionary, vsm, termFrequency, idf, tfidf, cosine, unique } = require("../../models/tfidf");
 
-router.post('/', (req, res) => {
+router.post("/", (req, res) => {
     //------------------------------------------------------------------------------------------ Finish Algo Part
     const searchTopic1 = req.body.searchTopic1;
     const searchTopic2 = req.body.searchTopic2;
@@ -12,14 +12,14 @@ router.post('/', (req, res) => {
     var allIdsArray = [];
     FoxIdsArray.forEach((e)=>{
         allIdsArray.push(e);
-    })
+    });
     NYIdsArray.forEach((e)=>{
         allIdsArray.push(e);
-    })
+    });
     console.log("allIdsArray: ", allIdsArray);
     allIdsArray = allIdsArray.filter(function(value, index, arr){
         return value !== "";
-    })
+    });
     
     allIdsArrayNum = allIdsArray.map(element=>parseInt(element,10));
     
@@ -35,7 +35,7 @@ router.post('/', (req, res) => {
             FROM politicmotion.fb_rawdata
             WHERE sentiment_score = ${clickedIds[i].Xaxis} AND magnitude_score = ${clickedIds[i].Yaxis}
             AND id IN (${allIdsArrayNum})
-            LIMIT 1;`
+            LIMIT 1;`;
             var sqlquery = await query(sql);
             return sqlquery;
         }
@@ -45,7 +45,7 @@ router.post('/', (req, res) => {
             allNewsIdClicked.push(ClickedNewsId);
             // console.log("allNewsIdClicked: ", allNewsIdClicked);
         }
-        showFirstCLickedNews()
+        showFirstCLickedNews();
     }
 
 
@@ -66,13 +66,13 @@ router.post('/', (req, res) => {
                 FROM fb_rawdata 
                 WHERE id IN (${allIdsArrayNum})
                 ORDER BY id ASC
-                ;` // here need to change to not limited
+                ;`; // here need to change to not limited
         var sqlquery = await query(sql);
         return sqlquery;
     }
 
     async function getStopWords() {
-        sql = `SELECT words FROM words_stopwords;`
+        sql = "SELECT words FROM words_stopwords;";
         var sqlquery = await query(sql);
         return sqlquery;
     }
@@ -110,7 +110,7 @@ router.post('/', (req, res) => {
             allNewsStrings.push(relevantNews[i].content);
             let singleData = {};
             singleData.NewsId = relevantNews[i].id;
-            singleData.content = relevantNews[i].content
+            singleData.content = relevantNews[i].content;
             allNewsDetails.push(singleData);
         }
     }
@@ -186,7 +186,7 @@ router.post('/', (req, res) => {
             }
             // console.log("matchedScores: ", matchedScores);
 
-            var maxSingleScore = Math.max.apply(Math, matchedScores.filter(function (x) { return x <= thresholdCosine })); // search other news condition here?
+            var maxSingleScore = Math.max.apply(Math, matchedScores.filter(function (x) { return x <= thresholdCosine; })); // search other news condition here?
 
             function findMatchArticleId(acc, curr) {
                 if (curr.firstString == allNewsIdClicked[i] && curr.cosineValue == maxSingleScore) {   //curr.cosineValue == maxSingleScore && curr.firstStringSource !== curr.secondStringSource
@@ -226,7 +226,7 @@ router.post('/', (req, res) => {
             // console.log("newsIdtoShow: ", newsIdtoShow);
             var uniqueNewsIdtoShow = newsIdtoShow.filter(unique);
             var clickedNews = [];
-            clickedNews = allMatched.map((element) => { return element.firstArticle });
+            clickedNews = allMatched.map((element) => { return element.firstArticle; });
         }
 
         async function getRelevantNews() {
@@ -240,7 +240,7 @@ router.post('/', (req, res) => {
             LEFT JOIN politicmotion.news_rawdata big ON fb.title = big.title
             LEFT JOIN politicmotion.nyt_details nyt ON big.title = nyt.headline
             LEFT JOIN politicmotion.fox_details fox ON big.post_link = fox.post_link
-            WHERE fb.id IN (${uniqueNewsIdtoShow});`
+            WHERE fb.id IN (${uniqueNewsIdtoShow});`;
             var sqlquery = await query(sql);
             return sqlquery;
         }
@@ -325,6 +325,6 @@ router.post('/', (req, res) => {
     //------------------------------------------------------------------------------------------ Export final output Part
 
 
-})
+});
 
 module.exports = router;
