@@ -148,7 +148,7 @@ def PostContent(soup, source):
 print("start getting new NYT News")
 driver = webdriver.Chrome()
 AllPost =[]
-NYTimeLinks = FindLinks(url='https://www.facebook.com/nytimes/', n = 1)
+NYTimeLinks = FindLinks(url='https://www.facebook.com/nytimes/', n = 4)
 for Link in NYTimeLinks:
     print("At Link: "+Link)
     driver.get(Link) #expand link for soup below to catch
@@ -172,7 +172,7 @@ driver.close()
 print("start getting new Fox News")
 driver = webdriver.Chrome()
 AllPost =[]
-FoxNewsLinks = FindLinks(url='https://www.facebook.com/FoxNews/', n = 1)
+FoxNewsLinks = FindLinks(url='https://www.facebook.com/FoxNews/', n = 4)
 for Link in FoxNewsLinks:
     print("At Link: "+Link)
     driver.get(Link) #expand link for soup below to catch

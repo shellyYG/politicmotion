@@ -171,7 +171,7 @@ socket.on("onlineUsers", (onlineUserList) => {
             statusSmall[i].innerText = 'online';
         }
     }
-    // console.log("F7");
+
 });
 
 // select chat partner 
