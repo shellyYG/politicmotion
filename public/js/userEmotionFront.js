@@ -98,13 +98,13 @@ axios.post("calUserEmotion", {
         
         pureDistanceNYT = userAvgSentEmotionArray[0]-reactionAvgNYTSentEmotionArray[0];
         pureDistanceFox = userAvgSentEmotionArray[0]-reactionAvgFoxSentEmotionArray[0];
-        usrEmotionDistanceNYT = Math.floor(Math.abs(userAvgSentEmotionArray[0]/reactionAvgNYTSentEmotionArray[0]-1)*100);
-        usrEmotionDistanceFox = Math.floor(Math.abs(userAvgSentEmotionArray[0]/reactionAvgFoxSentEmotionArray[0]-1)*100);
+        usrEmotionDistanceNYT = Math.floor(Math.abs(pureDistanceNYT*100));
+        usrEmotionDistanceFox = Math.floor(Math.abs(pureDistanceFox*100));
         if(isNaN(usrEmotionDistanceNYT)==true){
             usrEmotionDistanceNYT = "";
         }else{
             if(isFinite(usrEmotionDistanceNYT)){ //if its not infinity
-                usrEmotionDistanceNYT = usrEmotionDistanceNYT.toString()+"%";
+                usrEmotionDistanceNYT = usrEmotionDistanceNYT.toString()+" points";
             }else{  //if its infinity
                 usrEmotionDistanceNYT = "";
             }
@@ -113,7 +113,7 @@ axios.post("calUserEmotion", {
             usrEmotionDistanceFox = "";
         }else{
             if(isFinite(usrEmotionDistanceFox)){ //if its not infinity
-                usrEmotionDistanceFox = usrEmotionDistanceFox.toString()+"%";
+                usrEmotionDistanceFox = usrEmotionDistanceFox.toString()+" points";
             }else{  //if its infinity
                 usrEmotionDistanceFox = "";
             }
@@ -364,6 +364,8 @@ axios.post("calUserEmotion", {
         // find chat-buddies when clicked
         const ChatWithBuddyBtn = document.getElementById("chat-buddy");
         ChatWithBuddyBtn.addEventListener("click", () => {
+            localStorage.removeItem("buddiesToChat");
+            localStorage.removeItem("topBuddyNames");
             axios.post("findBuddies", {
                 "firstSearchTopic": searchTopic1,
                 "secondSearchTopic": searchTopic2

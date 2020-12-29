@@ -1,8 +1,4 @@
-
-
-
 var keyArr = [];
-console.log(localStorage.length);
 for (i=0; i<localStorage.length; i++){
     if (localStorage.key(i).substring(0,7) == "emotion"){
         keyArr.push(localStorage.key(i));
@@ -18,11 +14,6 @@ const searchButton = document.getElementById("btn-search");
 const chooseSentimentButton = document.getElementById("btn-chooseSentiment");
 
 searchButton.addEventListener("click",()=>{
-    // remove news & emotion when user try to find new topics
-    localStorage.removeItem("clickedPoints");
-    localStorage.removeItem("clickedEmotions");
-    localStorage.removeItem("buddiesToChat");
-    localStorage.removeItem("topBuddyNames");
     
     const firstSearchTopic = document.querySelector("#userInput1").value;
     const secondSearchTopic = document.querySelector("#userInput2").value;

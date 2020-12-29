@@ -64,580 +64,588 @@ axios.post("showNewsContent",{
     "NYIdsArray": NYIdsArray,
     "FoxIdsArray": FoxIdsArray
 }).then(res=>{
-        var articleRow;
-        for (i=0; i<res.data.length; i++){
-            // ============================================================= Get clicked Articles and create a block
-            if (res.data[i].clickedId !== 0){ // has at least 1 news
-                var rawDate = res.data[i].post_date;
-                var re = /([^T]+)/;
-                var pureDatePart = rawDate.split(re);
-                var datePart = pureDatePart[1];
-                var datePartArray = datePart.split("-");
-                
-                var beautifyDateYear = datePartArray[0];
-                var beautifyDateMonth = datePartArray[1];
-                var beautifyDateDate = datePartArray[2];
-                var finalBeutifiedDate = beautifyDateYear+"/"+beautifyDateMonth+"/"+beautifyDateDate;
-                
-                var articleDBId = res.data[i].id;
-
-                // -------------------------------------------------------------------------- set default classes
-                articleRow = document.createElement("div");
-                articleRow.setAttribute("id", `articleRow_${articleDBId}`);
-                articleRow.setAttribute("class", "row");
-
-                articleCol = document.createElement("div");
-                articleCol.setAttribute("class", `col-md-6 mb-4 col_selected_${articleDBId}`);
-                articleCol.setAttribute("id", "No-match-grow");
-                articleRow.appendChild(articleCol);
-
-                cardShadow = document.createElement("article");
-                cardShadow.setAttribute("class", "card shadow");
-                cardShadow.setAttribute("id", `selectedNews_${articleDBId}`);
-                articleCol.appendChild(cardShadow);
-
-                articleBody = document.createElement("div");
-                articleBody.setAttribute("class", "card-body");
-                articleBody.setAttribute("id", `selected_cbody_${articleDBId}`);
-                cardShadow.appendChild(articleBody);
-
-                var articleTitle = document.createElement("h4");
-                articleTitle.setAttribute("class","card-title");
-                articleTitle.setAttribute("id",`selectedNewsSrc_${articleDBId}`);
-                articleTitle.innerText = res.data[i].title; 
-
-                var articleSrcDate = document.createElement("h5");
-                articleSrcDate.setAttribute("class", "card-srcdate");
-                articleSrcDate.setAttribute("id", `selectedNewsDate_${articleDBId}`);
-                
-                var articleContent = document.createElement("p");
-                articleContent.setAttribute("class", "cars-text");
-                articleContent.setAttribute("id", `selectedNewsContent_${articleDBId}`);
-
-                var articleLink = document.createElement("a");
-                articleLink.setAttribute("class", "btn btn-xs btn-primary btn-selected");
-                articleLink.setAttribute("id", `a_${articleDBId}`);
-
-                var iconDiv = document.createElement("div");
-                iconDiv.setAttribute("id", `icons_${articleDBId}`);
-
-
-                var loveBtn = document.createElement("img");
-                loveBtn.setAttribute("id", `user_love_${articleDBId}`);
-                loveBtn.setAttribute("src", "imgs/iconx/love.png");
-
-                var hahaBtn = document.createElement("img");
-                hahaBtn.setAttribute("id", `user_haha_${articleDBId}`);
-                hahaBtn.setAttribute("src", "imgs/iconx/haha.png");
-
-                var sadBtn = document.createElement("img");
-                sadBtn.setAttribute("id", `user_sad_${articleDBId}`);
-                sadBtn.setAttribute("src", "imgs/iconx/sad.png");
-
-                var angryBtn = document.createElement("img");
-                angryBtn.setAttribute("id", `user_angry_${articleDBId}`);
-                angryBtn.setAttribute("src", "imgs/iconx/angry.png");
-
-                if(res.data[i].lead_paragraph==null){
-                    var leadParagraph = "";
-                }else{
-                    var leadParagraph = res.data[i].lead_paragraph;
-                }
-
-                if(res.data[i].paragraph==null){
-                    var foxParagraph = "";
-                }else{
-                    var foxParagraph = res.data[i].paragraph;
-                }
-                console.log("res.data[i].paragraph: ", foxParagraph);
-                articleLink.textContent = "Read More";
-                if (res.data[i].post_source == "nytimes"){
-                    console.log("has news from nytimes");
-                    articleContent.textContent = res.data[i].content +" " + leadParagraph;
-                    articleSrcDate.textContent = "New York Times" + " " + finalBeutifiedDate;
-                }else{
-                    console.log("has news from fox news");
-                    articleContent.textContent = res.data[i].content +" " + foxParagraph;
-                    articleSrcDate.textContent = "Fox News"+ " " + finalBeutifiedDate;
-                }
-
-                console.log("articleContent: ", articleContent);
-
-                // ===================================calculate average post emotion
-                avgPostSentiment += res.data[i].sentiment_score;
-                avgPostMagnitude += res.data[i].magnitude_score;
-                // ===================================calculate average FB user reaction 
-                avgReactionSentiment += res.data[i].user_sentiment_score;
-                avgReactionMagnitude += res.data[i].user_magnitude_score;
-    
-                // -------cal average New York Time post emotion
-                if(res.data[i].post_source=="nytimes"){
-                    avgNYTPostSentiment += res.data[i].sentiment_score;
-                    avgNYTPostMagnitude += res.data[i].magnitude_score;
-                    avgNYTReactionSentiment += res.data[i].user_sentiment_score;
-                    avgNYTReactionMagnitude += res.data[i].user_magnitude_score;
-                    NYTlength += 1;
-                }
-                // -------cal average Fox post emotion
-                if(res.data[i].post_source=="foxnews"){
-                    avgFoxPostSentiment += res.data[i].sentiment_score;
-                    avgFoxPostMagnitude += res.data[i].magnitude_score;
-                    avgFoxReactionSentiment += res.data[i].user_sentiment_score;
-                    avgFoxReactionMagnitude += res.data[i].user_magnitude_score;
-                    FoxLength += 1;
-                }
-
-                // append single article
-                articleBody.appendChild(articleTitle);
-                articleBody.appendChild(articleSrcDate);
-                articleBody.appendChild(articleContent);
-                articleBody.appendChild(articleLink);
-                articleBody.appendChild(iconDiv);
-                
-                iconDiv.appendChild(loveBtn);
-                iconDiv.appendChild(hahaBtn);
-                iconDiv.appendChild(sadBtn);
-                iconDiv.appendChild(angryBtn);
-                
-                // -------------------------------------------------------------------------- set pop up classes
-                articleCol2 = document.createElement("div");
-                articleCol2.setAttribute("class", `hiddenc col-md-6 mb-4 hcol_selected_${articleDBId}`);
-                articleRow.appendChild(articleCol2);
-
-                cardShadow2 = document.createElement("article");
-                cardShadow2.setAttribute("class", `card shadow hselectedNews_${articleDBId}`);
-                articleCol2.appendChild(cardShadow2);
-
-                articleBody2 = document.createElement("div");
-                articleBody2.setAttribute("class", "card-body");
-                articleBody2.setAttribute("id", `hselected_cbody_${articleDBId}`);
-                cardShadow2.appendChild(articleBody2);
-
-                var articleTitle2 = document.createElement("h4");
-                articleTitle2.setAttribute("class","card-title");
-                articleTitle2.setAttribute("id",`selectedNewsSrc_${articleDBId}`);
-                articleTitle2.innerText = res.data[i].title; 
-
-                var articleSrcDate2 = document.createElement("h5");
-                articleSrcDate2.setAttribute("class", "card-srcdate");
-                articleSrcDate2.setAttribute("id", `selectedNewsDate_${articleDBId}`);
-                
-                var articleContent2 = document.createElement("p");
-                articleContent2.setAttribute("class", "cars-text");
-                articleContent2.setAttribute("id", `hselectedNewsContent_${articleDBId}`);
-
-                if(res.data[i].lead_paragraph==null){
-                    var leadParagraph = "";
-                }else{
-                    var leadParagraph = res.data[i].lead_paragraph;
-                }
-
-                if(res.data[i].paragraph==null){
-                    var foxParagraph = "";
-                }else{
-                    var foxParagraph = res.data[i].paragraph;
-                }
-                
-                if (res.data[i].post_source == "nytimes"){
-                    console.log("has news from nytimes");
-                    articleSrcDate2.textContent = "New York Times" + " " + finalBeutifiedDate;
-                    articleContent2.textContent = res.data[i].content +" " + leadParagraph;
-                }else{
-                    console.log("has news from fox news");
-                    articleSrcDate2.textContent = "Fox News"+ " " + finalBeutifiedDate;
-                    articleContent2.textContent = res.data[i].content +" " + foxParagraph;
-                }
-
-
-                var closeBtn = document.createElement("a");
-                closeBtn.setAttribute("class", "btn btn-xs btn-primary btn-selected-close");
-                closeBtn.setAttribute("id", "closeBtn");
-                closeBtn.innerText = "close";
-                
-                // append single article
-                articleBody2.appendChild(articleTitle2);
-                articleBody2.appendChild(articleSrcDate2);
-                articleBody2.appendChild(articleContent2);
-                articleBody2.appendChild(closeBtn);
-                
-                // -------------------------------------------------------------------------- remove loading section
-                var loadingSection = document.getElementById("btnLoader");
-                loadingSection.setAttribute("class", "row hiddenc"); // make margin disappear
-                loadingSection.innerHTML = "";
-                articles.appendChild(articleRow); // append to all articles list
-            }
-        }
-
-        for (i=0; i<res.data.length; i++){
-            var matchedArticleRow;
-            // ============================================================= Get matched Articles in same block
-            for (j=0;j<res.data.length;j++){
-                if (res.data[i].clickedId == 0){ //is a matched article
-                    if (res.data[j].matchedId == res.data[i].id){ // if a clickedArticle's matched Article == this matched article
-                        var rawDate = res.data[i].post_date;
-                        var re = /([^T]+)/;
-                        var pureDatePart = rawDate.split(re);
-                        var datePart = pureDatePart[1];
-                        var datePartArray = datePart.split("-");
-                        
-                        var beautifyDateYear = datePartArray[0];
-                        var beautifyDateMonth = datePartArray[1];
-                        var beautifyDateDate = datePartArray[2];
-                        var finalBeutifiedDate = beautifyDateYear+"/"+beautifyDateMonth+"/"+beautifyDateDate;
-
-                        matchedArticleRow = document.getElementById(`articleRow_${res.data[j].id}`);
-                        
-                        articleDBId = res.data[i].id;
-
-                        articleCol = document.createElement("div");
-                        articleCol.setAttribute("class", `col-lg-6 col-sm-6 mb-4 col_matched_${articleDBId}`);
-                        matchedArticleRow.appendChild(articleCol);
-
-                        cardShadow = document.createElement("article");
-                        cardShadow.setAttribute("class", "card shadow");
-                        cardShadow.setAttribute("id", `matchedNews_${articleDBId}`);
-                        articleCol.appendChild(cardShadow);
-
-                        articleBody = document.createElement("div");
-                        articleBody.setAttribute("class", "card-body");
-                        articleBody.setAttribute("id", `matched_cbody_${articleDBId}`);
-                        cardShadow.appendChild(articleBody);
-
-                        var articleTitle = document.createElement("h4");
-                        articleTitle.setAttribute("class","card-title");
-                        articleTitle.setAttribute("id",`matchedNewsSrc_${articleDBId}`);
-                        articleTitle.innerText = res.data[i].title;
-
-                        var articleSrcDate = document.createElement("h5");
-                        articleSrcDate.setAttribute("class", "card-srcdate");
-                        articleSrcDate.setAttribute("id", `matchedNewsDate_${articleDBId}`);
-
-                        var articleContent = document.createElement("p");
-                        articleContent.setAttribute("class", "cars-text");
-                        articleContent.setAttribute("id", `matchedNewsContent_${articleDBId}`);
-
-                        var articleLink = document.createElement("a");
-                        articleLink.setAttribute("class", "btn btn-xs btn-primary btn-matched");
-                        articleLink.setAttribute("id", `a_${articleDBId}`);
-                        // articleLink.setAttribute("href", `${res.data[i].post_link}`);
-
-                        var iconDiv = document.createElement("div");
-                        iconDiv.setAttribute("id", `icons_${articleDBId}`);
-
-                        var loveBtn = document.createElement("img");
-                        loveBtn.setAttribute("id", `user_love_${articleDBId}`);
-                        loveBtn.setAttribute("src", "imgs/iconx/love.png");
-        
-                        var hahaBtn = document.createElement("img");
-                        hahaBtn.setAttribute("id", `user_haha_${articleDBId}`);
-                        hahaBtn.setAttribute("src", "imgs/iconx/haha.png");
-        
-                        var sadBtn = document.createElement("img");
-                        sadBtn.setAttribute("id", `user_sad_${articleDBId}`);
-                        sadBtn.setAttribute("src", "imgs/iconx/sad.png");
-        
-                        var angryBtn = document.createElement("img");
-                        angryBtn.setAttribute("id", `user_angry_${articleDBId}`);
-                        angryBtn.setAttribute("src", "imgs/iconx/angry.png");
-
-                        articleSrcDate.textContent = finalBeutifiedDate;
-
-                        if(res.data[i].lead_paragraph==null){
-                            var leadParagraph = "";
-                        }else{
-                            var leadParagraph = res.data[i].lead_paragraph;
-                        }
-
-                        if(res.data[i].paragraph==null){
-                            var foxParagraph = "";
-                        }else{
-                            var foxParagraph = res.data[i].paragraph;
-                        }
-
-                        articleLink.textContent = "Read More";
-
-                        if (res.data[i].post_source == "nytimes"){
-                            console.log("has news from nytimes");
-                            articleSrcDate.textContent = "New York Times" + " " + finalBeutifiedDate;
-                            articleContent.textContent = res.data[i].content +" " + leadParagraph;
-                        }else{
-                            console.log("has news from fox news");
-                            articleSrcDate.textContent = "Fox News"+ " " + finalBeutifiedDate;
-                            articleContent.textContent = res.data[i].content +" " + foxParagraph;
-                        }
-
-                        // ===================================calculate average post emotion
-                        avgPostSentiment += res.data[i].sentiment_score;
-                        avgPostMagnitude += res.data[i].magnitude_score;
-                        // ===================================calculate average FB user reaction 
-                        avgReactionSentiment += res.data[i].user_sentiment_score;
-                        avgReactionMagnitude += res.data[i].user_magnitude_score;
+    if (res.data.length == 0){
+        alert("Sorry, please select news again.");
+        window.location.href = '/showNewsDots.html';
+    }
+    var articleRow;
+    for (i=0; i<res.data.length; i++){
+        // ============================================================= Get clicked Articles and create a block
+        if (res.data[i].clickedId !== 0){ // has at least 1 news
+            var rawDate = res.data[i].post_date;
+            var re = /([^T]+)/;
+            var pureDatePart = rawDate.split(re);
+            var datePart = pureDatePart[1];
+            var datePartArray = datePart.split("-");
             
-                        // -------cal average New York Time post emotion
-                        if(res.data[i].post_source=="nytimes"){
-                            avgNYTPostSentiment += res.data[i].sentiment_score;
-                            avgNYTPostMagnitude += res.data[i].magnitude_score;
-                            avgNYTReactionSentiment += res.data[i].user_sentiment_score;
-                            avgNYTReactionMagnitude += res.data[i].user_magnitude_score;
-                            NYTlength += 1;
-                        }
-                        // -------cal average Fox post emotion
-                        if(res.data[i].post_source=="foxnews"){
-                            avgFoxPostSentiment += res.data[i].sentiment_score;
-                            avgFoxPostMagnitude += res.data[i].magnitude_score;
-                            avgFoxReactionSentiment += res.data[i].user_sentiment_score;
-                            avgFoxReactionMagnitude += res.data[i].user_magnitude_score;
-                            FoxLength += 1;
-                        }
+            var beautifyDateYear = datePartArray[0];
+            var beautifyDateMonth = datePartArray[1];
+            var beautifyDateDate = datePartArray[2];
+            var finalBeutifiedDate = beautifyDateYear+"/"+beautifyDateMonth+"/"+beautifyDateDate;
+            
+            var articleDBId = res.data[i].id;
 
-                        // append single article
-                        
-                        articleBody.appendChild(articleTitle);
-                        articleBody.appendChild(articleSrcDate);
-                        articleBody.appendChild(articleContent);
-                        articleBody.appendChild(articleLink);
-                        articleBody.appendChild(iconDiv);
-                
-                        iconDiv.appendChild(loveBtn);
-                        iconDiv.appendChild(hahaBtn);
-                        iconDiv.appendChild(sadBtn);
-                        iconDiv.appendChild(angryBtn);
+            // -------------------------------------------------------------------------- set default classes
+            articleRow = document.createElement("div");
+            articleRow.setAttribute("id", `articleRow_${articleDBId}`);
+            articleRow.setAttribute("class", "row");
 
-                        // -------------------------------------------------------------------------- set pop up classes
-                        articleCol2 = document.createElement("div");
-                        articleCol2.setAttribute("class", `hiddenc col-md-6 mb-4 hcol_matched_${articleDBId}`);
-                        articleRow.appendChild(articleCol2);
+            articleCol = document.createElement("div");
+            articleCol.setAttribute("class", `col-md-6 mb-4 col_selected_${articleDBId}`);
+            articleCol.setAttribute("id", "No-match-grow");
+            articleRow.appendChild(articleCol);
 
-                        cardShadow2 = document.createElement("article");
-                        cardShadow2.setAttribute("class", `card shadow hmatchedNews_${articleDBId}`);
-                        articleCol2.appendChild(cardShadow2);
+            cardShadow = document.createElement("article");
+            cardShadow.setAttribute("class", "card shadow");
+            cardShadow.setAttribute("id", `selectedNews_${articleDBId}`);
+            articleCol.appendChild(cardShadow);
 
-                        articleBody2 = document.createElement("div");
-                        articleBody2.setAttribute("class", "card-body");
-                        articleBody2.setAttribute("id", `hmatched_cbody_${articleDBId}`);
-                        cardShadow2.appendChild(articleBody2);
+            articleBody = document.createElement("div");
+            articleBody.setAttribute("class", "card-body");
+            articleBody.setAttribute("id", `selected_cbody_${articleDBId}`);
+            cardShadow.appendChild(articleBody);
 
-                        var articleTitle2 = document.createElement("h4");
-                        articleTitle2.setAttribute("class","card-title");
-                        articleTitle2.setAttribute("id",`matchedNewsSrc_${articleDBId}`);
-                        articleTitle2.innerText = res.data[i].title; 
+            var articleTitle = document.createElement("h4");
+            articleTitle.setAttribute("class","card-title");
+            articleTitle.setAttribute("id",`selectedNewsSrc_${articleDBId}`);
+            articleTitle.innerText = res.data[i].title; 
 
-                        var articleSrcDate2 = document.createElement("h5");
-                        articleSrcDate2.setAttribute("class", "card-srcdate");
-                        articleSrcDate2.setAttribute("id", `matchedNewsDate_${articleDBId}`);
-                        
-                        var articleContent2 = document.createElement("p");
-                        articleContent2.setAttribute("class", "cars-text");
-                        articleContent2.setAttribute("id", `hmatchedNewsContent_${articleDBId}`);
+            var articleSrcDate = document.createElement("h5");
+            articleSrcDate.setAttribute("class", "card-srcdate");
+            articleSrcDate.setAttribute("id", `selectedNewsDate_${articleDBId}`);
+            
+            var articleContent = document.createElement("p");
+            articleContent.setAttribute("class", "cars-text");
+            articleContent.setAttribute("id", `selectedNewsContent_${articleDBId}`);
 
-                        if(res.data[i].lead_paragraph==null){
-                            var leadParagraph = "";
-                        }else{
-                            var leadParagraph = res.data[i].lead_paragraph;
-                        }
-                        if(res.data[i].paragraph==null){
-                            var foxParagraph = "";
-                        }else{
-                            var foxParagraph = res.data[i].paragraph;
-                        }
-                        
-                        if (res.data[i].post_source == "nytimes"){
-                            articleSrcDate2.textContent = "New York Times" + " " + finalBeutifiedDate;
-                            articleContent2.textContent = res.data[i].content +" " + leadParagraph;
-                        }else{
-                            articleSrcDate2.textContent = "Fox News"+ " " + finalBeutifiedDate;
-                            articleContent2.textContent = res.data[i].content +" " + foxParagraph;
-                        }
+            var articleLink = document.createElement("a");
+            articleLink.setAttribute("class", "btn btn-xs btn-primary btn-selected");
+            articleLink.setAttribute("id", `a_${articleDBId}`);
 
-                        var closeMatchedBtn = document.createElement("a");
-                        closeMatchedBtn.setAttribute("class", "btn btn-xs btn-primary btn-matched-close");
-                        closeMatchedBtn.setAttribute("id", "closeMatchedBtn");
-                        closeMatchedBtn.innerText = "close";
-                        
-                        // append single article
-                        articleBody2.appendChild(articleTitle2);
-                        articleBody2.appendChild(articleSrcDate2);
-                        articleBody2.appendChild(articleContent2);
-                        articleBody2.appendChild(closeMatchedBtn);
+            var iconDiv = document.createElement("div");
+            iconDiv.setAttribute("id", `icons_${articleDBId}`);
 
-                        var loadingSection = document.getElementById("btnLoader");
-                        loadingSection.setAttribute("class", "row hiddenc"); // make margin disappear
-                        loadingSection.innerHTML = "";
 
-                        articles.appendChild(matchedArticleRow); // append to all articles list
+            var loveBtn = document.createElement("img");
+            loveBtn.setAttribute("id", `user_love_${articleDBId}`);
+            loveBtn.setAttribute("src", "imgs/iconx/love.png");
+
+            var hahaBtn = document.createElement("img");
+            hahaBtn.setAttribute("id", `user_haha_${articleDBId}`);
+            hahaBtn.setAttribute("src", "imgs/iconx/haha.png");
+
+            var sadBtn = document.createElement("img");
+            sadBtn.setAttribute("id", `user_sad_${articleDBId}`);
+            sadBtn.setAttribute("src", "imgs/iconx/sad.png");
+
+            var angryBtn = document.createElement("img");
+            angryBtn.setAttribute("id", `user_angry_${articleDBId}`);
+            angryBtn.setAttribute("src", "imgs/iconx/angry.png");
+
+            if(res.data[i].lead_paragraph==null){
+                var leadParagraph = "";
+            }else{
+                var leadParagraph = res.data[i].lead_paragraph;
+            }
+
+            if(res.data[i].paragraph==null){
+                var foxParagraph = "";
+            }else{
+                var foxParagraph = res.data[i].paragraph;
+            }
+            console.log("res.data[i].paragraph: ", foxParagraph);
+            articleLink.textContent = "Read More";
+            if (res.data[i].post_source == "nytimes"){
+                console.log("has news from nytimes");
+                articleContent.textContent = res.data[i].content +" " + leadParagraph;
+                articleSrcDate.textContent = "New York Times" + " " + finalBeutifiedDate;
+            }else{
+                console.log("has news from fox news");
+                articleContent.textContent = res.data[i].content +" " + foxParagraph;
+                articleSrcDate.textContent = "Fox News"+ " " + finalBeutifiedDate;
+            }
+
+            console.log("articleContent: ", articleContent);
+
+            // ===================================calculate average post emotion
+            avgPostSentiment += res.data[i].sentiment_score;
+            avgPostMagnitude += res.data[i].magnitude_score;
+            // ===================================calculate average FB user reaction 
+            avgReactionSentiment += res.data[i].user_sentiment_score;
+            avgReactionMagnitude += res.data[i].user_magnitude_score;
+
+            // -------cal average New York Time post emotion
+            if(res.data[i].post_source=="nytimes"){
+                avgNYTPostSentiment += res.data[i].sentiment_score;
+                avgNYTPostMagnitude += res.data[i].magnitude_score;
+                avgNYTReactionSentiment += res.data[i].user_sentiment_score;
+                avgNYTReactionMagnitude += res.data[i].user_magnitude_score;
+                NYTlength += 1;
+            }
+            // -------cal average Fox post emotion
+            if(res.data[i].post_source=="foxnews"){
+                avgFoxPostSentiment += res.data[i].sentiment_score;
+                avgFoxPostMagnitude += res.data[i].magnitude_score;
+                avgFoxReactionSentiment += res.data[i].user_sentiment_score;
+                avgFoxReactionMagnitude += res.data[i].user_magnitude_score;
+                FoxLength += 1;
+            }
+
+            // append single article
+            articleBody.appendChild(articleTitle);
+            articleBody.appendChild(articleSrcDate);
+            articleBody.appendChild(articleContent);
+            articleBody.appendChild(articleLink);
+            articleBody.appendChild(iconDiv);
+            
+            iconDiv.appendChild(loveBtn);
+            iconDiv.appendChild(hahaBtn);
+            iconDiv.appendChild(sadBtn);
+            iconDiv.appendChild(angryBtn);
+            
+            // -------------------------------------------------------------------------- set pop up classes
+            articleCol2 = document.createElement("div");
+            articleCol2.setAttribute("class", `hiddenc col-md-6 mb-4 hcol_selected_${articleDBId}`);
+            articleRow.appendChild(articleCol2);
+
+            cardShadow2 = document.createElement("article");
+            cardShadow2.setAttribute("class", `card shadow hselectedNews_${articleDBId}`);
+            articleCol2.appendChild(cardShadow2);
+
+            articleBody2 = document.createElement("div");
+            articleBody2.setAttribute("class", "card-body");
+            articleBody2.setAttribute("id", `hselected_cbody_${articleDBId}`);
+            cardShadow2.appendChild(articleBody2);
+
+            var articleTitle2 = document.createElement("h4");
+            articleTitle2.setAttribute("class","card-title");
+            articleTitle2.setAttribute("id",`selectedNewsSrc_${articleDBId}`);
+            articleTitle2.innerText = res.data[i].title; 
+
+            var articleSrcDate2 = document.createElement("h5");
+            articleSrcDate2.setAttribute("class", "card-srcdate");
+            articleSrcDate2.setAttribute("id", `selectedNewsDate_${articleDBId}`);
+            
+            var articleContent2 = document.createElement("p");
+            articleContent2.setAttribute("class", "cars-text");
+            articleContent2.setAttribute("id", `hselectedNewsContent_${articleDBId}`);
+
+            if(res.data[i].lead_paragraph==null){
+                var leadParagraph = "";
+            }else{
+                var leadParagraph = res.data[i].lead_paragraph;
+            }
+
+            if(res.data[i].paragraph==null){
+                var foxParagraph = "";
+            }else{
+                var foxParagraph = res.data[i].paragraph;
+            }
+            
+            if (res.data[i].post_source == "nytimes"){
+                console.log("has news from nytimes");
+                articleSrcDate2.textContent = "New York Times" + " " + finalBeutifiedDate;
+                articleContent2.textContent = res.data[i].content +" " + leadParagraph;
+            }else{
+                console.log("has news from fox news");
+                articleSrcDate2.textContent = "Fox News"+ " " + finalBeutifiedDate;
+                articleContent2.textContent = res.data[i].content +" " + foxParagraph;
+            }
+
+
+            var closeBtn = document.createElement("a");
+            closeBtn.setAttribute("class", "btn btn-xs btn-primary btn-selected-close");
+            closeBtn.setAttribute("id", "closeBtn");
+            closeBtn.innerText = "close";
+            
+            // append single article
+            articleBody2.appendChild(articleTitle2);
+            articleBody2.appendChild(articleSrcDate2);
+            articleBody2.appendChild(articleContent2);
+            articleBody2.appendChild(closeBtn);
+            
+            // -------------------------------------------------------------------------- remove loading section
+            var loadingSection = document.getElementById("btnLoader");
+            loadingSection.setAttribute("class", "row hiddenc"); // make margin disappear
+            loadingSection.innerHTML = "";
+            articles.appendChild(articleRow); // append to all articles list
+        }
+    }
+
+    for (i=0; i<res.data.length; i++){
+        var matchedArticleRow;
+        // ============================================================= Get matched Articles in same block
+        for (j=0;j<res.data.length;j++){
+            if (res.data[i].clickedId == 0){ //is a matched article
+                if (res.data[j].matchedId == res.data[i].id){ // if a clickedArticle's matched Article == this matched article
+                    var rawDate = res.data[i].post_date;
+                    var re = /([^T]+)/;
+                    var pureDatePart = rawDate.split(re);
+                    var datePart = pureDatePart[1];
+                    var datePartArray = datePart.split("-");
+                    
+                    var beautifyDateYear = datePartArray[0];
+                    var beautifyDateMonth = datePartArray[1];
+                    var beautifyDateDate = datePartArray[2];
+                    var finalBeutifiedDate = beautifyDateYear+"/"+beautifyDateMonth+"/"+beautifyDateDate;
+
+                    matchedArticleRow = document.getElementById(`articleRow_${res.data[j].id}`);
+                    
+                    articleDBId = res.data[i].id;
+
+                    articleCol = document.createElement("div");
+                    articleCol.setAttribute("class", `col-lg-6 col-sm-6 mb-4 col_matched_${articleDBId}`);
+                    matchedArticleRow.appendChild(articleCol);
+
+                    cardShadow = document.createElement("article");
+                    cardShadow.setAttribute("class", "card shadow");
+                    cardShadow.setAttribute("id", `matchedNews_${articleDBId}`);
+                    articleCol.appendChild(cardShadow);
+
+                    articleBody = document.createElement("div");
+                    articleBody.setAttribute("class", "card-body");
+                    articleBody.setAttribute("id", `matched_cbody_${articleDBId}`);
+                    cardShadow.appendChild(articleBody);
+
+                    var articleTitle = document.createElement("h4");
+                    articleTitle.setAttribute("class","card-title");
+                    articleTitle.setAttribute("id",`matchedNewsSrc_${articleDBId}`);
+                    articleTitle.innerText = res.data[i].title;
+
+                    var articleSrcDate = document.createElement("h5");
+                    articleSrcDate.setAttribute("class", "card-srcdate");
+                    articleSrcDate.setAttribute("id", `matchedNewsDate_${articleDBId}`);
+
+                    var articleContent = document.createElement("p");
+                    articleContent.setAttribute("class", "cars-text");
+                    articleContent.setAttribute("id", `matchedNewsContent_${articleDBId}`);
+
+                    var articleLink = document.createElement("a");
+                    articleLink.setAttribute("class", "btn btn-xs btn-primary btn-matched");
+                    articleLink.setAttribute("id", `a_${articleDBId}`);
+                    // articleLink.setAttribute("href", `${res.data[i].post_link}`);
+
+                    var iconDiv = document.createElement("div");
+                    iconDiv.setAttribute("id", `icons_${articleDBId}`);
+
+                    var loveBtn = document.createElement("img");
+                    loveBtn.setAttribute("id", `user_love_${articleDBId}`);
+                    loveBtn.setAttribute("src", "imgs/iconx/love.png");
+    
+                    var hahaBtn = document.createElement("img");
+                    hahaBtn.setAttribute("id", `user_haha_${articleDBId}`);
+                    hahaBtn.setAttribute("src", "imgs/iconx/haha.png");
+    
+                    var sadBtn = document.createElement("img");
+                    sadBtn.setAttribute("id", `user_sad_${articleDBId}`);
+                    sadBtn.setAttribute("src", "imgs/iconx/sad.png");
+    
+                    var angryBtn = document.createElement("img");
+                    angryBtn.setAttribute("id", `user_angry_${articleDBId}`);
+                    angryBtn.setAttribute("src", "imgs/iconx/angry.png");
+
+                    articleSrcDate.textContent = finalBeutifiedDate;
+
+                    if(res.data[i].lead_paragraph==null){
+                        var leadParagraph = "";
+                    }else{
+                        var leadParagraph = res.data[i].lead_paragraph;
                     }
 
+                    if(res.data[i].paragraph==null){
+                        var foxParagraph = "";
+                    }else{
+                        var foxParagraph = res.data[i].paragraph;
+                    }
+
+                    articleLink.textContent = "Read More";
+
+                    if (res.data[i].post_source == "nytimes"){
+                        console.log("has news from nytimes");
+                        articleSrcDate.textContent = "New York Times" + " " + finalBeutifiedDate;
+                        articleContent.textContent = res.data[i].content +" " + leadParagraph;
+                    }else{
+                        console.log("has news from fox news");
+                        articleSrcDate.textContent = "Fox News"+ " " + finalBeutifiedDate;
+                        articleContent.textContent = res.data[i].content +" " + foxParagraph;
+                    }
+
+                    // ===================================calculate average post emotion
+                    avgPostSentiment += res.data[i].sentiment_score;
+                    avgPostMagnitude += res.data[i].magnitude_score;
+                    // ===================================calculate average FB user reaction 
+                    avgReactionSentiment += res.data[i].user_sentiment_score;
+                    avgReactionMagnitude += res.data[i].user_magnitude_score;
+        
+                    // -------cal average New York Time post emotion
+                    if(res.data[i].post_source=="nytimes"){
+                        avgNYTPostSentiment += res.data[i].sentiment_score;
+                        avgNYTPostMagnitude += res.data[i].magnitude_score;
+                        avgNYTReactionSentiment += res.data[i].user_sentiment_score;
+                        avgNYTReactionMagnitude += res.data[i].user_magnitude_score;
+                        NYTlength += 1;
+                    }
+                    // -------cal average Fox post emotion
+                    if(res.data[i].post_source=="foxnews"){
+                        avgFoxPostSentiment += res.data[i].sentiment_score;
+                        avgFoxPostMagnitude += res.data[i].magnitude_score;
+                        avgFoxReactionSentiment += res.data[i].user_sentiment_score;
+                        avgFoxReactionMagnitude += res.data[i].user_magnitude_score;
+                        FoxLength += 1;
+                    }
+
+                    // append single article
+                    
+                    articleBody.appendChild(articleTitle);
+                    articleBody.appendChild(articleSrcDate);
+                    articleBody.appendChild(articleContent);
+                    articleBody.appendChild(articleLink);
+                    articleBody.appendChild(iconDiv);
+            
+                    iconDiv.appendChild(loveBtn);
+                    iconDiv.appendChild(hahaBtn);
+                    iconDiv.appendChild(sadBtn);
+                    iconDiv.appendChild(angryBtn);
+
+                    // -------------------------------------------------------------------------- set pop up classes
+                    articleCol2 = document.createElement("div");
+                    articleCol2.setAttribute("class", `hiddenc col-md-6 mb-4 hcol_matched_${articleDBId}`);
+                    articleRow.appendChild(articleCol2);
+
+                    cardShadow2 = document.createElement("article");
+                    cardShadow2.setAttribute("class", `card shadow hmatchedNews_${articleDBId}`);
+                    articleCol2.appendChild(cardShadow2);
+
+                    articleBody2 = document.createElement("div");
+                    articleBody2.setAttribute("class", "card-body");
+                    articleBody2.setAttribute("id", `hmatched_cbody_${articleDBId}`);
+                    cardShadow2.appendChild(articleBody2);
+
+                    var articleTitle2 = document.createElement("h4");
+                    articleTitle2.setAttribute("class","card-title");
+                    articleTitle2.setAttribute("id",`matchedNewsSrc_${articleDBId}`);
+                    articleTitle2.innerText = res.data[i].title; 
+
+                    var articleSrcDate2 = document.createElement("h5");
+                    articleSrcDate2.setAttribute("class", "card-srcdate");
+                    articleSrcDate2.setAttribute("id", `matchedNewsDate_${articleDBId}`);
+                    
+                    var articleContent2 = document.createElement("p");
+                    articleContent2.setAttribute("class", "cars-text");
+                    articleContent2.setAttribute("id", `hmatchedNewsContent_${articleDBId}`);
+
+                    if(res.data[i].lead_paragraph==null){
+                        var leadParagraph = "";
+                    }else{
+                        var leadParagraph = res.data[i].lead_paragraph;
+                    }
+                    if(res.data[i].paragraph==null){
+                        var foxParagraph = "";
+                    }else{
+                        var foxParagraph = res.data[i].paragraph;
+                    }
+                    
+                    if (res.data[i].post_source == "nytimes"){
+                        articleSrcDate2.textContent = "New York Times" + " " + finalBeutifiedDate;
+                        articleContent2.textContent = res.data[i].content +" " + leadParagraph;
+                    }else{
+                        articleSrcDate2.textContent = "Fox News"+ " " + finalBeutifiedDate;
+                        articleContent2.textContent = res.data[i].content +" " + foxParagraph;
+                    }
+
+                    var closeMatchedBtn = document.createElement("a");
+                    closeMatchedBtn.setAttribute("class", "btn btn-xs btn-primary btn-matched-close");
+                    closeMatchedBtn.setAttribute("id", "closeMatchedBtn");
+                    closeMatchedBtn.innerText = "close";
+                    
+                    // append single article
+                    articleBody2.appendChild(articleTitle2);
+                    articleBody2.appendChild(articleSrcDate2);
+                    articleBody2.appendChild(articleContent2);
+                    articleBody2.appendChild(closeMatchedBtn);
+
+                    var loadingSection = document.getElementById("btnLoader");
+                    loadingSection.setAttribute("class", "row hiddenc"); // make margin disappear
+                    loadingSection.innerHTML = "";
+
+                    articles.appendChild(matchedArticleRow); // append to all articles list
                 }
+
             }
         }
-       
-        avgPostSentiment = avgPostSentiment/res.data.length;
-        avgPostMagnitude = avgPostMagnitude/res.data.length;
-        avgPostSentiment = avgPostSentiment.toFixed(2);
-        avgPostMagnitude = avgPostMagnitude.toFixed(2);
+    }
 
-        avgReactionSentiment = avgReactionSentiment/res.data.length;
-        avgReactionMagnitude = avgReactionMagnitude/res.data.length;
-        avgReactionSentiment = avgReactionSentiment.toFixed(2);
-        avgReactionMagnitude = avgReactionMagnitude.toFixed(2);
+    avgPostSentiment = avgPostSentiment/res.data.length;
+    avgPostMagnitude = avgPostMagnitude/res.data.length;
+    avgPostSentiment = avgPostSentiment.toFixed(2);
+    avgPostMagnitude = avgPostMagnitude.toFixed(2);
 
-        // by news source
-        avgNYTPostSentiment = avgNYTPostSentiment/NYTlength;
-        avgNYTPostMagnitude = avgNYTPostMagnitude/NYTlength;
-        avgNYTReactionSentiment = avgNYTReactionSentiment/NYTlength;
-        avgNYTReactionMagnitude = avgNYTReactionMagnitude/NYTlength;
-        avgFoxPostSentiment = avgFoxPostSentiment/FoxLength;
-        avgFoxPostMagnitude = avgFoxPostMagnitude/FoxLength;
-        avgFoxReactionSentiment = avgFoxReactionSentiment/FoxLength;
-        avgFoxReactionMagnitude = avgFoxReactionMagnitude/FoxLength;
+    avgReactionSentiment = avgReactionSentiment/res.data.length;
+    avgReactionMagnitude = avgReactionMagnitude/res.data.length;
+    avgReactionSentiment = avgReactionSentiment.toFixed(2);
+    avgReactionMagnitude = avgReactionMagnitude.toFixed(2);
 
-        avgNYTPostSentiment = avgNYTPostSentiment.toFixed(2);
-        avgNYTPostMagnitude = avgNYTPostMagnitude.toFixed(2);
-        avgNYTReactionSentiment = avgNYTReactionSentiment.toFixed(2);
-        avgNYTReactionMagnitude = avgNYTReactionMagnitude.toFixed(2);
-        avgFoxPostSentiment = avgFoxPostSentiment.toFixed(2);
-        avgFoxPostMagnitude = avgFoxPostMagnitude.toFixed(2);
-        avgFoxReactionSentiment = avgFoxReactionSentiment.toFixed(2);
-        avgFoxReactionMagnitude = avgFoxReactionMagnitude.toFixed(2);
+    // by news source
+    avgNYTPostSentiment = avgNYTPostSentiment/NYTlength;
+    avgNYTPostMagnitude = avgNYTPostMagnitude/NYTlength;
+    avgNYTReactionSentiment = avgNYTReactionSentiment/NYTlength;
+    avgNYTReactionMagnitude = avgNYTReactionMagnitude/NYTlength;
+    avgFoxPostSentiment = avgFoxPostSentiment/FoxLength;
+    avgFoxPostMagnitude = avgFoxPostMagnitude/FoxLength;
+    avgFoxReactionSentiment = avgFoxReactionSentiment/FoxLength;
+    avgFoxReactionMagnitude = avgFoxReactionMagnitude/FoxLength;
 
-        localStorage.setItem("avgPostSentiment",avgPostSentiment);
-        localStorage.setItem("avgPostMagnitude",avgPostMagnitude);
-        localStorage.setItem("avgReactionSentiment", avgReactionSentiment);
-        localStorage.setItem("avgReactionMagnitude", avgReactionMagnitude);
+    avgNYTPostSentiment = avgNYTPostSentiment.toFixed(2);
+    avgNYTPostMagnitude = avgNYTPostMagnitude.toFixed(2);
+    avgNYTReactionSentiment = avgNYTReactionSentiment.toFixed(2);
+    avgNYTReactionMagnitude = avgNYTReactionMagnitude.toFixed(2);
+    avgFoxPostSentiment = avgFoxPostSentiment.toFixed(2);
+    avgFoxPostMagnitude = avgFoxPostMagnitude.toFixed(2);
+    avgFoxReactionSentiment = avgFoxReactionSentiment.toFixed(2);
+    avgFoxReactionMagnitude = avgFoxReactionMagnitude.toFixed(2);
 
-        localStorage.setItem("avgNYTPostSentiment", avgNYTPostSentiment);
-        localStorage.setItem("avgNYTPostMagnitude", avgNYTPostMagnitude);
-        localStorage.setItem("avgNYTReactionSentiment", avgNYTReactionSentiment);
-        localStorage.setItem("avgNYTReactionMagnitude", avgNYTReactionMagnitude);
-        localStorage.setItem("avgFoxPostSentiment", avgFoxPostSentiment);
-        localStorage.setItem("avgFoxPostMagnitude", avgFoxPostMagnitude);
-        localStorage.setItem("avgFoxReactionSentiment", avgFoxReactionSentiment);
-        localStorage.setItem("avgFoxReactionMagnitude", avgFoxReactionMagnitude);
-        
-        var BlockShowEmotionBtn = document.getElementById("showEmotion");
+    localStorage.setItem("avgPostSentiment",avgPostSentiment);
+    localStorage.setItem("avgPostMagnitude",avgPostMagnitude);
+    localStorage.setItem("avgReactionSentiment", avgReactionSentiment);
+    localStorage.setItem("avgReactionMagnitude", avgReactionMagnitude);
 
-        var RowShowEmotionBtn = document.createElement("div");
-        RowShowEmotionBtn.setAttribute("class", "row");
+    localStorage.setItem("avgNYTPostSentiment", avgNYTPostSentiment);
+    localStorage.setItem("avgNYTPostMagnitude", avgNYTPostMagnitude);
+    localStorage.setItem("avgNYTReactionSentiment", avgNYTReactionSentiment);
+    localStorage.setItem("avgNYTReactionMagnitude", avgNYTReactionMagnitude);
+    localStorage.setItem("avgFoxPostSentiment", avgFoxPostSentiment);
+    localStorage.setItem("avgFoxPostMagnitude", avgFoxPostMagnitude);
+    localStorage.setItem("avgFoxReactionSentiment", avgFoxReactionSentiment);
+    localStorage.setItem("avgFoxReactionMagnitude", avgFoxReactionMagnitude);
+    
+    var BlockShowEmotionBtn = document.getElementById("showEmotion");
 
-        var ColShowEmotionBtn = document.createElement("div");
-        ColShowEmotionBtn.setAttribute("class", "col-md-12 text-center");
-        
-        var showEmotionBtn = document.createElement("button");
-        showEmotionBtn.setAttribute("class","btn btn-lg btn-primary");
-        showEmotionBtn.setAttribute("id","btn-analyzeUser");
-        showEmotionBtn.innerText = "Next Step";
+    var RowShowEmotionBtn = document.createElement("div");
+    RowShowEmotionBtn.setAttribute("class", "row");
 
-        RowShowEmotionBtn.appendChild(ColShowEmotionBtn);
-        ColShowEmotionBtn.appendChild(showEmotionBtn);
-        BlockShowEmotionBtn.appendChild(RowShowEmotionBtn);
+    var ColShowEmotionBtn = document.createElement("div");
+    ColShowEmotionBtn.setAttribute("class", "col-md-12 text-center");
+    
+    var showEmotionBtn = document.createElement("button");
+    showEmotionBtn.setAttribute("class","btn btn-lg btn-primary");
+    showEmotionBtn.setAttribute("id","btn-analyzeUser");
+    showEmotionBtn.innerText = "Next Step";
 
-        // ========================================== Click effect
-        var emojis = document.querySelectorAll("[id^=\"user_\"]");
-        emojis.forEach(emoji=>{
-            emoji.addEventListener("click",()=>{
-                var cId = emoji.getAttribute("id").split("_")[2];
-                var emotion = emoji.getAttribute("id").split("_")[1];
-                var iconsSection = document.querySelector(`#icons_${cId}`);
-                iconsSection.childNodes.forEach(()=>{
-                    // remove bigger attributes
-                    var bundledLove = document.querySelector(`#user_love_${cId}`);
-                    var bundledHaha = document.querySelector(`#user_haha_${cId}`);
-                    var bundledSad = document.querySelector(`#user_sad_${cId}`);
-                    var bundledAngry = document.querySelector(`#user_angry_${cId}`);
-                    bundledLove.removeAttribute("class");
-                    bundledHaha.removeAttribute("class");
-                    bundledSad.removeAttribute("class");
-                    bundledAngry.removeAttribute("class");
+    RowShowEmotionBtn.appendChild(ColShowEmotionBtn);
+    ColShowEmotionBtn.appendChild(showEmotionBtn);
+    BlockShowEmotionBtn.appendChild(RowShowEmotionBtn);
 
-                    // make the one which is clicked bigger
-                    emoji.setAttribute("class", "userEmotionClicked");
-                    localStorage.setItem(`emotion_${cId}`,emotion);
-                });
+    // ========================================== Click effect
+    var emojis = document.querySelectorAll("[id^=\"user_\"]");
+    emojis.forEach(emoji=>{
+        emoji.addEventListener("click",()=>{
+            var cId = emoji.getAttribute("id").split("_")[2];
+            var emotion = emoji.getAttribute("id").split("_")[1];
+            var iconsSection = document.querySelector(`#icons_${cId}`);
+            iconsSection.childNodes.forEach(()=>{
+                // remove bigger attributes
+                var bundledLove = document.querySelector(`#user_love_${cId}`);
+                var bundledHaha = document.querySelector(`#user_haha_${cId}`);
+                var bundledSad = document.querySelector(`#user_sad_${cId}`);
+                var bundledAngry = document.querySelector(`#user_angry_${cId}`);
+                bundledLove.removeAttribute("class");
+                bundledHaha.removeAttribute("class");
+                bundledSad.removeAttribute("class");
+                bundledAngry.removeAttribute("class");
+
+                // make the one which is clicked bigger
+                emoji.setAttribute("class", "userEmotionClicked");
+                localStorage.setItem(`emotion_${cId}`,emotion);
             });
         });
-        
+    });
+    
 
-        // ===================================================================================== pop up news when clicked
-        var readMoresBtns = document.querySelectorAll("[id^=\"a_\"]");
-        readMoresBtns.forEach((e)=>{
-            e.addEventListener("click",()=>{
-                var idToPopUp = e.getAttribute("id").split("_")[1];
-                var classToPopUp = e.getAttribute("class");
-                
-                if (classToPopUp.includes("btn-selected")){
-                    var sectionToPop = document.querySelector(".hcol_selected_"+idToPopUp);
-                    var contentSectionToPop = document.querySelector(".hselectedNews_"+idToPopUp);
-                    var bodyToPop = document.querySelector("#hselected_cbody_"+idToPopUp);
-                    
-                    sectionToPop.setAttribute("class", `modalc hcol_selected_${idToPopUp}`);
-                    contentSectionToPop.setAttribute("class", `modal-dialog modal-dialog-centered hselectedNews_${idToPopUp}`);
-                    contentSectionToPop.setAttribute("id", "contentSectionToPop");
-                    bodyToPop.setAttribute("class", "modalc-content");
-                }else{
-                    var sectionToPop = document.querySelector(".hcol_matched_"+idToPopUp);
-                    var contentSectionToPop = document.querySelector(".hmatchedNews_"+idToPopUp);
-                    var bodyToPop = document.querySelector("#hmatched_cbody_"+idToPopUp);
-                    
-                    sectionToPop.setAttribute("class", `modalc hcol_matched_${idToPopUp}`);
-                    contentSectionToPop.setAttribute("class", `modal-dialog modal-dialog-centered hmatchedNews_${idToPopUp}`);
-                    contentSectionToPop.setAttribute("id", "contentSectionToPop");
-                    bodyToPop.setAttribute("class", "modalc-content");
-                }
-            });
-        });
-        // when closed the selected read-more section
-        closeBtns = document.querySelectorAll("#closeBtn");
-        closeBtns.forEach((e)=>{
-            e.addEventListener("click",()=>{
-                var hiddenElements = document.querySelectorAll("[class^=\"modalc hcol_selected_\"]");
-                hiddenElements.forEach((x)=>{
-                    x.setAttribute("class",`hiddenc col-md-6 mb-4 ${x.classList[1]}`);
-                });
-            });
-        });
-
-        // when closed the matched read-more section
-        closeMatchedBtns = document.querySelectorAll("#closeMatchedBtn");
-        closeMatchedBtns.forEach((e)=>{
-            e.addEventListener("click",()=>{
-                var hiddenElements = document.querySelectorAll("[class^=\"modalc hcol_matched_\"]");
-                hiddenElements.forEach((x)=>{
-                    x.setAttribute("class",`hiddenc col-md-6 mb-4 ${x.classList[1]}`);
-                });
-            });
-        });
-
-        // when clicked the next step
-        const analyzeUserEmotionButton = document.getElementById("btn-analyzeUser");
-        analyzeUserEmotionButton.addEventListener("click",()=>{
+    // ===================================================================================== pop up news when clicked
+    var readMoresBtns = document.querySelectorAll("[id^=\"a_\"]");
+    readMoresBtns.forEach((e)=>{
+        e.addEventListener("click",()=>{
+            var idToPopUp = e.getAttribute("id").split("_")[1];
+            var classToPopUp = e.getAttribute("class");
             
-            var keyArr = [];
-            console.log(localStorage.length);
-            for (i=0; i<localStorage.length; i++){
-                if (localStorage.key(i).substring(0,7) == "emotion"){
-                    keyArr.push(localStorage.key(i));
-                }
-            }
-            console.log("keyArr: ", keyArr);
-
-            var emotionArray = [];
-            for (i=0; i < keyArr.length; i++){
-                emotionArray.push(localStorage.getItem(keyArr[i]));
-            }
-
-            console.log("emotionArray: ", emotionArray);
-            localStorage.setItem("clickedEmotions",JSON.stringify(emotionArray)); 
-
-            // check if there is emotion
-            var checkedIfHasEmotion = localStorage.getItem("clickedEmotions");
-            console.log("checkedIfHasEmotion: ", checkedIfHasEmotion);
-            console.log("checkedIfHasEmotion.length: ", checkedIfHasEmotion.length);
-            if(checkedIfHasEmotion=="[]"){
-                alert("Please click on emotion emojis to proceed.");
+            if (classToPopUp.includes("btn-selected")){
+                var sectionToPop = document.querySelector(".hcol_selected_"+idToPopUp);
+                var contentSectionToPop = document.querySelector(".hselectedNews_"+idToPopUp);
+                var bodyToPop = document.querySelector("#hselected_cbody_"+idToPopUp);
+                
+                sectionToPop.setAttribute("class", `modalc hcol_selected_${idToPopUp}`);
+                contentSectionToPop.setAttribute("class", `modal-dialog modal-dialog-centered hselectedNews_${idToPopUp}`);
+                contentSectionToPop.setAttribute("id", "contentSectionToPop");
+                bodyToPop.setAttribute("class", "modalc-content");
             }else{
-                window.location.href = "/userEmotion.html";
+                var sectionToPop = document.querySelector(".hcol_matched_"+idToPopUp);
+                var contentSectionToPop = document.querySelector(".hmatchedNews_"+idToPopUp);
+                var bodyToPop = document.querySelector("#hmatched_cbody_"+idToPopUp);
+                
+                sectionToPop.setAttribute("class", `modalc hcol_matched_${idToPopUp}`);
+                contentSectionToPop.setAttribute("class", `modal-dialog modal-dialog-centered hmatchedNews_${idToPopUp}`);
+                contentSectionToPop.setAttribute("id", "contentSectionToPop");
+                bodyToPop.setAttribute("class", "modalc-content");
             }
         });
+    });
+    // when closed the selected read-more section
+    closeBtns = document.querySelectorAll("#closeBtn");
+    closeBtns.forEach((e)=>{
+        e.addEventListener("click",()=>{
+            var hiddenElements = document.querySelectorAll("[class^=\"modalc hcol_selected_\"]");
+            hiddenElements.forEach((x)=>{
+                x.setAttribute("class",`hiddenc col-md-6 mb-4 ${x.classList[1]}`);
+            });
+        });
+    });
+
+    // when closed the matched read-more section
+    closeMatchedBtns = document.querySelectorAll("#closeMatchedBtn");
+    closeMatchedBtns.forEach((e)=>{
+        e.addEventListener("click",()=>{
+            var hiddenElements = document.querySelectorAll("[class^=\"modalc hcol_matched_\"]");
+            hiddenElements.forEach((x)=>{
+                x.setAttribute("class",`hiddenc col-md-6 mb-4 ${x.classList[1]}`);
+            });
+        });
+    });
+
+    // when clicked the next step
+    const analyzeUserEmotionButton = document.getElementById("btn-analyzeUser");
+    analyzeUserEmotionButton.addEventListener("click",()=>{
+        
+        var keyArr = [];
+        console.log(localStorage.length);
+        for (i=0; i<localStorage.length; i++){
+            if (localStorage.key(i).substring(0,7) == "emotion"){
+                keyArr.push(localStorage.key(i));
+            }
+        }
+        console.log("keyArr: ", keyArr);
+
+        // remove clickedEmotions before creating it
+        localStorage.removeItem("clickedEmotions");
+        
+        // create clickedEmotions
+        var emotionArray = [];
+        for (i=0; i < keyArr.length; i++){
+            emotionArray.push(localStorage.getItem(keyArr[i]));
+        }
+
+        console.log("emotionArray: ", emotionArray);
+        localStorage.setItem("clickedEmotions",JSON.stringify(emotionArray)); 
+
+        // check if there is emotion
+        var checkedIfHasEmotion = localStorage.getItem("clickedEmotions");
+        console.log("checkedIfHasEmotion: ", checkedIfHasEmotion);
+        console.log("checkedIfHasEmotion.length: ", checkedIfHasEmotion.length);
+        if(checkedIfHasEmotion=="[]"){
+            alert("Please click on emotion emojis to proceed.");
+        }else{
+            window.location.href = "/userEmotion.html";
+        }
+    });
 }).catch(err => {
     console.log("err from tfidf: ",err);
 }); 

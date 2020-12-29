@@ -56,17 +56,14 @@ router.post("/", verifyToken, (req, res)=>{
                         email: payload.data.email,
                         user_sentiment_score: avgUserSentiment.toFixed(2),
                         user_magnitude_score: avgUserMagnitude.toFixed(2),
-    
-                        };
+                    };
                     let sql = "INSERT INTO user_emotion SET ?";
                     let sqlquery = await query(sql, insertedData);
                     return sqlquery;
                 }
                 insertUserEmotion();
                 console.log("combinedUserEmotion: ", combinedUserEmotion);
-
             }
-
             res.json(combinedUserEmotion);
         }
     });
@@ -74,7 +71,6 @@ router.post("/", verifyToken, (req, res)=>{
 
 function verifyToken(req, res, next){
     const bearerHeader=req.headers["authorization"];
-    
     if(typeof bearerHeader !== "undefined"){
         const bearer = bearerHeader.split(" ");
         const bearerToken = bearer[1];

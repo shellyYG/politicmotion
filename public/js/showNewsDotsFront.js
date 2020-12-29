@@ -208,6 +208,10 @@ async function searchNews(){
 
             // -------------------------------------------------- Build click event & saved it to localStorage     
             graph.on("plotly_click", function(data){
+                // clear clicked points first
+                localStorage.removeItem("clickedPoints");
+
+                // create points array
                 for(var i=0; i < data.points.length; i++){
                     // ------------------------------save localstorage
                     Xaxis = data.points[i].x;
@@ -267,12 +271,6 @@ async function searchNews(){
                 }
             });
             
-            // // ---------------------------------------------- remove points
-            // const reselectNewsBtn = document.getElementById("reselectBtnCol");
-            // reselectNewsBtn.addEventListener('click',()=>{
-            //     localStorage.removeItem("clickedPoints");
-            //     Plotly.relayout(graph,{annotations: []});
-            // })
         }
     }).catch(err=>{
         alert("Please select at least one dot!");

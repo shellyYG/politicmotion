@@ -168,7 +168,9 @@ router.post("/", verifyToken, (req, res)=>{
             async function findBuddyNames(){
                 var buddiesInfo = await findBuddies();
                 var buddyEmails = buddiesInfo.finalBuddyEmails;
+                console.log("buddyEmails: ", buddyEmails);
                 var formatbuddyEmails = buddyEmails.map(element=>"\""+element+"\"");
+                console.log("formatbuddyEmails: ", formatbuddyEmails);
                 
                 try{
                     sql = `SELECT username, signature FROM politicmotion.user_basic WHERE email IN (${formatbuddyEmails})
