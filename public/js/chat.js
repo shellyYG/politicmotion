@@ -458,9 +458,16 @@ socket.on("userDisconnected", (disconnectUserName) => {
 
 // add topics when clicked
 dropdownBtn.addEventListener("click",()=>{
-    myDropdown.setAttribute("class", "dropdown-content show"); // show the dropdown
-    // append the list of topics
-    socket.emit("search topics");
+    // check if the drop-down has already shown.
+    var myDropdownIsShown = myDropdown.getAttribute("class");
+    // --------- if yes, then close the show
+    if (myDropdownIsShown == "dropdown-content show"){
+        myDropdown.setAttribute("class", "dropdown-content");
+    }else{// --------- if no, then open the show
+        myDropdown.setAttribute("class", "dropdown-content show"); // show the dropdown
+        // append the list of topics
+        socket.emit("search topics");
+    }
 });
 var dropDownLists = document.getElementById("myDropdown");
 
