@@ -50,38 +50,42 @@ router.post("/",(req, res, next)=> {
 
     async function comparepass(){
         let LoginUserResult = await insertLoginUser();
-        let DataBasePass = LoginUserResult[0]["encryptpass"];
-        let userPass = await getLogInUserPass();
-        // console.log("Encrypted sign-in password is:", userPass);
-        // console.log("Encrypted User pass in database is:", DataBasePass);
-        if (userPass == DataBasePass) {
-            let userObject = {};
-            userObject["id"]= LoginUserResult[0]["id"];
-            userObject["provider"]= LoginUserResult[0]["provider"];
-            userObject["name"]= LoginUserResult[0]["username"];
-            userObject["email"]= LoginUserResult[0]["email"];
-            // userObject['picture']= 'http://3.138.56.214'+LoginUserResult[0]["picture"];
-            let finalObject = {};
-            let dataObject = {};
+        console.log("LoginUserResult: ", LoginUserResult);
+        if(LoginUserResult.length == 0){
+            res.send("Email not existed.");
+        }else{
+            let DataBasePass = LoginUserResult[0]["encryptpass"];
+            let userPass = await getLogInUserPass();
             
-            dataObject["user"] = userObject;
-            finalObject["data"] = dataObject;
-            
-            let payloadObject = {};
-            payloadObject["data"]= userObject;
-            
-            //--------------------------------------------------------------------------------------Token
-            //Create user payload (aka data)
-            const payload = payloadObject;
-            const accessToken = generateAccessToken(payload); //get access token
+            if (userPass == DataBasePass) {
+                let userObject = {};
+                userObject["id"]= LoginUserResult[0]["id"];
+                userObject["provider"]= LoginUserResult[0]["provider"];
+                userObject["name"]= LoginUserResult[0]["username"];
+                userObject["email"]= LoginUserResult[0]["email"];
+                
+                let finalObject = {};
+                let dataObject = {};
+                
+                dataObject["user"] = userObject;
+                finalObject["data"] = dataObject;
+                
+                let payloadObject = {};
+                payloadObject["data"]= userObject;
+                
+                //--------------------------------------------------------------------------------------Token
+                //Create user payload (aka data)
+                const payload = payloadObject;
+                const accessToken = generateAccessToken(payload); //get access token
 
-            dataObject["access_token"] = accessToken;
-            dataObject["access_expired"] = 30;
-            console.log("finalObject @signIn back: ", finalObject);
-            res.send(finalObject);
-
-        } else {
-            res.send("Wrong password!");
+                dataObject["access_token"] = accessToken;
+                dataObject["access_expired"] = 30;
+                console.log("finalObject @signIn back: ", finalObject);
+                res.send(finalObject);
+            
+            } else {
+                res.send("Wrong password!");
+            }
         }
     }
     comparepass();

@@ -44,12 +44,17 @@ signInT.addEventListener("click",()=>{
     "email": document.querySelector("#signInEmail").value,
     "password": document.querySelector("#signInPass").value
   }).then(res =>{
-    console.log(res.data);
-    let token = res.data.data.access_token;
-    console.log("token is:", token);
-    window.localStorage.setItem("generalToken",token);
-    alert("Successfully signed in!");
-    window.location.href="/search.html";
+    if(res.data == "Wrong password!"){
+      alert("Sorry, wrong password.");
+    }else if(res.data == "Email not existed."){
+      alert("Sorry, email not existed.");
+    }else{
+      let token = res.data.data.access_token;
+      console.log("token is:", token);
+      window.localStorage.setItem("generalToken",token);
+      alert("Successfully signed in!");
+      window.location.href="/search.html";
+    }
   }).catch(err =>{
     console.log(err);
   });
