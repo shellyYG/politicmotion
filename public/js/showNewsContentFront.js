@@ -2,6 +2,7 @@ let articles = document.querySelector("#articles");
 const searchTopic1 = localStorage.getItem("searchTopic1");
 const searchTopic2 = localStorage.getItem("searchTopic2");
 var finalPointsClicked = localStorage.getItem("clickedPoints");
+var clickedSources = localStorage.getItem("clickedSources");
 let step1 = document.getElementById("step1");
 let step2 = document.getElementById("step2");
 let step3 = document.getElementById("step3");
@@ -93,6 +94,7 @@ axios.post("showNewsContent",{
     "searchTopic1": searchTopic1,
     "searchTopic2": searchTopic2,
     "clickedIds": finalPointsClicked,
+    "clickedSources": clickedSources,
     "NYIdsArray": NYIdsArray,
     "FoxIdsArray": FoxIdsArray
 }).then(res=>{

@@ -1,7 +1,5 @@
 const searchButton = document.getElementById("btn-search");
 const analyzeUserEmotionButton = document.getElementById("btn-analyzeUser");
-
-console.log("search button clicked!!");
 const searchTopic1 = localStorage.getItem("searchTopic1");
 const searchTopic2 = localStorage.getItem("searchTopic2");
 const allUserEmotions = [];
@@ -11,6 +9,10 @@ let avgPostMagnitude = 0;
 let avgReactionSentiment = 0;
 let avgReactionMagnitude = 0;
 var d3 = Plotly.d3;
+
+// remove clickedPoints when the page is loaded
+localStorage.removeItem("clickedPoints");
+localStorage.removeItem("clickedSources");
 
 let step1 = document.getElementById("step1");
 let step2 = document.getElementById("step2");
@@ -239,12 +241,10 @@ async function searchNews(){
 
             // -------------------------------------------------- Build click event & saved it to localStorage     
             graph.on("plotly_click", function(data){
-                // clear clicked points first
-                localStorage.removeItem("clickedPoints");
 
                 // create points array
                 for(var i=0; i < data.points.length; i++){
-                    // ------------------------------save localstorage
+                    // ------------------------------save localstorage for sentiment & mag score of points clicked
                     Xaxis = data.points[i].x;
                     Yaxis = data.points[i].y;
                     var clickedPoints = localStorage.getItem("clickedPoints");
@@ -254,14 +254,29 @@ async function searchNews(){
                     }
                     pointArray.push({"Xaxis": Xaxis, "Yaxis": Yaxis});
                     localStorage.setItem("clickedPoints",JSON.stringify(pointArray));
+
+                    // ------------------------------save localstorage for news source of points clicked
+                    // ----------- to prevent if there is a dot which two news source with the same score
+                    if(data.points[i].data.name == "New York Times"){
+                        var clickedNewsSource = "nytimes";
+                    }else{
+                        var clickedNewsSource = "foxnews";
+                    }
+                    var clickedSources = localStorage.getItem('clickedSources');
+                    var sourcesArray = [];
+                    if(clickedSources){
+                        sourcesArray = JSON.parse(clickedSources);
+                    }
+                    sourcesArray.push(clickedNewsSource);
+                    localStorage.setItem('clickedSources', JSON.stringify(sourcesArray));
                     
                     // ------------------------------ add annotation
                     if(data.points[i].data.name == "New York Times"){
-                        newsSource = "NYT";
+                        var newsSource = "NYT";
                     }else{
-                        newsSource = "Fox";
+                        var newsSource = "Fox";
                     }
-                    
+
                     annotate_text = `${newsSource} selected!`;
                     annotation = {
                         text: annotate_text,
@@ -286,6 +301,7 @@ async function searchNews(){
                     reselectNewsBtn.addEventListener("click",()=>{
                         annotations = [];
                         localStorage.removeItem("clickedPoints");
+                        localStorage.removeItem("clickedSources");
                         Plotly.relayout(graph,{annotations: []});
                     });
                 }

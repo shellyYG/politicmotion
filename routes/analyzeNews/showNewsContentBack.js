@@ -23,10 +23,14 @@ router.post("/", (req, res) => {
     });
     
     allIdsArrayNum = allIdsArray.map(element=>parseInt(element,10));
-    
+    console.log("allIdsArrayNum: ", allIdsArrayNum);
     
     let clickedIds = req.body.clickedIds;
     clickedIds = JSON.parse(clickedIds);
+
+    let clickedSources = req.body.clickedSources;
+    clickedSources = JSON.parse(clickedSources);
+    console.log("clickedIds: ", clickedIds, "clickedSources: ", clickedSources);
 
     //--------------------------------------------------------------------------Get clicked news
     let allNewsIdClicked = [];
@@ -39,6 +43,7 @@ router.post("/", (req, res) => {
                 FROM politicmotion.fb_rawdata
                 WHERE sentiment_score = ${clickedIds[i].Xaxis} AND magnitude_score = ${clickedIds[i].Yaxis}
                 AND id IN (${allIdsArrayNum})
+                AND post_source = '${clickedSources[i]}'
                 LIMIT 1;`;
                 var sqlquery = await query(sql);
                 return sqlquery;
