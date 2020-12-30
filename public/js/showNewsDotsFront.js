@@ -53,6 +53,9 @@ if(existedLogoutLink){
     existedLogoutLink.addEventListener('click', ()=>{
         localStorage.removeItem('generalToken');
         alert("Successfully logged out!");
+        const logInNavReshow = document.getElementById('logInNav');
+        logInNavReshow.setAttribute('class', 'nav-item'); //show log in
+        existedLogoutLink.setAttribute('class', 'hiddenc'); //hide log out
     })
 }
   

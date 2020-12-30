@@ -44,6 +44,9 @@ if(existedLogoutLink){
     existedLogoutLink.addEventListener('click', ()=>{
         localStorage.removeItem('generalToken');
         alert("Successfully logged out!");
+        const logInNavReshow = document.getElementById('logInNav');
+        logInNavReshow.setAttribute('class', 'nav-item'); //show log in
+        existedLogoutLink.setAttribute('class', 'hiddenc'); //hide log out
     })
 }
 
@@ -126,13 +129,13 @@ axios.post("calUserEmotion", {
         
         pureDistanceNYT = userAvgSentEmotionArray[0]-reactionAvgNYTSentEmotionArray[0];
         pureDistanceFox = userAvgSentEmotionArray[0]-reactionAvgFoxSentEmotionArray[0];
-        usrEmotionDistanceNYT = Math.floor(Math.abs(pureDistanceNYT*100));
-        usrEmotionDistanceFox = Math.floor(Math.abs(pureDistanceFox*100));
+        usrEmotionDistanceNYT = Math.floor(Math.abs(pureDistanceNYT*100/2)); // 2 is distance btw max and min.
+        usrEmotionDistanceFox = Math.floor(Math.abs(pureDistanceFox*100/2));
         if(isNaN(usrEmotionDistanceNYT)==true){
             usrEmotionDistanceNYT = "";
         }else{
             if(isFinite(usrEmotionDistanceNYT)){ //if its not infinity
-                usrEmotionDistanceNYT = usrEmotionDistanceNYT.toString()+" points";
+                usrEmotionDistanceNYT = usrEmotionDistanceNYT.toString()+" %";
             }else{  //if its infinity
                 usrEmotionDistanceNYT = "";
             }
@@ -141,7 +144,7 @@ axios.post("calUserEmotion", {
             usrEmotionDistanceFox = "";
         }else{
             if(isFinite(usrEmotionDistanceFox)){ //if its not infinity
-                usrEmotionDistanceFox = usrEmotionDistanceFox.toString()+" points";
+                usrEmotionDistanceFox = usrEmotionDistanceFox.toString()+" %";
             }else{  //if its infinity
                 usrEmotionDistanceFox = "";
             }
