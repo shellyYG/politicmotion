@@ -30,8 +30,13 @@ def listToString(s):
     joined_string = "|".join(s)
     return joined_string
 
+#Add options
+option = webdriver.ChromeOptions()
+option.add_argument('--headless')
+option.add_argument('--disable-notifications')
+
 #Find Post Link
-driver = webdriver.Chrome()
+driver = webdriver.Chrome(options = option)
 
 
 def findArticles(n, topic1, topic2):
@@ -208,7 +213,7 @@ def getDetailedNews():
     for i in allLinksToFill: # or postLinks in the future??
         print(i)
         try:
-            driver = webdriver.Chrome()  #need to declare driver again
+            driver = webdriver.Chrome(options = option)  #need to declare driver again
             time.sleep(3)
         
             driver.get(i)
