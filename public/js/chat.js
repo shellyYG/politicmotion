@@ -80,7 +80,6 @@ userMsgBox.addEventListener('keyup', function(event) {
 let buddyNames = buddiesToChat.map(element => element.buddies);
 buddySignatures = buddySignatures.map(element => element.signatures);
 
-
 let step1 = document.getElementById("step1");
 let step2 = document.getElementById("step2");
 let step3 = document.getElementById("step3");
@@ -126,12 +125,9 @@ for (i = 0; i < buddiesToChat.length; i++) {
     nameStrong.setAttribute("id", "StrongName");
     nameStrong.innerText = buddiesToChat[i].buddies;
 
-    
-
     statusDiv.appendChild(statusSmall);
     statusDiv.appendChild(nameStrong);
     
-
     // add star for top partner
     if (topBuddyNamesPart.includes(buddiesToChat[i].buddies)){
         var star = document.createElement("img");
@@ -150,11 +146,11 @@ var allPartnerNames = [];
 directPartnerNames.forEach((e)=>{
     allPartnerNames.push(e.innerText);
 });
-console.log("allPartnerNames: ", allPartnerNames);
+
 socket.emit("allPartnerNames", allPartnerNames);
 socket.on("signaturesForShow", (s)=>{
     var statusDivs = document.querySelectorAll(".friend-name");
-    console.log("signature: ", s);
+    
     for(i=0; i<s.length; i++){
         var signature = document.createElement("signature");
         signature.setAttribute("id", "userSignature");
@@ -173,22 +169,19 @@ const tokenTest = () => {
         resolve(query);
     });
 };
-// console.log("F1");
+
 socket.on("getToken", () => {
-    // console.log("F2");
     tokenTest().then(result => {
         socket.emit("verifyToken", (result));
-        // console.log("F3");
     });
 });
 socket.on("AuthError", (msg) => {
     alert("You are too long away. Please sign in again.");
     window.location.replace("/signIn.html");
-    // console.log("F4 Auth Error");
 });
 
 socket.on("Self", (self) => {
-    // console.log("F4");
+    console.log(`${self.self} at Self`);
     selfNameForExcl = self.self;
     senderNow = self.self;
     selfNameDiv.innerText = `Welcome to chat, ${self.self}!`;
@@ -203,14 +196,12 @@ socket.on("Self", (self) => {
     instructionStar.setAttribute("id","starIcon");
     instruction.appendChild(instructionStar);
     socket.emit("newUserUser");
-    // console.log("F5");
 });
 
 // change color to green when online
 socket.on("onlineUsers", (onlineUserList) => {
-    // console.log("F6");
     var potentialPartners = document.querySelectorAll("partnerName");
-    // console.log("onlineUsers: ", onlineUserList);
+
     for (i = 0; i < potentialPartners.length; i++) {
         if (onlineUserList.includes(potentialPartners[i].innerText)) {
             var statusSmall = document.querySelectorAll("small");
@@ -219,7 +210,6 @@ socket.on("onlineUsers", (onlineUserList) => {
             statusSmall[i].innerText = "online";
         }
     }
-
 });
 
 // select chat partner 
@@ -273,7 +263,6 @@ socket.on("history", (data) => {
 
         // switch sender & receiver based on if it's self
         if (element.sender == senderNow) { //if its self, add to sender class
-            console.log("sender is self");
             singleMessage.setAttribute("class", "right clearfix");
             // append sender (self)
             var historySender = document.createElement("span");
@@ -484,16 +473,12 @@ socket.on("msgToShow", (data) => {
         // make scroll bar default to bottom
         var messageBody = document.querySelector(".scroll-message");
         messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
-
-
     }
 });
 
 socket.on("userDisconnected", (disconnectUserName) => {
-    console.log("F8");
     var potentialPartners = document.querySelectorAll("partnerName");
     for (i = 0; i < potentialPartners.length; i++) {
-        // console.log("potentialPartners[i].innerText: ", potentialPartners[i].innerText, "disconnectUserName", disconnectUserName);
         if (potentialPartners[i].innerText == disconnectUserName) {
             console.log("remove color");
             var statusSmall = document.querySelectorAll("small");
@@ -514,9 +499,14 @@ dropdownBtn.addEventListener("click",()=>{
     }else{// --------- if no, then open the show
         myDropdown.setAttribute("class", "dropdown-content show"); // show the dropdown
         // append the list of topics
-        socket.emit("search topics");
+        const selfWelcomeDiv = document.getElementById('selfName');
+        const ultimateSelfNamte = selfWelcomeDiv.innerText.split(/[,!]+/g)[1].trim();
+    
+        socket.emit("search topics", ultimateSelfNamte);
     }
 });
+
+
 var dropDownLists = document.getElementById("myDropdown");
 
 socket.on("allTopics",(topics)=>{
@@ -563,7 +553,6 @@ socket.on("other partners", (partners)=>{
     msgPlaceHolder.appendChild(defaultTextHolder);
 
     for (i = 0; i < partners.partnerList.length; i++) {
-        console.log("partners.partnerList[i]: ", partners.partnerList[i]);
         console.log("selfNameForExcl: ", selfNameForExcl);
         if(partners.partnerList[i] !== selfNameForExcl){
             var singleBuddy = document.createElement("li");
@@ -584,7 +573,6 @@ socket.on("other partners", (partners)=>{
             var signature = document.createElement("signature");
             signature.setAttribute("id", "userSignature");
             signature.innerText = partners.signatureList[i];
-            console.log("partners.signatureList[i]: ", partners.signatureList[i]);
 
             statusDiv.appendChild(statusSmall);
             statusDiv.appendChild(nameStrong);

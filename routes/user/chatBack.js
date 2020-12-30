@@ -9,39 +9,33 @@ let room = "public";
 let selfName;
 let buddyNames;
 var receiverId;
-var allTopics = [];
+
 const socketChat = (socket) => {
-    // console.log("B1");
     socket.emit("getToken");
-    // console.log("B2");
     socket.on("verifyToken", (query)=>{
-        // console.log("B3");
         let {generalToken} = query;
         buddyNames = query.buddyNames;
         jwt.verify(generalToken, process.env.ACCESS_TOKEN_SECRET, (err, payload)=>{
             if(err) {
                 socket.emit("AuthError", "invalid token");
-                // console.log("B4 invalid, 跳9");
             }else{
                 selfName = payload.data.name;
                 userList[payload.data.name] = socket.id;
                 socket.join(room);
-                // console.log("B4");
+                
                 console.log(`${selfName} joins`);
                 socket.emit("Self", { self: payload.data.name, onlineUsers: onlineUserList});
-                // console.log("onlineUserList before pushing from connected users: ", onlineUserList);
-                // console.log("B5.");
+                
                 for (const key in userList) {
                     console.log("key: ", key, "|userList: ", userList, "|buddyNames: ", buddyNames) ;
                     if(buddyNames.includes(key) || key == selfName){ //only push when it's related users (same topic, same positive or negative score)
                         onlineUserList.push(key); //push also self into online user list
-                        // console.log("B6");
                     }
                 }
                 onlineUserList = onlineUserList.filter(unique);
                 socket.to(room).emit("onlineUsers", onlineUserList); //emit to others
-                socket.emit("onlineUsers", onlineUserList); //emit to self the latest online user list
-                console.log("B7, onlineUsers: ", onlineUserList);
+                socket.emit("onlineUsers", onlineUserList); //emit to self
+                console.log("onlineUsers: ", onlineUserList);
             }
         });
     });
@@ -69,7 +63,7 @@ const socketChat = (socket) => {
             initialSigs.forEach((s)=>{
                 signaturesForShow.push(s.signature);
             });
-            console.log("signaturesForShow: ", signaturesForShow);
+            // console.log("signaturesForShow: ", signaturesForShow);
             socket.emit("signaturesForShow", signaturesForShow);
         }
         sendSignature();
@@ -143,7 +137,6 @@ const socketChat = (socket) => {
             });
         }else{
             //------------if yes receiveer, push to self's + receiver's front-end
-            console.log("receiver is online!");
             socket.emit("msgToShow",{ //emit to self
                 msg: data.msg,
                 sender: data.sender,
@@ -158,25 +151,27 @@ const socketChat = (socket) => {
     });
 
     // show other topic a user has selected
-    socket.on("search topics", ()=>{
-        console.log("reached search topic backend");
+    socket.on("search topics", (ultimateSelfNamte)=>{
+       
+
+        console.log(`reached search topic backend of ${ultimateSelfNamte}`);
+
         async function findtopics(){
             sql = `SELECT DISTINCT firstSearchTopic, secondSearchTopic
             FROM politicmotion.user_emotion
-            WHERE username = '${selfName}';`;
+            WHERE username = '${ultimateSelfNamte}';`;
             var sqlquery = await query(sql);
             return sqlquery;
         }
         async function showTopics(){
             var topics = await findtopics();
-            console.log("topics: ", topics);
+            var allTopics = []; //need to be non-global variable so you don't overwrite topics with another user
             topics.forEach((t)=>{
                 allTopics.push(t.firstSearchTopic + " & " + t.secondSearchTopic);
             });
             socket.emit("allTopics", allTopics);
         }
         showTopics();
-
     });
 
     // get topic clicked
@@ -205,13 +200,16 @@ const socketChat = (socket) => {
                 partnerList: partnerList,
                 signatureList: signatureList
             });
+
+            // emit online users again
+            socket.to(room).emit("onlineUsers", onlineUserList); //emit to others
+            socket.emit("onlineUsers", onlineUserList); //emit to self
         }
         showOtherPartners();
     });
 
     // disconnect
     socket.on("disconnect", () => {
-        // console.log("B9");
         console.log("selfName: ", selfName); 
         console.log("disconnected:", "socket.id: ", socket.id, "onlineUserList: ", onlineUserList);
         onlineUserList = onlineUserList.filter(function(value, index, arr){
@@ -222,7 +220,7 @@ const socketChat = (socket) => {
         console.log("B10");
         socket.emit("userDisconnected", (selfName)); // send to self
         socket.to(room).emit("userDisconnected", (selfName)); // send to all in room except sender
-        console.log("B11");
+        
     });
 };
 
