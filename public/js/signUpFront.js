@@ -1,5 +1,6 @@
 // go to signIn (LogIn) page when clicked
 let signInT = document.querySelector("#signInBtn");
+const signupT=document.querySelector("#btn_signUp");
 
 signInT.addEventListener("click",()=>{
   window.location.href="/signin.html";
@@ -35,8 +36,17 @@ if(existedLogoutLink){
   })
 }
 
-// use axios post for signup. rather than form
-let signupT=document.querySelector("#btn_signUp");
+
+// trigger enter keyboard for sending out form
+var signUpPass = document.getElementById("signUpPass");
+signUpPass.addEventListener('keyup', function(event) {
+    if (event.code === 'Enter') {
+      event.preventDefault();
+      signupT.click();
+    }
+});
+
+// when submit btn is clicked
 signupT.addEventListener("click",()=>{
   axios.post("/user/signup",{
     "name": document.querySelector("#signUpName").value,

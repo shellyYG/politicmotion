@@ -1,4 +1,18 @@
 const socket = io();
+const userMsgBox = document.getElementById('userMsg');
+const chatForm = document.getElementById("chat-form");
+const submitBtn = document.getElementById("sendMsgBtn");
+const msgPlaceHolder = document.getElementById("chatList");
+const partnerContainer = document.getElementById("friend-list");
+const startChatBtn = document.getElementById("startChat");
+const sendMsgBtn = document.getElementById("sendMsgBtn");
+let selfNameForExcl;
+let senderNow;
+let receiver;
+let selfNameDiv = document.getElementById("selfName");
+let topicOne = localStorage.getItem("searchTopic1");
+let topicTwo = localStorage.getItem("searchTopic2");
+let dropdownBtn = document.querySelector(".dropbtn");
 
 let buddiesToChat = localStorage.getItem("buddiesToChat");
 buddiesToChat = JSON.parse(buddiesToChat);
@@ -55,24 +69,17 @@ if(existedLogoutLink){
     })
 }
   
-
+// trigger enter keyboard for sending out form
+userMsgBox.addEventListener('keyup', function(event) {
+    if (event.code === 'Enter') {
+      event.preventDefault();
+      sendMsgBtn.click();
+    }
+});
 
 let buddyNames = buddiesToChat.map(element => element.buddies);
 buddySignatures = buddySignatures.map(element => element.signatures);
 
-const chatForm = document.getElementById("chat-form");
-const submitBtn = document.getElementById("sendMsgBtn");
-const msgPlaceHolder = document.getElementById("chatList");
-const partnerContainer = document.getElementById("friend-list");
-const startChatBtn = document.getElementById("startChat");
-const sendMsgBtn = document.getElementById("sendMsgBtn");
-let selfNameForExcl;
-let senderNow;
-let receiver;
-let selfNameDiv = document.getElementById("selfName");
-let topicOne = localStorage.getItem("searchTopic1");
-let topicTwo = localStorage.getItem("searchTopic2");
-let dropdownBtn = document.querySelector(".dropbtn");
 
 let step1 = document.getElementById("step1");
 let step2 = document.getElementById("step2");

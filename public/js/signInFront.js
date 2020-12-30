@@ -39,6 +39,16 @@ if(existedLogoutLink){
   })
 }
 
+// trigger enter keyboard for sending out form
+var signInPass = document.getElementById("signInPass");
+signInPass.addEventListener('keyup', function(event) {
+    if (event.code === 'Enter') {
+      event.preventDefault();
+      signInT.click();
+    }
+});
+
+// when clicked on submit button
 signInT.addEventListener("click",()=>{
   axios.post("/user/signIn",{
     "email": document.querySelector("#signInEmail").value,

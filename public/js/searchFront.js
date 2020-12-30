@@ -43,9 +43,16 @@ if(existedLogoutLink){
     })
 }
   
+// trigger enter keyboard for sending out form
+var userInput2 = document.getElementById("userInput2");
+userInput2.addEventListener('keyup', function(event) {
+    if (event.code === 'Enter') {
+      event.preventDefault();
+      searchButton.click();
+    }
+});
 
-
-
+// when click on submite button
 searchButton.addEventListener("click",()=>{
     
     const firstSearchTopic = document.querySelector("#userInput1").value;
