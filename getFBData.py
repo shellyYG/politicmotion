@@ -1,7 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import time
-import re, time, requests
+import re, time
 from datetime import date
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -32,9 +32,19 @@ def listToString(s):
     joined_string = "|".join(s)
     return joined_string
 
+#Add options
+options = Options()
+options.add_argument("--headless")
+options.add_argument("window-size=1400,1500")
+options.add_argument("--disable-gpu")
+options.add_argument("--no-sandbox")
+options.add_argument("start-maximized")
+options.add_argument("enable-automation")
+options.add_argument("--disable-infobars")
+options.add_argument("--disable-dev-shm-usage")
 
 #Find Post Link
-driver = webdriver.Chrome()
+driver = webdriver.Chrome(options = options)
 def FindLinks(url, n):
     Links = []
     driver.get(url)
@@ -148,7 +158,7 @@ def PostContent(soup, source):
 print("start getting new NYT News")
 driver = webdriver.Chrome()
 AllPost =[]
-NYTimeLinks = FindLinks(url='https://www.facebook.com/nytimes/', n = 10)
+NYTimeLinks = FindLinks(url='https://www.facebook.com/nytimes/', n = 1)
 for Link in NYTimeLinks:
     print("At Link: "+Link)
     driver.get(Link) #expand link for soup below to catch
@@ -172,7 +182,7 @@ driver.close()
 print("start getting new Fox News")
 driver = webdriver.Chrome()
 AllPost =[]
-FoxNewsLinks = FindLinks(url='https://www.facebook.com/FoxNews/', n = 10)
+FoxNewsLinks = FindLinks(url='https://www.facebook.com/FoxNews/', n = 1)
 for Link in FoxNewsLinks:
     print("At Link: "+Link)
     driver.get(Link) #expand link for soup below to catch
