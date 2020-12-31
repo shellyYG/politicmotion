@@ -152,7 +152,7 @@ def PostContent(soup, source):
 print("start getting new NYT News")
 driver = webdriver.Chrome(options = option)
 AllPost =[]
-NYTimeLinks = FindLinks(url='https://www.facebook.com/nytimes/', n = 1)
+NYTimeLinks = FindLinks(url='https://www.facebook.com/nytimes/', n = 10)
 for Link in NYTimeLinks:
     print("At Link: "+Link)
     driver.get(Link) #expand link for soup below to catch
@@ -176,7 +176,7 @@ driver.close()
 print("start getting new Fox News")
 driver = webdriver.Chrome(options = option)
 AllPost =[]
-FoxNewsLinks = FindLinks(url='https://www.facebook.com/FoxNews/', n = 1)
+FoxNewsLinks = FindLinks(url='https://www.facebook.com/FoxNews/', n = 10)
 for Link in FoxNewsLinks:
     print("At Link: "+Link)
     driver.get(Link) #expand link for soup below to catch
@@ -194,96 +194,4 @@ Foxnewsdf.to_sql(
 )
 
 driver.close()
-
-
-# #================================================================================================================== update existing FB data
-# def contentToFill(soup, linkToFill):
-#     userContent = soup.find('div', {'class':'_5pcr userContentWrapper'})
-#     try:
-#         Content = userContent.find('div',{'class':'_5pbx userContent _3576'}).text
-#         PosterInfo = userContent.find('div', {'class':'l_c3pyo2v0u _5eit i_c3pynyi2f clearfix'})
-#     except:
-#         Content = "No Content Found"
-#         PosterInfo = "No PosterInfo"
-#         print("no content found")
-    
-
-#     # add Big title of article
-#     try:
-#         bigTitle = userContent.find('div', {'class': 'mbs _6m6 _2cnj _5s6c'}).text
-#         bigTitle = bigTitle("'","")
-#         print("has bigTitle")
-#         print(bigTitle)
-#     except:
-#         bigTitle = "No Big Title"
-#         print("No Big Title")
-    
-#     # add Small title of article
-#     try:
-#         smallTitle = userContent.find('div', {'class': '_6m7 _3bt9'}).text
-#         print("has smallTitle")
-#         smallTitle = smallTitle("'","")
-#         print(smallTitle)
-#     except:
-#         smallTitle = "No Small Title"
-#         print("No Small Title")
-
-    
-#     with engine.begin() as conn:
-#         conn.execute(f"UPDATE politicmotion.fb_rawdata SET title = '{bigTitle}', small_title = '{smallTitle}' WHERE post_link = '{linkToFill}';")
-        
-#     print("Done try")
- 
-#     return {bigTitle, smallTitle}
-
-# #==============================================================================================================================================================  UPDATE existing news
-# #---------------------------------------------------------------------------------------------------------------------------- Update NYT Post
-# # get all post links that does not have paragraph yet
-# NYTLinksToFill = []
-# with engine.begin() as conn:
-#     results = conn.execute('SELECT id, post_link FROM politicmotion.fb_rawdata WHERE post_source = "nytimes" AND (title IS NULL OR title = "No Big Title") AND post_link IS NOT NULL AND id > 4112 ORDER BY id ASC LIMIT 50;')
-#     rows = results.fetchall()
-#     for i in rows:
-#         print(i)
-#         linksToFill = i['post_link']
-#         NYTLinksToFill.append(linksToFill)
-# print("NYTLinksToFill: ")
-# print(NYTLinksToFill)
-
-# # start update the content
-# for Link in NYTLinksToFill:
-#     print("At Link: "+Link)
-#     driver.get(Link) #expand link for soup below to catch
-#     soup = BeautifulSoup(driver.page_source, "html.parser")
-    
-#     contentToFill(soup,Link)
-
-# # # transform list of dict to dataframe
-# print("done try")
-# driver.close()
-# #---------------------------------------------------------------------------------------------------------------------------- Update Fox News Post
-# #get all post links that does not have paragraph yet
-# FoxLinksToFill = []
-# with engine.begin() as conn:
-#     results = conn.execute('SELECT id, post_link FROM politicmotion.fb_rawdata WHERE id> 4196 AND post_source = "foxnews" AND (title IS NULL) AND post_link IS NOT NULL ORDER BY id ASC LIMIT 15;')
-#     rows = results.fetchall()
-#     for i in rows:
-#         print(i)
-#         linksToFill = i['post_link']
-#         FoxLinksToFill.append(linksToFill)
-# print("FoxLinksToFill: ")
-# print(FoxLinksToFill)
-
-# # start update the content
-# for Link in FoxLinksToFill:
-#     print("At Fox Link: "+Link)
-#     driver.get(Link) #expand link for soup below to catch
-#     soup = BeautifulSoup(driver.page_source, "html.parser")
-    
-#     contentToFill(soup,Link)
-
-# # # transform list of dict to dataframe
-# print("done try (fox)")
-# driver.close()
-
 

@@ -1,4 +1,4 @@
-print("Start!")
+print("Calling Google Natural Language Processing API!")
 
 # from google.cloud import language
 from google.cloud import language_v1

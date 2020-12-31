@@ -364,13 +364,11 @@ submitBtn.addEventListener("click", (e) => { // (e) means event
 socket.on("msgToShow", (data) => {
 
     //clear default text
-    
     var defaultTextHolder = document.getElementById("default-select-user-text");
     if(defaultTextHolder !==null){
         defaultTextHolder.setAttribute("class", "hiddenc");
     }
     
-
     var singleMessage = document.createElement("li");
 
     if (data.sender == senderNow) { // --------------------- shown on sender side
