@@ -141,7 +141,7 @@ for (i = 0; i < buddiesToChat.length; i++) {
 }
 
 var directPartnerNames = document.querySelectorAll("#StrongName");
-// console.log("directPartnerNames: ", directPartnerNames);
+
 var allPartnerNames = [];
 directPartnerNames.forEach((e)=>{
     allPartnerNames.push(e.innerText);
@@ -181,7 +181,6 @@ socket.on("AuthError", (msg) => {
 });
 
 socket.on("Self", (self) => {
-    console.log(`${self.self} at Self`);
     selfNameForExcl = self.self;
     senderNow = self.self;
     selfNameDiv.innerText = `Welcome to chat, ${self.self}!`;
@@ -228,15 +227,18 @@ potentialPartnerDivs.forEach((element) => {
         // set local Storage to send to back-end
         localStorage.setItem("receiver", element.childNodes[0].childNodes[1].innerText);
         receiver = localStorage.getItem("receiver");
-        console.log("receiver: ", receiver);
-        socket.emit("receiver", {receiver: receiver, topicOne: topicOne, topicTwo: topicTwo}); //send to all server
-        console.log(`${receiver} sent to back-end!`);
+        
+        const selfWelcomeDiv = document.getElementById('selfName');
+        let senderName = document.getElementById('selfName');
+        senderName = selfWelcomeDiv.innerText.split(/[,!]+/g)[1].trim();
+        
+        socket.emit("receiver", {senderName: senderName, receiver: receiver, topicOne: topicOne, topicTwo: topicTwo}); //send to all server
+        
     });
 });
 
 // Load the history
 socket.on("history", (data) => {
-    console.log("history : ", data);
     // empty history with other people
     msgPlaceHolder.innerHTML = "";
 
@@ -297,7 +299,6 @@ socket.on("history", (data) => {
             timeContentDiv.appendChild(message);
 
         } else if (element.receiver == senderNow) { //switch
-            console.log("sender is not self");
             singleMessage.setAttribute("class", "left clearfix");
             // append sender (other people)
             var historySender = document.createElement("span");
@@ -478,7 +479,6 @@ socket.on("userDisconnected", (disconnectUserName) => {
     var potentialPartners = document.querySelectorAll("partnerName");
     for (i = 0; i < potentialPartners.length; i++) {
         if (potentialPartners[i].innerText == disconnectUserName) {
-            console.log("remove color");
             var statusSmall = document.querySelectorAll("small");
             statusSmall[i].setAttribute("class", "chat-alert label label-danger");
             statusSmall[i].setAttribute("id", "label-danger");
@@ -504,7 +504,6 @@ dropdownBtn.addEventListener("click",()=>{
     }
 });
 
-
 var dropDownLists = document.getElementById("myDropdown");
 
 socket.on("allTopics",(topics)=>{
@@ -528,7 +527,6 @@ socket.on("allTopics",(topics)=>{
 });
 
 socket.on("other partners", (partners)=>{
-    console.log("partners: ", partners);
     partnerContainer.innerHTML = ""; // clear all existing buddies
 
     var starDiv = document.getElementById("instruction-for-star");
@@ -551,7 +549,6 @@ socket.on("other partners", (partners)=>{
     msgPlaceHolder.appendChild(defaultTextHolder);
 
     for (i = 0; i < partners.partnerList.length; i++) {
-        console.log("selfNameForExcl: ", selfNameForExcl);
         if(partners.partnerList[i] !== selfNameForExcl){
             var singleBuddy = document.createElement("li");
             singleBuddy.setAttribute("class", "active bounceInDown singleBuddy");
@@ -597,9 +594,13 @@ socket.on("other partners", (partners)=>{
             // set local Storage to send to back-end
             localStorage.setItem("receiver", element.childNodes[0].childNodes[1].innerText);
             receiver = localStorage.getItem("receiver");
-            console.log("receiver: ", receiver);
-            socket.emit("receiver", {receiver: receiver, topicOne: topicOne, topicTwo: topicTwo}); //send to all server
-            console.log(`${receiver} sent to back-end!`);
+            
+            const selfWelcomeDiv = document.getElementById('selfName');
+            let senderName = document.getElementById('selfName');
+            senderName = selfWelcomeDiv.innerText.split(/[,!]+/g)[1].trim();
+            
+            socket.emit("receiver", {senderName: senderName, receiver: receiver, topicOne: topicOne, topicTwo: topicTwo}); //send to all server
+            
         });
     });
 

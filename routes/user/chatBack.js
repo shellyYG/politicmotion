@@ -21,13 +21,11 @@ const socketChat = (socket) => {
             }else{
                 selfName = payload.data.name;
                 userList[payload.data.name] = socket.id;
+
                 socket.join(room);
-                
-                console.log(`${selfName} joins`);
                 socket.emit("Self", { self: payload.data.name, onlineUsers: onlineUserList});
                 
                 for (const key in userList) {
-                    console.log("key: ", key, "|userList: ", userList, "|buddyNames: ", buddyNames) ;
                     if(buddyNames.includes(key) || key == selfName){ //only push when it's related users (same topic, same positive or negative score)
                         onlineUserList.push(key); //push also self into online user list
                     }
@@ -35,18 +33,15 @@ const socketChat = (socket) => {
                 onlineUserList = onlineUserList.filter(unique);
                 socket.to(room).emit("onlineUsers", onlineUserList); //emit to others
                 socket.emit("onlineUsers", onlineUserList); //emit to self
-                console.log("onlineUsers: ", onlineUserList);
             }
         });
     });
 
     socket.on("allPartnerNames", (partners)=>{
-        console.log("partners: ", partners);
         var partnersFormat = [];
         partners.forEach((p)=>{
             partnersFormat.push("'"+p+"'");
         });
-        console.log("partnersFormat", partnersFormat);
         
         async function getSignature(){
             sql = `SELECT username, signature
@@ -58,62 +53,49 @@ const socketChat = (socket) => {
         }
         async function sendSignature(){
             var initialSigs = await getSignature();
-            console.log("initialSigs: ", initialSigs);
             var signaturesForShow = [];
             initialSigs.forEach((s)=>{
                 signaturesForShow.push(s.signature);
             });
-            // console.log("signaturesForShow: ", signaturesForShow);
             socket.emit("signaturesForShow", signaturesForShow);
         }
         sendSignature();
     });
     
     socket.on("receiver", (receiver)=>{ //sometimes this won't work
-        // console.log("received receiver");
 
         for (const key in userList){
-            console.log("key: ", key, "receiver.receiver: ", receiver.receiver);
             if(key == receiver.receiver){ //----------------------------------------- if receiver is online
-                console.log("receiver is online");
                 receiverId = userList[receiver.receiver]; //receiverId = socketId
-                
             }else{      //----------------------------------------- if receiver is NOT online
-                console.log("receiver is NOT online");
                 receiverId; // receiverId remains undefined
             }
         }
-        console.log("selfName: ",selfName, "receiver.receiver: ", receiver.receiver);
+        
         // send historical msg to Front-End for later refresh
         async function searchHistory(){
             sql = `SELECT * FROM chat_history 
-            WHERE ((sender = '${selfName}' AND receiver = '${receiver.receiver}') 
-            OR (sender = '${receiver.receiver}' AND receiver = '${selfName}')) 
+            WHERE ((sender = '${receiver.senderName}' AND receiver = '${receiver.receiver}') 
+            OR (sender = '${receiver.receiver}' AND receiver = '${receiver.senderName}')) 
             ORDER BY message_time ASC;`;
             var sqlquery = await query(sql);
             return sqlquery;
         }
         async function showHistory(){
             let history = await searchHistory();
-            // console.log("history: ", history);
             socket.emit("history", history); // emit history to self
         }
         showHistory();
         
     });
-
-    console.log("receiverId: ", receiverId); // emit to that socketId
         
     socket.on("userSendMsg",(data)=>{
-        // console.log("userSendMsg: ", data.msg, "sender: ", data.sender, "receiver: ", data.receiver);
         let dateTime = new Date();
         let msgPackage = {};
         msgPackage.sender = data.sender;
         msgPackage.receiver = data.receiver;
         msgPackage.message = data.msg;
         msgPackage.message_time = dateTime;
-
-        console.log("user message: ", data);
 
         async function saveMsg(){
             // save to DB
@@ -126,10 +108,8 @@ const socketChat = (socket) => {
         // emit received msg to selected user's front-end & self's front-end
         //--------get receiver's socket id
         let receiverSocketId = userList[data.receiver];
-        console.log("receiver: ", data.receiver, "receiver socket id: ", receiverSocketId);
         if(!receiverSocketId){
             //------------if no receiveer, push to self's front-end only
-            console.log("receiver is not online!");
             socket.emit("msgToShow",{ //emit to self
                 msg: data.msg,
                 sender: data.sender,
@@ -152,10 +132,6 @@ const socketChat = (socket) => {
 
     // show other topic a user has selected
     socket.on("search topics", (ultimateSelfNamte)=>{
-       
-
-        console.log(`reached search topic backend of ${ultimateSelfNamte}`);
-
         async function findtopics(){
             sql = `SELECT DISTINCT firstSearchTopic, secondSearchTopic
             FROM politicmotion.user_emotion
@@ -210,17 +186,12 @@ const socketChat = (socket) => {
 
     // disconnect
     socket.on("disconnect", () => {
-        console.log("selfName: ", selfName); 
-        console.log("disconnected:", "socket.id: ", socket.id, "onlineUserList: ", onlineUserList);
         onlineUserList = onlineUserList.filter(function(value, index, arr){
             return value !== selfName;
         });
 
-        console.log(`after ${selfName} disconnect, remaining online users: `, onlineUserList);
-        console.log("B10");
         socket.emit("userDisconnected", (selfName)); // send to self
         socket.to(room).emit("userDisconnected", (selfName)); // send to all in room except sender
-        
     });
 };
 
