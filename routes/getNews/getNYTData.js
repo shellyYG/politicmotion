@@ -213,11 +213,16 @@ async function getNYTimesWebData(){
 
         matchLeadParagraph();
         
-        res.send("Successfully got NYTData & saved!");
+        // res.send("Successfully got NYTData & saved!");
         console.log("Data successfully saved.");
-        return NYTimeResponse.data;
+        // return NYTimeResponse.data;
     }catch(err){
         console.log("Can't get NYT Web data!");
     }
 }
 getNYTimesWebData();
+
+// kill the process after 90 sec
+setTimeout((function() {
+    return process.kill(process.pid);
+}), 90000);
