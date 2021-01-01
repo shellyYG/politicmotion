@@ -8,22 +8,20 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false}));
 app.use(bodyParser.json());
 app.set('view engine', 'ejs'); //for 404 page
-// app.set('views', __dirname + '/templates') //for 404 page
 
-// const NYTWebDataRoutes = require('./routes/getNews/getNYTData');
-const segmentTopicRoutes = require('./routes/getNews/segmentTopic');
+// const calPostDateRoutes = require('./routes/getNews/calPostDate');
 const searchRoutes = require('./routes/searchNews/searchBack');
-const showNewsRoutes = require('./routes/getNews/showNews');
+// const showNewsRoutes = require('./routes/getNews/showNews');
 const showNewsContentRoutes = require('./routes/analyzeNews/showNewsContentBack');
 const analyzeUserEmotion = require('./routes/analyzeUsers/userEmotionBack');
 const signUpRoutes = require('./routes/user/signUp');
 const signInRoutes = require('./routes/user/signIn');
 const findBuddiesRoutes = require('./routes/user/findBuddies');
 
-// app.use('/NYTimesWeb', NYTWebDataRoutes);
-app.use('/segmentTopic', segmentTopicRoutes);
+
+// app.use('/calPostDate', calPostDateRoutes);
 app.use('/searchNews', searchRoutes);
-app.use('/showNews', showNewsRoutes);
+// app.use('/showNews', showNewsRoutes);
 app.use('/showNewsContent', showNewsContentRoutes);
 app.use('/calUserEmotion', analyzeUserEmotion);
 app.use('/user/signup', signUpRoutes);
