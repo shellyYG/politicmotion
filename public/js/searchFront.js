@@ -52,7 +52,7 @@ userInput2.addEventListener('keyup', function(event) {
     }
 });
 
-// when click on submite button
+// when click on submit button
 searchButton.addEventListener("click",()=>{
     
     const firstSearchTopic = document.querySelector("#userInput1").value;
@@ -63,12 +63,59 @@ searchButton.addEventListener("click",()=>{
         if(!secondSearchTopic){
             alert("Please provide at least 2 topics!");
         }else{
-            console.log("Has 2 searched terms!");
+            // Has 2 searched terms
             const searchTopic1 = document.querySelector("#userInput1").value;
             const searchTopic2 = document.querySelector("#userInput2").value;
             localStorage.setItem("searchTopic1", searchTopic1);
             localStorage.setItem("searchTopic2", searchTopic2);
-            window.location.href = "/showNewsDots.html";
+            
+            // Find buddies first in case people want to go to chat room directly
+            const generalToken = localStorage.getItem("generalToken");
+            const headers = {
+                "Content-Type": "application/json",
+                Authorization: "Bearer" + " " + generalToken
+            };
+            
+            axios.post("findBuddies", {
+                "firstSearchTopic": searchTopic1,
+                "secondSearchTopic": searchTopic2
+            }, { headers: headers })
+                .then(res => {
+                    console.log("res userEmotionFront: ", res);
+                    if (res.data.buddyNames.length == null){
+                        alert("Sorry, we found no one who has searched for the same topics.");
+                    }else{
+                        const buddyNamesRank = res.data.buddyNames;
+                        const topBuddyNames = res.data.topBuddyNames;
+                        const buddySignatures = res.data.buddySignatures;
+                        const topBuddySignatures = res.data.topBuddySignatures;
+                        
+                        localStorage.setItem("topBuddyNames", topBuddyNames);
+                        localStorage.setItem("topBuddySignatures", topBuddySignatures);
+                        localStorage.removeItem("buddiesToChat");
+                        for (i = 0; i < buddyNamesRank.length; i++) {
+                            var buddiesToChat = localStorage.getItem("buddiesToChat");
+                            var buddiesToChatArray = [];
+                            if (buddiesToChat) {
+                                buddiesToChatArray = JSON.parse(buddiesToChat);
+                            }
+                            buddiesToChatArray.push({ "buddies": buddyNamesRank[i] });
+                            localStorage.setItem("buddiesToChat", JSON.stringify(buddiesToChatArray));
+                        }
+                        localStorage.removeItem("buddySignatures");
+                        for (i = 0; i < buddySignatures.length; i++) {
+                            var buddySignaturesToChat = localStorage.getItem("buddySignatures");
+                            var buddySignaturesArray = [];
+                            if (buddySignaturesToChat) {
+                                buddySignaturesArray = JSON.parse(buddySignaturesToChat);
+                            }
+                            buddySignaturesArray.push({ "signatures": buddySignatures[i] });
+                            localStorage.setItem("buddySignatures", JSON.stringify(buddySignaturesArray));
+                        }
+                        window.location.href = "/showNewsDots.html";
+                    }
+                })
+            
         }    
     }
 });

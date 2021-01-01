@@ -217,8 +217,7 @@ router.post("/", verifyToken, (req, res)=>{
                     topBuddySignatures: topBuddySignatures
                 });
             }
-            sendBuddyNames();
-           
+            sendBuddyNames();     
         }
     });        
 });
