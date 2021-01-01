@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 app.set('view engine', 'ejs'); //for 404 page
 // app.set('views', __dirname + '/templates') //for 404 page
 
-const NYTWebDataRoutes = require('./routes/getNews/getNYTData');
+// const NYTWebDataRoutes = require('./routes/getNews/getNYTData');
 const segmentTopicRoutes = require('./routes/getNews/segmentTopic');
 const searchRoutes = require('./routes/searchNews/searchBack');
 const showNewsRoutes = require('./routes/getNews/showNews');
@@ -20,7 +20,7 @@ const signUpRoutes = require('./routes/user/signUp');
 const signInRoutes = require('./routes/user/signIn');
 const findBuddiesRoutes = require('./routes/user/findBuddies');
 
-app.use('/NYTimesWeb', NYTWebDataRoutes);
+// app.use('/NYTimesWeb', NYTWebDataRoutes);
 app.use('/segmentTopic', segmentTopicRoutes);
 app.use('/searchNews', searchRoutes);
 app.use('/showNews', showNewsRoutes);
