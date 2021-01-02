@@ -1,6 +1,6 @@
 // go to signIn (LogIn) page when clicked
 let signInT = document.querySelector("#signInBtn");
-const signupT=document.querySelector("#btn_signUp");
+const signUpT=document.querySelector("#btn_signUp");
 
 signInT.addEventListener("click",()=>{
   window.location.href="/signin.html";
@@ -42,12 +42,12 @@ var signUpPass = document.getElementById("signUpPass");
 signUpPass.addEventListener('keyup', function(event) {
     if (event.code === 'Enter') {
       event.preventDefault();
-      signupT.click();
+      signUpT.click();
     }
 });
 
 // when submit btn is clicked
-signupT.addEventListener("click",()=>{
+signUpT.addEventListener("click",()=>{
   axios.post("/user/signup",{
     "name": document.querySelector("#signUpName").value,
     "password": document.querySelector("#signUpPass").value,
