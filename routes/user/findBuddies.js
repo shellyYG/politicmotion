@@ -29,7 +29,7 @@ router.post("/", verifyToken, (req, res)=>{
         
             async function findBuddies(){
                 var allUsers = await getAllUsers();
-                // console.log("allUsers (findBuddies): ", allUsers);
+                console.log("allUsers (findBuddies): ", allUsers);
                 
                 var allEmails = allUsers.map((element)=>{return element.email;});
                 var currentUserEmail = payload.data.email;
@@ -51,6 +51,7 @@ router.post("/", verifyToken, (req, res)=>{
 
                 currentEmailIndex = allEmails.reduce(findEmailArrayIndex,0);
                 var sentimentMultiples = [];
+                // console.log("currentEmailIndex: ", currentEmailIndex);
 
                 // get sentiment & magnitude multiple numbers
                 for (i=0; i<allUsers.length; i++){
@@ -59,6 +60,7 @@ router.post("/", verifyToken, (req, res)=>{
                     var magnitudeMultiple = allUsers[currentEmailIndex].u_mag * allUsers[i].u_mag;
                     var sentimentDistance = Math.abs(allUsers[currentEmailIndex].u_sent - allUsers[i].u_sent);
                     var magnitudeDistance = Math.abs(allUsers[currentEmailIndex].u_mag - allUsers[i].u_mag);
+                    
                     singleSentPack.firstIndex = currentEmailIndex;
                     singleSentPack.secondIndex = i;
                     singleSentPack.matchedEmail = allUsers[i].email;

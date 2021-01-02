@@ -102,9 +102,17 @@ const chatList = document.getElementById("chatList");
 function unique(value, index, self) {
     return self.indexOf(value) === index;
 }
+try{
+    console.log("topBuddyNames: ", topBuddyNames)
+    var topBuddyNamesPart = topBuddyNames.split(",");
+    var topBuddySignaturesPart = topBuddySignatures.split(",");
+    console.log("Has top buddies");
+}catch(err){
+    console.log("no top buddies, err: ", err);
+    var topBuddyNamesPart = [];
+    var topBuddySignaturesPart = [];
+}
 
-var topBuddyNamesPart = topBuddyNames.split(",");
-var topBuddySignaturesPart = topBuddySignatures.split(",");
 
 buddiesToChat = buddiesToChat.filter(unique);
 buddySignatures = buddySignatures.filter(unique);

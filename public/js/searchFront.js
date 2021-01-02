@@ -89,30 +89,63 @@ searchButton.addEventListener("click",()=>{
                         const topBuddyNames = res.data.topBuddyNames;
                         const buddySignatures = res.data.buddySignatures;
                         const topBuddySignatures = res.data.topBuddySignatures;
+                        const clickedEmotions = localStorage.removeItem("clickedEmotions");
+                        if(!clickedEmotions){
+                            // do not have top matches partner (because no emotion yet to match)
+                            localStorage.removeItem("topBuddyNames");
+                            localStorage.removeItem("topBuddySignatures");
+                            localStorage.removeItem("buddiesToChat");
+                            for (i = 0; i < buddyNamesRank.length; i++) {
+                                var buddiesToChat = localStorage.getItem("buddiesToChat");
+                                var buddiesToChatArray = [];
+                                if (buddiesToChat) {
+                                    buddiesToChatArray = JSON.parse(buddiesToChat);
+                                }
+                                buddiesToChatArray.push({ "buddies": buddyNamesRank[i] });
+                                localStorage.setItem("buddiesToChat", JSON.stringify(buddiesToChatArray));
+                            }
+                            localStorage.removeItem("buddySignatures");
+                            for (i = 0; i < buddySignatures.length; i++) {
+                                var buddySignaturesToChat = localStorage.getItem("buddySignatures");
+                                var buddySignaturesArray = [];
+                                if (buddySignaturesToChat) {
+                                    buddySignaturesArray = JSON.parse(buddySignaturesToChat);
+                                }
+                                buddySignaturesArray.push({ "signatures": buddySignatures[i] });
+                                localStorage.setItem("buddySignatures", JSON.stringify(buddySignaturesArray));
+                            }
+                            window.location.href = "/showNewsDots.html";
+
+                        }else{
+                            // can have top matched partners
+                            localStorage.removeItem("topBuddyNames");
+                            localStorage.removeItem("topBuddySignatures");
+                            localStorage.setItem("topBuddyNames", topBuddyNames);
+                            localStorage.setItem("topBuddySignatures", topBuddySignatures);
+                            localStorage.removeItem("buddiesToChat");
+                            for (i = 0; i < buddyNamesRank.length; i++) {
+                                var buddiesToChat = localStorage.getItem("buddiesToChat");
+                                var buddiesToChatArray = [];
+                                if (buddiesToChat) {
+                                    buddiesToChatArray = JSON.parse(buddiesToChat);
+                                }
+                                buddiesToChatArray.push({ "buddies": buddyNamesRank[i] });
+                                localStorage.setItem("buddiesToChat", JSON.stringify(buddiesToChatArray));
+                            }
+                            localStorage.removeItem("buddySignatures");
+                            for (i = 0; i < buddySignatures.length; i++) {
+                                var buddySignaturesToChat = localStorage.getItem("buddySignatures");
+                                var buddySignaturesArray = [];
+                                if (buddySignaturesToChat) {
+                                    buddySignaturesArray = JSON.parse(buddySignaturesToChat);
+                                }
+                                buddySignaturesArray.push({ "signatures": buddySignatures[i] });
+                                localStorage.setItem("buddySignatures", JSON.stringify(buddySignaturesArray));
+                            }
+                            window.location.href = "/showNewsDots.html";
+
+                        }
                         
-                        localStorage.setItem("topBuddyNames", topBuddyNames);
-                        localStorage.setItem("topBuddySignatures", topBuddySignatures);
-                        localStorage.removeItem("buddiesToChat");
-                        for (i = 0; i < buddyNamesRank.length; i++) {
-                            var buddiesToChat = localStorage.getItem("buddiesToChat");
-                            var buddiesToChatArray = [];
-                            if (buddiesToChat) {
-                                buddiesToChatArray = JSON.parse(buddiesToChat);
-                            }
-                            buddiesToChatArray.push({ "buddies": buddyNamesRank[i] });
-                            localStorage.setItem("buddiesToChat", JSON.stringify(buddiesToChatArray));
-                        }
-                        localStorage.removeItem("buddySignatures");
-                        for (i = 0; i < buddySignatures.length; i++) {
-                            var buddySignaturesToChat = localStorage.getItem("buddySignatures");
-                            var buddySignaturesArray = [];
-                            if (buddySignaturesToChat) {
-                                buddySignaturesArray = JSON.parse(buddySignaturesToChat);
-                            }
-                            buddySignaturesArray.push({ "signatures": buddySignatures[i] });
-                            localStorage.setItem("buddySignatures", JSON.stringify(buddySignaturesArray));
-                        }
-                        window.location.href = "/showNewsDots.html";
                     }
                 })
             
