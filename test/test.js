@@ -1,16 +1,18 @@
 const {assert, requester} = require('./set_up');
 
-describe('test log in wrong password', () => {
-    it('log in', async () => {
+describe('log in test!', () => {
+    it('log in test here la', async () => {
         const user = {
             email: 'shelly@e',
             password: 'shelly'
         };
         const res = await requester
-            .post('/user/signin')
+            .post('/user/signIn')
             .send(user);
-        const data = res.data;
-        const resExpect = "Wrong password!";
-        assert.strictEqual(data, resExpect);
+
+        data = res.body.data.access_token; // need to say "body". different from original res.data.data.access_token
+        const resExpect = "It would be a token!";
+        console.log("data is: ", data);
+        assert.strictEqual(typeof(data), typeof(resExpect));
     });
 });

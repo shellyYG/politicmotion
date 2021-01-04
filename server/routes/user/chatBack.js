@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { unique } = require("../../models/tfidf");
+const { unique } = require("../../../util/tfidf");
 const { query } = require("../../models/query");
 
 

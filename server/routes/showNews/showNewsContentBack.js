@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { query } = require("../../models/query");
-const { tokenize, makeDictionary, vsm, termFrequency, idf, tfidf, cosine, unique } = require("../../models/tfidf");
+const { tokenize, makeDictionary, vsm, termFrequency, idf, tfidf, cosine, unique } = require("../../../util/tfidf");
 
 router.post("/", (req, res) => {
     console.log("req.body @showNewsContentBack: ", req.body);
