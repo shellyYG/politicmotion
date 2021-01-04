@@ -1,4 +1,4 @@
-const { query } = require("./query");
+const { query } = require("../query");
 
 async function getFoxWebData(){
     sql = "SELECT id, published_time, saved_date FROM politicmotion.news_rawdata  WHERE news_source = 'Fox News' AND published_date IS NULL ORDER BY id ASC;";

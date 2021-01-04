@@ -1,6 +1,7 @@
-const { query } = require("../../models/query");
+require("dotenv").config();
 const axios = require("axios");
 const NYTimesToken = process.env.NYTimeToken;
+const getNYTDataModel = require('../../models/getNews/getNYTDataModel');
 
 let link = `https://api.nytimes.com/svc/mostpopular/v2/shared/1/facebook.json?api-key=${NYTimesToken}`; //get last 1 day data from facebook
 async function getNYTimesWebData(){
@@ -37,29 +38,18 @@ async function getNYTimesWebData(){
                 allNews.push(singleNews);
             }
 
-            sql = "INSERT INTO news_rawdata (news_id, post_link, news_source, published_date, title, abstract, topics, saved_date) VALUES ?";
-            let sqlquery = await query(sql, [allNews]);
-            return sqlquery;
+            await getNYTDataModel.addNYTNews(allNews);
         }
         
         
         // ---------------------------------------------------------------------- start saving to news (details) table
 
-        async function getLeadParagraph(){
-            let saveNewNews = await saveData();
-            saveNewNews;
-            sql = `SELECT n.title
-            FROM politicmotion.news_rawdata n
-            LEFT JOIN politicmotion.nyt_details d ON n.title = d.headline
-            WHERE n.news_source = "New York Times" AND d.headline IS NULL
-            ORDER BY n.id DESC;`;
-            let sqlquery = await query(sql);
-            return sqlquery;
-        }
+        await saveData();
 
         let allDetails = [];
         async function matchLeadParagraph(){
-            let titles = await getLeadParagraph();
+            let titles = await getNYTDataModel.getLeadParagraph();
+            console.log("titles.length: ", titles.length);
             
             for (i=0; i<titles.length; i++){
                 console.log("i:",i);
@@ -85,11 +75,10 @@ async function getNYTimesWebData(){
                 }
             }
 
+            console.log("allDetails.length: ", allDetails.length);
+
             try {
-                sql = "INSERT INTO nyt_details (headline, abstract, lead_paragraph, saved_date) VALUES ?";
-                let sqlquery = await query(sql, [allDetails]);
-                console.log("done inserting lead-paragraph");
-                return sqlquery;
+                await getNYTDataModel.addNYTDetails(allDetails);
             }catch(err){
                 console.log("Not a single lead-paragraph to insert.");
             }
@@ -97,12 +86,10 @@ async function getNYTimesWebData(){
         }
 
         matchLeadParagraph();
-        
-        // res.send("Successfully got NYTData & saved!");
         console.log("Data successfully saved.");
-        // return NYTimeResponse.data;
+
     }catch(err){
-        console.log("Can't get NYT Web data!");
+        console.log("Can't get NYT Web data!, err is: ", err);
     }
 }
 getNYTimesWebData();
@@ -110,4 +97,4 @@ getNYTimesWebData();
 // kill the process after 90 sec
 setTimeout((function() {
     return process.kill(process.pid);
-}), 90000);
+}), 150000);
