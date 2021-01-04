@@ -25,15 +25,8 @@ async function getNYTimesWebData(){
                 let topics = des_facet.join("|");
 
                 // build single news array
-                singleNews.push(newsid);
-                singleNews.push(url);
-                singleNews.push(source);
-                singleNews.push(published_date);
-                singleNews.push(title);
-                singleNews.push(abstract);
-                singleNews.push(topics);
-                singleNews.push(saved_date);
-
+                singleNews.push(newsid, url, source, published_date, title, abstract, topics, saved_date);
+                
                 // build allNews array
                 allNews.push(singleNews);
             }
@@ -63,10 +56,7 @@ async function getNYTimesWebData(){
                     var savedDetailedDate = new Date();
                     var singleDetails = [];
                     
-                    singleDetails.push(headline);
-                    singleDetails.push(abstract);
-                    singleDetails.push(leadParagraph);
-                    singleDetails.push(savedDetailedDate);
+                    singleDetails.push(headline, abstract, leadParagraph, savedDetailedDate);
                     
                     // build allNews array
                     allDetails.push(singleDetails);

@@ -7,7 +7,6 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false}));
 app.use(bodyParser.json());
 
-const searchRoutes = require('./server/routes/showNews/searchBack');
 const showNewsContentRoutes = require('./server/routes/showNews/showNewsContentBack');
 const analyzeUserEmotion = require('./server/routes/user/userEmotionBack');
 const signUpRoutes = require('./server/routes/user/signUp');
@@ -15,7 +14,10 @@ const signInRoutes = require('./server/routes/user/signIn');
 const findBuddiesRoutes = require('./server/routes/user/findBuddies');
 const contactRoutes = require('./server/routes/user/contact');
 
-app.use('/searchNews', searchRoutes);
+app.use([
+    require('./server/routes/showNews/searchRoute')
+])
+
 app.use('/showNewsContent', showNewsContentRoutes);
 app.use('/calUserEmotion', analyzeUserEmotion);
 app.use('/user/signup', signUpRoutes);
