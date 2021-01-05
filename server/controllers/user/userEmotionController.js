@@ -1,10 +1,7 @@
-const express = require("express");
-const router = express.Router();
 const jwt = require("jsonwebtoken");
-const { query } = require("../../models/query");
+const userEmotionModel = require('../../models/user/userEmotionModel');
 
-router.post("/", verifyToken, (req, res)=>{
-
+const getUserEmotion = async (req, res) => {
     jwt.verify(req.token, process.env.ACCESS_TOKEN_SECRET, (err, payload) => {
         if (err) {
             console.log("You are too long away. Please sign in again.");
@@ -48,37 +45,16 @@ router.post("/", verifyToken, (req, res)=>{
                 // insert user emotion to database
                 const firstSearchTopic = req.body.firstSearchTopic;
                 const secondSearchTopic = req.body.secondSearchTopic;
-                async function insertUserEmotion(){
-                    let insertedData = {
-                        firstSearchTopic: firstSearchTopic,
-                        secondSearchTopic: secondSearchTopic,
-                        username: payload.data.name,
-                        email: payload.data.email,
-                        user_sentiment_score: avgUserSentiment.toFixed(2),
-                        user_magnitude_score: avgUserMagnitude.toFixed(2),
-                    };
-                    let sql = "INSERT INTO user_emotion SET ?";
-                    let sqlquery = await query(sql, insertedData);
-                    return sqlquery;
-                }
-                insertUserEmotion();
+                
+                userEmotionModel.insertUserEmotion(firstSearchTopic, secondSearchTopic, payload, avgUserSentiment, avgUserMagnitude);
                 console.log("combinedUserEmotion: ", combinedUserEmotion);
             }
             res.json(combinedUserEmotion);
         }
     });
-});
+};
 
-function verifyToken(req, res, next){
-    const bearerHeader=req.headers["authorization"];
-    if(typeof bearerHeader !== "undefined"){
-        const bearer = bearerHeader.split(" ");
-        const bearerToken = bearer[1];
-        req.token = bearerToken;
-        next();
-    }else{
-        res.sendStatus(403); //forbidden status
-    }
-}
 
-module.exports = router;
+module.exports = {
+    getUserEmotion
+};

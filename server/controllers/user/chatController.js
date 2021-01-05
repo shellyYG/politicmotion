@@ -1,7 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { unique } = require("../../../util/tfidf");
-const { query } = require("../../models/query");
-
+const chatModel = require('../../models/user/chatModel');
 
 var userList = {};
 var onlineUserList = [];
@@ -10,7 +9,7 @@ let selfName;
 let buddyNames;
 var receiverId;
 
-const socketChat = (socket) => {
+const socketChat = async (socket) => {
     socket.emit("getToken");
     socket.on("verifyToken", (query)=>{
         let {generalToken} = query;
@@ -43,16 +42,8 @@ const socketChat = (socket) => {
             partnersFormat.push("'"+p+"'");
         });
         
-        async function getSignature(){
-            sql = `SELECT username, signature
-            FROM politicmotion.user_basic 
-            WHERE username IN (${partnersFormat}) 
-            ORDER BY FIELD(username,${partnersFormat})`;
-            var sqlquery = await query(sql);
-            return sqlquery;
-        }
         async function sendSignature(){
-            var initialSigs = await getSignature();
+            var initialSigs = await chatModel.getSignature(partnersFormat);
             var signaturesForShow = [];
             initialSigs.forEach((s)=>{
                 signaturesForShow.push(s.signature);
@@ -72,17 +63,8 @@ const socketChat = (socket) => {
             }
         }
         
-        // send historical msg to Front-End for later refresh
-        async function searchHistory(){
-            sql = `SELECT * FROM chat_history 
-            WHERE ((sender = '${receiver.senderName}' AND receiver = '${receiver.receiver}') 
-            OR (sender = '${receiver.receiver}' AND receiver = '${receiver.senderName}')) 
-            ORDER BY message_time ASC;`;
-            var sqlquery = await query(sql);
-            return sqlquery;
-        }
         async function showHistory(){
-            let history = await searchHistory();
+            let history = await chatModel.searchHistory(receiver);
             socket.emit("history", history); // emit history to self
         }
         showHistory();
@@ -97,50 +79,39 @@ const socketChat = (socket) => {
         msgPackage.message = data.msg;
         msgPackage.message_time = dateTime;
 
-        async function saveMsg(){
-            // save to DB
-            sql = "INSERT INTO chat_history SET ?";
-            let sqlquery = await query(sql, msgPackage);
-            return sqlquery;
+        
+        async function showMsg(){
+            await chatModel.saveMsg(msgPackage);
+            //--------get receiver's socket id
+            let receiverSocketId = userList[data.receiver];
+            if(!receiverSocketId){
+                //------------if no receiveer, push to self's front-end only
+                socket.emit("msgToShow",{ //emit to self
+                    msg: data.msg,
+                    sender: data.sender,
+                    receiver: data.receiver
+                });
+            }else{
+                //------------if yes receiveer, push to self's + receiver's front-end
+                socket.emit("msgToShow",{ //emit to self
+                    msg: data.msg,
+                    sender: data.sender,
+                    receiver: data.receiver
+                });
+                socket.to(receiverSocketId).emit("msgToShow",{ //emit to receiver
+                    msg: data.msg,
+                    sender: data.sender,
+                    receiver: data.receiver
+                });
+            }
         }
-        saveMsg();
-
-        // emit received msg to selected user's front-end & self's front-end
-        //--------get receiver's socket id
-        let receiverSocketId = userList[data.receiver];
-        if(!receiverSocketId){
-            //------------if no receiveer, push to self's front-end only
-            socket.emit("msgToShow",{ //emit to self
-                msg: data.msg,
-                sender: data.sender,
-                receiver: data.receiver
-            });
-        }else{
-            //------------if yes receiveer, push to self's + receiver's front-end
-            socket.emit("msgToShow",{ //emit to self
-                msg: data.msg,
-                sender: data.sender,
-                receiver: data.receiver
-            });
-            socket.to(receiverSocketId).emit("msgToShow",{ //emit to receiver
-                msg: data.msg,
-                sender: data.sender,
-                receiver: data.receiver
-            });
-        }
+        showMsg()
     });
 
     // show other topic a user has selected
     socket.on("search topics", (ultimateSelfNamte)=>{
-        async function findtopics(){
-            sql = `SELECT DISTINCT firstSearchTopic, secondSearchTopic
-            FROM politicmotion.user_emotion
-            WHERE username = '${ultimateSelfNamte}';`;
-            var sqlquery = await query(sql);
-            return sqlquery;
-        }
         async function showTopics(){
-            var topics = await findtopics();
+            var topics = await chatModel.findtopics(ultimateSelfNamte);
             var allTopics = []; //need to be non-global variable so you don't overwrite topics with another user
             topics.forEach((t)=>{
                 allTopics.push(t.firstSearchTopic + " & " + t.secondSearchTopic);
@@ -154,20 +125,10 @@ const socketChat = (socket) => {
     socket.on("topics clicked",(topics)=>{
         var firstTopic = topics.split("&")[0].trim(); //remove blank
         var secondTopic = topics.split("&")[1].trim();
-        async function findOtherPartners(){
-            sql = `SELECT DISTINCT m.username, b.signature 
-            FROM politicmotion.user_emotion m
-            INNER JOIN politicmotion.user_basic b ON m.username = b.username
-            WHERE firstSearchTopic IN ('${firstTopic}', '${secondTopic}')
-            AND secondSearchTopic IN ('${firstTopic}', '${secondTopic}')
-            `;
-            var sqlquery = await query(sql);
-            return sqlquery;
-        }
         async function showOtherPartners(){
             var partnerList = [];
             var signatureList = [];
-            var otherPartners = await findOtherPartners();
+            var otherPartners = await chatModel.findOtherPartners(firstTopic, secondTopic);
             otherPartners.forEach((partner)=>{
                 partnerList.push(partner.username);
                 signatureList.push(partner.signature);
@@ -189,7 +150,6 @@ const socketChat = (socket) => {
         onlineUserList = onlineUserList.filter(function(value, index, arr){
             return value !== selfName;
         });
-
         socket.emit("userDisconnected", (selfName)); // send to self
         socket.to(room).emit("userDisconnected", (selfName)); // send to all in room except sender
     });
