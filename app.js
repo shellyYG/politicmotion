@@ -10,19 +10,20 @@ app.use(bodyParser.json());
 const analyzeUserEmotion = require('./server/routes/user/userEmotionBack');
 const signUpRoutes = require('./server/routes/user/signUp');
 const signInRoutes = require('./server/routes/user/signIn');
-const findBuddiesRoutes = require('./server/routes/user/findBuddies');
+// const findBuddiesRoutes = require('./server/controllers/user/findBuddiesController');
 const contactRoutes = require('./server/routes/user/contact');
 
 app.use([
     require('./server/routes/showNews/searchRoute'),
-    require('./server/routes/showNews/showNewsContentRoute')
+    require('./server/routes/showNews/showNewsContentRoute'),
+    require('./server/routes/user/findBuddiesRoute')
 ])
 
 
 app.use('/calUserEmotion', analyzeUserEmotion);
 app.use('/user/signup', signUpRoutes);
 app.use('/user/signin', signInRoutes);
-app.use('/findBuddies', findBuddiesRoutes);
+// app.use('/findBuddies', findBuddiesRoutes);
 app.use('/user/contact', contactRoutes);
 
 
