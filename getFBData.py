@@ -51,33 +51,22 @@ def FindLinks(url, n):
         driver.execute_script('window.scrollTo(0, document.body.scrollHeight);')  #scroll down
 
     for i in range(n): #make it sleep a few secs so you can see the next block box
-        print(i)
         try:
             driver.find_element_by_class_name('layerCancel').click() #byPass we got error message box
             driver.execute_script('window.scrollTo(0, document.body.scrollHeight);')
             time.sleep(3)
-            print("blockbox has shown again")
         except:
             driver.execute_script('window.scrollTo(0, document.body.scrollHeight);')
             time.sleep(3)
-            print("no blockbox")
    
-    print("一")
     try:
         driver.find_element_by_xpath('//a[@id="expanding_cta_close_button"]').click() #byPass register user box
-        print("二")
         soup = BeautifulSoup(driver.page_source, "html.parser")
-        print("三")
         posts = soup.findAll('div',{'class':'clearfix y_c3pyo2ta3'})
-        print("四")
     except:
-        print("二")
         soup = BeautifulSoup(driver.page_source, "html.parser")
-        print("三")
         posts = soup.findAll('div',{'class':'clearfix y_c3pyo2ta3'})
-        print("四")
     for i in posts:
-        print("五")
         try: 
             driver.find_element_by_class_name('layerCancel').click()
             Links.append('https://www.facebook.com'+i.find('a',{'class':'_5pcq'}).attrs['href'].split('?',2)[0]) #get each post link
@@ -98,7 +87,6 @@ def PostContent(soup, source):
     except:
         Content = "No Content Found"
         PosterInfo = "No PosterInfo"
-        print("no content found")
     try:
         Time = PosterInfo.find('abbr').attrs['title']
     except:
@@ -115,25 +103,20 @@ def PostContent(soup, source):
             AllReaction.append(ReactionNum)
     except:
         Like = '0'
-        print("Failed to load Reactions")
 
     # add Big title of article
     try:
         bigTitle = userContent.find('div', {'class': 'mbs _6m6 _2cnj _5s6c'}).text
-        print("has bigTitle")
-        print(bigTitle)
+
     except:
         bigTitle = "No Big Title"
-        print("NO bigTitle")
     
     # add Small title of article
     try:
         smallTitle = userContent.find('div', {'class': '_6m7 _3bt9'}).text
-        print("has smallTitle")
-        print(smallTitle)
+        
     except:
         smallTitle = "No Small Title"
-        print("No Small Title")
 
     FullPost['Link'] = driver.current_url
     FullPost['Time'] = Time
@@ -154,7 +137,6 @@ driver = webdriver.Chrome(options = option)
 AllPost =[]
 NYTimeLinks = FindLinks(url='https://www.facebook.com/nytimes/', n = 10)
 for Link in NYTimeLinks:
-    print("At Link: "+Link)
     driver.get(Link) #expand link for soup below to catch
     soup = BeautifulSoup(driver.page_source, "html.parser")
     
@@ -178,7 +160,6 @@ driver = webdriver.Chrome(options = option)
 AllPost =[]
 FoxNewsLinks = FindLinks(url='https://www.facebook.com/FoxNews/', n = 10)
 for Link in FoxNewsLinks:
-    print("At Link: "+Link)
     driver.get(Link) #expand link for soup below to catch
     soup = BeautifulSoup(driver.page_source, "html.parser")
     PostContent(soup, "foxnews")
