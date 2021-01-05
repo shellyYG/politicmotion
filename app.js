@@ -7,23 +7,22 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false}));
 app.use(bodyParser.json());
 
-const analyzeUserEmotion = require('./server/routes/user/userEmotionBack');
+// const analyzeUserEmotion = require('./server/controllers/user/userEmotionController');
 const signUpRoutes = require('./server/routes/user/signUp');
 const signInRoutes = require('./server/routes/user/signIn');
-// const findBuddiesRoutes = require('./server/controllers/user/findBuddiesController');
 const contactRoutes = require('./server/routes/user/contact');
 
 app.use([
     require('./server/routes/showNews/searchRoute'),
     require('./server/routes/showNews/showNewsContentRoute'),
-    require('./server/routes/user/findBuddiesRoute')
+    require('./server/routes/user/findBuddiesRoute'),
+    require('./server/routes/user/userEmotionRoute')
 ])
 
 
-app.use('/calUserEmotion', analyzeUserEmotion);
+// app.use('/calUserEmotion', analyzeUserEmotion);
 app.use('/user/signup', signUpRoutes);
 app.use('/user/signin', signInRoutes);
-// app.use('/findBuddies', findBuddiesRoutes);
 app.use('/user/contact', contactRoutes);
 
 
