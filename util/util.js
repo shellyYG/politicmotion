@@ -1,9 +1,14 @@
-const { fn } = require("moment")
+require("dotenv").config();
+const jwt = require("jsonwebtoken");
 
 const wrapAsync = (func) => {
     return function(req, res, next){
         func(req, res, next).catch(next);
     }
+}
+
+const generateAccessToken = function(user){
+    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "10800s" }); //3hr
 }
 
 const verifyToken = function(req, res, next){
@@ -19,7 +24,11 @@ const verifyToken = function(req, res, next){
     }
 }
 
+
+
+
 module.exports = {
     wrapAsync,
-    verifyToken
+    verifyToken,
+    generateAccessToken
 }

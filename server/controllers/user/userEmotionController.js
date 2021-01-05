@@ -1,8 +1,6 @@
 const jwt = require("jsonwebtoken");
 const userEmotionModel = require('../../models/user/userEmotionModel');
-// const { query } = require("../../models/query");
 
-// router.post("/", verifyToken, (req, res)=>{
 const getUserEmotion = async (req, res) => {
     jwt.verify(req.token, process.env.ACCESS_TOKEN_SECRET, (err, payload) => {
         if (err) {
@@ -47,19 +45,7 @@ const getUserEmotion = async (req, res) => {
                 // insert user emotion to database
                 const firstSearchTopic = req.body.firstSearchTopic;
                 const secondSearchTopic = req.body.secondSearchTopic;
-                // async function insertUserEmotion(){
-                //     let insertedData = {
-                //         firstSearchTopic: firstSearchTopic,
-                //         secondSearchTopic: secondSearchTopic,
-                //         username: payload.data.name,
-                //         email: payload.data.email,
-                //         user_sentiment_score: avgUserSentiment.toFixed(2),
-                //         user_magnitude_score: avgUserMagnitude.toFixed(2),
-                //     };
-                //     let sql = "INSERT INTO user_emotion SET ?";
-                //     let sqlquery = await query(sql, insertedData);
-                //     return sqlquery;
-                // }
+                
                 userEmotionModel.insertUserEmotion(firstSearchTopic, secondSearchTopic, payload, avgUserSentiment, avgUserMagnitude);
                 console.log("combinedUserEmotion: ", combinedUserEmotion);
             }

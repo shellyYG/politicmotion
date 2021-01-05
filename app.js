@@ -7,8 +7,7 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false}));
 app.use(bodyParser.json());
 
-// const analyzeUserEmotion = require('./server/controllers/user/userEmotionController');
-const signUpRoutes = require('./server/routes/user/signUp');
+// const signUpRoutes = require('./server/controllers/user/signUpController');
 const signInRoutes = require('./server/routes/user/signIn');
 const contactRoutes = require('./server/routes/user/contact');
 
@@ -16,12 +15,11 @@ app.use([
     require('./server/routes/showNews/searchRoute'),
     require('./server/routes/showNews/showNewsContentRoute'),
     require('./server/routes/user/findBuddiesRoute'),
-    require('./server/routes/user/userEmotionRoute')
+    require('./server/routes/user/userEmotionRoute'),
+    require('./server/routes/user/signUpRoute'),
 ])
 
-
-// app.use('/calUserEmotion', analyzeUserEmotion);
-app.use('/user/signup', signUpRoutes);
+// app.use('/user/signup', signUpRoutes);
 app.use('/user/signin', signInRoutes);
 app.use('/user/contact', contactRoutes);
 
