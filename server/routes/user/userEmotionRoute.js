@@ -1,12 +1,12 @@
-const router = require('express').Router();
-const { wrapAsync } = require('../../../util/util');
-const { verifyToken } = require('../../../util/util');
+const router = require("express").Router();
+const { wrapAsync } = require("../../../util/util");
+const { verifyToken } = require("../../../util/util");
 
 const {
     getUserEmotion 
-} = require('../../controllers/user/userEmotionController');
+} = require("../../controllers/user/userEmotionController");
 
-router.route('/calUserEmotion')
+router.route("/calUserEmotion")
     .post(verifyToken, wrapAsync(getUserEmotion));
 
 module.exports = router;

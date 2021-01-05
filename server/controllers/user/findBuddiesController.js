@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const findBuddiesModel = require('../../models/user/findBuddiesModel');
+const findBuddiesModel = require("../../models/user/findBuddiesModel");
 
 var firstdegreeBuddies = [];
 var firstdegreeBuddiesEmails = [];
@@ -89,7 +89,6 @@ const showbuddies =  async (req, res) => {
                 // filter to min sentiment distance
                 for (i=0; i<similarBuddies.length; i++){
                     //kickout selfs for finding min. 
-                    console.log("sentimentMultiples[similarBuddies[i].buddyIndex].matchedEmail: ", sentimentMultiples[similarBuddies[i].buddyIndex].matchedEmail,"sentimentMultiples[buddies[i].buddyIndex].sentimentDistance: ", sentimentMultiples[buddies[i].buddyIndex].sentimentDistance);
                     if(sentimentMultiples[similarBuddies[i].buddyIndex].matchedEmail !== currentUserEmail){ 
                         filteredSentDistance.push(sentimentMultiples[similarBuddies[i].buddyIndex].sentimentDistance);
                     }

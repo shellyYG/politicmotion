@@ -9,4 +9,4 @@ async function insertLoginUser(req){
 
 module.exports = {
     insertLoginUser
-}
+};

@@ -1,8 +1,8 @@
 require("dotenv").config();
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken"); //create json web token
-const signUpModel = require('../../models/user/signUpModel');
-const { generateAccessToken } = require('../../../util/util');
+const signUpModel = require("../../models/user/signUpModel");
+const { generateAccessToken } = require("../../../util/util");
 
 const signUp = async (req, res) => {    
     const data = req.body;

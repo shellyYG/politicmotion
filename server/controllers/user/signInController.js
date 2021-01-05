@@ -1,7 +1,7 @@
 require("dotenv").config();
 const crypto = require("crypto");
-const signInModel = require('../../models/user/signInModel');
-const { generateAccessToken } = require('../../../util/util');
+const signInModel = require("../../models/user/signInModel");
+const { generateAccessToken } = require("../../../util/util");
 
 const signIn = async (req, res) => { 
     const data = req.body;

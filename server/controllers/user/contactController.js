@@ -1,12 +1,12 @@
 require("dotenv").config();
-const nodeMailer = require('nodemailer');
+const nodeMailer = require("nodemailer");
 
 const sendEmail = async (req, res) => { 
     let data = req.body; //should be customerName, customerEmail, customerMsg
     var mailTransport = nodeMailer.createTransport({
-        service: 'Gmail',
+        service: "Gmail",
         auth: {
-            user: 'politicmotion@gmail.com',
+            user: "politicmotion@gmail.com",
             pass: process.env.EMAIL_PASS
         }
     });
@@ -16,9 +16,9 @@ const sendEmail = async (req, res) => {
     let customerMsg = data.customerMsg;
 
     var options = {
-        from: 'Contact Page Msg <politicmotion@gmail.com>',
-        to: `Contact Page Msg <politicmotion@gmail.com>` , 
-        subject: `Contact page message`, 
+        from: "Contact Page Msg <politicmotion@gmail.com>",
+        to: "Contact Page Msg <politicmotion@gmail.com>" , 
+        subject: "Contact page message", 
         text: `From: ${customerEmail}, Message:${customerMsg}`
     };
     
@@ -26,9 +26,9 @@ const sendEmail = async (req, res) => {
         if(err){
             console.log(err);
         }else{
-            console.log('email sent: ' + info.response);
+            console.log("email sent: " + info.response);
         }
-    })
+    });
 
     let results = {};
     results.customerName = customerName;
@@ -37,7 +37,7 @@ const sendEmail = async (req, res) => {
     results.status = "Email successfully sent!";
 
     res.json({"data": results});
-}
+};
 
 module.exports = {
     sendEmail

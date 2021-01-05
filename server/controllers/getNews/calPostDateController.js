@@ -1,6 +1,6 @@
 const natural = require("natural");
 const tokenizer = new natural.WordTokenizer();
-const calPostDateModel = require('../../models/getNews/calPostDateModel'); 
+const calPostDateModel = require("../../models/getNews/calPostDateModel"); 
 
 async function tokenizeTime(){
     sqlFoxResult = await calPostDateModel.getFoxWebData();

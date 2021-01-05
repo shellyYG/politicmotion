@@ -58,4 +58,4 @@ async function searchFBFoxNewsDots(searchTopic1, searchTopic2){
 module.exports = {
     searchFBNYNewsDots,
     searchFBFoxNewsDots
-}
+};

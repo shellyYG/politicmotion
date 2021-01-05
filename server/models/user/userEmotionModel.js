@@ -17,4 +17,4 @@ async function insertUserEmotion(firstSearchTopic, secondSearchTopic, payload, a
 
 module.exports = {
     insertUserEmotion
-}
+};
