@@ -7,7 +7,7 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false}));
 app.use(bodyParser.json());
 
-const contactRoutes = require('./server/routes/user/contact');
+// const contactRoutes = require('./server/controllers/user/contactController');
 
 app.use([
     require('./server/routes/showNews/searchRoute'),
@@ -16,9 +16,10 @@ app.use([
     require('./server/routes/user/userEmotionRoute'),
     require('./server/routes/user/signUpRoute'),
     require('./server/routes/user/signInRoute'),
+    require('./server/routes/user/contactRoute'),
 ])
 
-app.use('/user/contact', contactRoutes);
+// app.use('/user/contact', contactRoutes);
 
 
 const server = require("http").createServer(app);

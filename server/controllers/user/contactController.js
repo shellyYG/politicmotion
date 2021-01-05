@@ -1,13 +1,10 @@
 require("dotenv").config();
 const express = require("express");
 const router = express.Router();
-
 const nodeMailer = require('nodemailer');
-// const hbs=require('nodemailer-express-handlebars');
 
-router.post("/", (req, res)=>{
+const sendEmail = async (req, res) => { 
     let data = req.body; //should be customerName, customerEmail, customerMsg
-
     var mailTransport = nodeMailer.createTransport({
         service: 'Gmail',
         auth: {
@@ -20,19 +17,10 @@ router.post("/", (req, res)=>{
     let customerEmail = data.customerEmail;
     let customerMsg = data.customerMsg;
 
-    // mailTransport.use(
-    //     "compile", 
-    //     hbs({
-    //         viewEngine: 'express-handlebars',
-    //         viewPath: "emailTemplate"
-    //     })
-    // )
-
     var options = {
         from: 'Contact Page Msg <politicmotion@gmail.com>',
         to: `Contact Page Msg <politicmotion@gmail.com>` , 
-        subject: `Contact page message`, // Subject line
-        // template: "welcomeEmail",
+        subject: `Contact page message`, 
         text: `From: ${customerEmail}, Message:${customerMsg}`
     };
     
@@ -51,6 +39,8 @@ router.post("/", (req, res)=>{
     results.status = "Email successfully sent!";
 
     res.json({"data": results});
-})
+}
 
-module.exports = router;
+module.exports = {
+    sendEmail
+};
