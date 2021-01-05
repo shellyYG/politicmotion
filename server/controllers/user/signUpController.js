@@ -4,14 +4,13 @@ const jwt = require("jsonwebtoken"); //create json web token
 const signUpModel = require('../../models/user/signUpModel');
 const { generateAccessToken } = require('../../../util/util');
 
-// router.post("/",(req, res, next)=> {
 const signUp = async (req, res) => {    
     const data = req.body;
     console.log("data: ", data);
     
     //-----encrypt password
     crypto.randomBytes(16, (err, buf)=> {});
-    let iv = crypto.randomBytes(16); //it will be different everytime you refresh your GET request
+    let iv = crypto.randomBytes(16); //different everytime
   
     //-----get the ivString
     let ivString = iv.toString("base64");
