@@ -50,7 +50,6 @@ if(existedLogoutLink){
     })
 }
 
-
 var usrEmotionDistanceNYT;
 usrEmotionDistanceNYT = 30;
 
