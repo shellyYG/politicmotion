@@ -1,7 +1,7 @@
 require("dotenv").config();
 const axios = require("axios");
 const NYTimesToken = process.env.NYTimeToken;
-const getNYTDataModel = require('../../models/getNews/getNYTDataModel');
+const getNYTDataModel = require("../../models/getNews/getNYTDataModel");
 
 let link = `https://api.nytimes.com/svc/mostpopular/v2/shared/1/facebook.json?api-key=${NYTimesToken}`; //get last 1 day data from facebook
 async function getNYTimesWebData(){

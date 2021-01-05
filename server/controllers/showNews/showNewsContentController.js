@@ -1,5 +1,5 @@
 const { tokenize, makeDictionary, vsm, termFrequency, idf, tfidf, cosine, unique } = require("../../../util/tfidf");
-const showNewsContentModel = require('../../models/showNews/showNewsContentModel');
+const showNewsContentModel = require("../../models/showNews/showNewsContentModel");
 
 const showNews = async (req, res) => {
     console.log("req.body @showNewsContentBack: ", req.body);
@@ -268,7 +268,7 @@ const showNews = async (req, res) => {
     
         getAllCosine(allNewsStrings);
     }
-}
+};
 
 module.exports = {
     showNews

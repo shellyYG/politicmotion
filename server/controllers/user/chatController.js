@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { unique } = require("../../../util/tfidf");
-const chatModel = require('../../models/user/chatModel');
+const chatModel = require("../../models/user/chatModel");
 
 var userList = {};
 var onlineUserList = [];
@@ -105,7 +105,7 @@ const socketChat = async (socket) => {
                 });
             }
         }
-        showMsg()
+        showMsg();
     });
 
     // show other topic a user has selected
@@ -147,7 +147,7 @@ const socketChat = async (socket) => {
 
     // disconnect
     socket.on("disconnect", () => {
-        onlineUserList = onlineUserList.filter(function(value, index, arr){
+        onlineUserList = onlineUserList.filter(function(value){
             return value !== selfName;
         });
         socket.emit("userDisconnected", (selfName)); // send to self

@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const userEmotionModel = require('../../models/user/userEmotionModel');
+const userEmotionModel = require("../../models/user/userEmotionModel");
 
 const getUserEmotion = async (req, res) => {
     jwt.verify(req.token, process.env.ACCESS_TOKEN_SECRET, (err, payload) => {

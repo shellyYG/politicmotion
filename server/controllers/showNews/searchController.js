@@ -1,4 +1,4 @@
-const searchModel = require('../../models/showNews/searchModel');
+const searchModel = require("../../models/showNews/searchModel");
 
 const searchNews = async (req, res) => {
     const searchTopic1 = req.body.searchTopic1;
@@ -81,8 +81,8 @@ const searchNews = async (req, res) => {
         res.json(finalRes);
     }
     pushDataToFront();
-}
+};
 
 module.exports = {
     searchNews
-}
+};
