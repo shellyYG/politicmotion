@@ -1,6 +1,4 @@
 require("dotenv").config();
-const express = require("express");
-const router = express.Router();
 const nodeMailer = require('nodemailer');
 
 const sendEmail = async (req, res) => { 

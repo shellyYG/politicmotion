@@ -7,8 +7,6 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false}));
 app.use(bodyParser.json());
 
-// const contactRoutes = require('./server/controllers/user/contactController');
-
 app.use([
     require('./server/routes/showNews/searchRoute'),
     require('./server/routes/showNews/showNewsContentRoute'),
@@ -19,13 +17,10 @@ app.use([
     require('./server/routes/user/contactRoute'),
 ])
 
-// app.use('/user/contact', contactRoutes);
-
-
+// socket.IO for chat room
 const server = require("http").createServer(app);
 const io = require("socket.io")(server);
-
-const socketChat = require("./server/routes/user/chatBack");
+const socketChat = require("./server/controllers/user/chatController");
 io.on('connection', socketChat);
 
 // Setup 404 page
@@ -37,4 +32,4 @@ server.listen(PORT,()=>{
     console.log(`Socket listening on port ${PORT}...`);
 })
 
-// module.exports = server;
+// module.exports = server; //for mocha test
