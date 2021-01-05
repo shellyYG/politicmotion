@@ -49,8 +49,6 @@ if(existedLogoutLink){
         existedLogoutLink.setAttribute('class', 'hiddenc'); //hide log out
     })
 }
-  
-
 
 let avgPostSentiment = 0;
 let avgPostMagnitude = 0;
@@ -98,6 +96,7 @@ axios.post("showNewsContent",{
     "NYIdsArray": NYIdsArray,
     "FoxIdsArray": FoxIdsArray
 }).then(res=>{
+    console.log("showNewsContent res: ", res);
     if (res.data.length == 0){
         if(localStorage.getItem(searchTopic1)){ // has search topics
             alert("Sorry, please select news again.");

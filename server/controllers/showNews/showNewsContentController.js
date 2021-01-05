@@ -1,9 +1,7 @@
-const express = require("express");
-const router = express.Router();
-const { query } = require("../../models/query");
 const { tokenize, makeDictionary, vsm, termFrequency, idf, tfidf, cosine, unique } = require("../../../util/tfidf");
+const showNewsContentModel = require('../../models/showNews/showNewsContentModel');
 
-router.post("/", (req, res) => {
+const showNews = async (req, res) => {
     console.log("req.body @showNewsContentBack: ", req.body);
     //------------------------------------------------------------------------------------------ Finish Algo Part
     const searchTopic1 = req.body.searchTopic1;
@@ -17,7 +15,7 @@ router.post("/", (req, res) => {
     NYIdsArray.forEach((e)=>{
         allIdsArray.push(e);
     });
-    // console.log("allIdsArray: ", allIdsArray);
+
     allIdsArray = allIdsArray.filter(function(value, index, arr){
         return value !== "";
     });
@@ -30,7 +28,6 @@ router.post("/", (req, res) => {
 
     let clickedSources = req.body.clickedSources;
     clickedSources = JSON.parse(clickedSources);
-    console.log("clickedIds: ", clickedIds, "clickedSources: ", clickedSources);
 
     //--------------------------------------------------------------------------Get clicked news
     let allNewsIdClicked = [];
@@ -38,25 +35,8 @@ router.post("/", (req, res) => {
         res.json([]);
     }else{
         for (i = 0; i < clickedIds.length; i++) {
-            async function getClickedNews() {
-                sql = `SELECT id, content, post_date, post_link, reaction, sentiment_score, magnitude_score
-                FROM politicmotion.fb_rawdata
-                WHERE sentiment_score = ${clickedIds[i].Xaxis} AND magnitude_score = ${clickedIds[i].Yaxis}
-                AND id IN (${allIdsArrayNum})
-                AND post_source = '${clickedSources[i]}'
-                LIMIT 1;`;
-                var sqlquery = await query(sql);
-                return sqlquery;
-            }
-            async function showFirstCLickedNews() {
-                let ClickedNews = await getClickedNews();
-                let ClickedNewsId = ClickedNews[0].id;
-                allNewsIdClicked.push(ClickedNewsId);
-            }
-            showFirstCLickedNews();
+            await showNewsContentModel.showFirstCLickedNews(clickedIds, i, allIdsArrayNum, allNewsIdClicked, clickedSources);
         }
-    
-    
         //------------------------------------------------------------------------------------------ Ignore Stop Words
         let allStopWords = [];
         function ignoreStopTokens(acc, curr) {
@@ -66,23 +46,6 @@ router.post("/", (req, res) => {
                 acc;
             }
             return acc;
-        }
-    
-        //------------------------------------------------------------------------------------------ Get String Part
-        async function searchRelevantNews() {
-            sql = `SELECT id, content, post_date, post_link, post_source, reaction,  sentiment_score, magnitude_score 
-                    FROM fb_rawdata 
-                    WHERE id IN (${allIdsArrayNum})
-                    ORDER BY id ASC
-                    ;`; // here need to change to not limited
-            var sqlquery = await query(sql);
-            return sqlquery;
-        }
-    
-        async function getStopWords() {
-            sql = "SELECT words FROM words_stopwords;";
-            var sqlquery = await query(sql);
-            return sqlquery;
         }
     
         //------------------------------------------------------------------------------------------ Start Similar Score Calculation
@@ -105,8 +68,8 @@ router.post("/", (req, res) => {
         const finalNewsPackage = [];
     
         async function getAllRelevantNews() {
-            const relevantNews = await searchRelevantNews();
-            const stopWords = await getStopWords();
+            const relevantNews = await showNewsContentModel.searchRelevantNews(allIdsArrayNum);
+            const stopWords = await showNewsContentModel.getStopWords();
     
             for (i = 0; i < stopWords.length; i++) {
                 allStopWords.push(stopWords[i].words);
@@ -164,10 +127,10 @@ router.post("/", (req, res) => {
                     stringCosineCombination.push(singleCombination);
                 }
             }
-            // console.log("stringCosineCombination: ", stringCosineCombination);
+            
             let allMatched = [];
             for (i = 0; i < allNewsIdClicked.length; i++) {
-                // console.log("i is: ", i);
+                
                 function findSingleMatch(acc, curr) {
                     if (curr.firstString == allNewsIdClicked[i]) {
                         let clickedP = {};
@@ -187,12 +150,10 @@ router.post("/", (req, res) => {
                     }
                 }
                 let singleMatch = stringCosineCombination.reduce(findSingleMatch, []);
-                // console.log("singleMatch: ", singleMatch)
                 let matchedScores = [];
                 for (j = 0; j < singleMatch.length; j++) {
                     matchedScores.push(singleMatch[j].score);
                 }
-                // console.log("matchedScores: ", matchedScores);
     
                 var maxSingleScore = Math.max.apply(Math, matchedScores.filter(function (x) { return x <= thresholdCosine; })); // search other news condition here?
     
@@ -228,8 +189,7 @@ router.post("/", (req, res) => {
     
             } else {
                 for (i = 0; i < allMatched.length; i++) {
-                    newsIdtoShow.push(allMatched[i].firstArticle);
-                    newsIdtoShow.push(allMatched[i].secondString);
+                    newsIdtoShow.push(allMatched[i].firstArticle, allMatched[i].secondString);
                 }
                 // console.log("newsIdtoShow: ", newsIdtoShow);
                 var uniqueNewsIdtoShow = newsIdtoShow.filter(unique);
@@ -237,27 +197,11 @@ router.post("/", (req, res) => {
                 clickedNews = allMatched.map((element) => { return element.firstArticle; });
             }
     
-            async function getRelevantNews() {
-                sql = `SELECT DISTINCT fb.id, fb.post_link, fb.content, fb.title
-                , fb.small_title
-                , nyt.lead_paragraph, fox.paragraph
-                , fb.post_date, fb.post_link, fb.reaction
-                , fb.post_source, fb.sentiment_score, fb.magnitude_score
-                , fb.user_sentiment_score, fb.user_magnitude_score
-                FROM politicmotion.fb_rawdata fb
-                LEFT JOIN politicmotion.news_rawdata big ON fb.title = big.title
-                LEFT JOIN politicmotion.nyt_details nyt ON big.title = nyt.headline
-                LEFT JOIN politicmotion.fox_details fox ON big.post_link = fox.post_link
-                WHERE fb.id IN (${uniqueNewsIdtoShow});`;
-                var sqlquery = await query(sql);
-                return sqlquery;
-            }
-    
             async function showRelevantNews() {
-                let allNews = await getRelevantNews();
+                let allNews = await showNewsContentModel.getRelevantNews(uniqueNewsIdtoShow);
                 // console.log("allNews: ", allNews);
                 if (allMatched.length == 0) {
-                   
+                
                     var singleNews = {};
                     singleNews.id = allNews[0].id;
                     singleNews.content = allNews[0].content;
@@ -308,7 +252,6 @@ router.post("/", (req, res) => {
                                 matchedId.push(allMatched[j].secondString);
                             }
                         }
-                        // console.log("clickedId.length: ", clickedId.length)
                         if (clickedId.length == 0) {
                             clickedId.push(0);
                             matchedId.push(0);
@@ -317,20 +260,16 @@ router.post("/", (req, res) => {
                         singleNews.matchedId = matchedId[0];
                         finalNewsPackage.push(singleNews);
                     }
-    
-                    
                 }
-                // console.log("finalNewsPackage: ", finalNewsPackage);
                 res.json(finalNewsPackage);
-    
             }
             showRelevantNews();
-    
         }
     
         getAllCosine(allNewsStrings);
-
     }
-});
+}
 
-module.exports = router;
+module.exports = {
+    showNews
+};
