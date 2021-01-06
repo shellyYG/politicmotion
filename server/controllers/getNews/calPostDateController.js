@@ -3,6 +3,7 @@ const tokenizer = new natural.WordTokenizer();
 const calPostDateModel = require("../../models/getNews/calPostDateModel"); 
 
 async function tokenizeTime(){
+    console.log("Start calPostDateController");
     sqlFoxResult = await calPostDateModel.getFoxWebData();
     const idsFox = sqlFoxResult.map(getUniqueId);
     const tokenedTimesFox = sqlFoxResult.map(relativeToAbsTime);
@@ -53,7 +54,6 @@ async function tokenizeTime(){
         }else if(tokenizedTime[1] == "hour" || tokenizedTime[1] == "hours" || tokenizedTime[1] == "min" || tokenizedTime[1] == "mins"){
             var published_date = savedDate;
         }else{
-            console.log("published_date format unrecognized!");
             var published_date = savedDate;
         }
         return published_date;
@@ -72,7 +72,6 @@ async function tokenizeTime(){
 async function savePublishedDate(){
 
     const processedTimeResult = await tokenizeTime();
-    console.log(processedTimeResult[0],processedTimeResult[1],processedTimeResult[2],processedTimeResult[3]);
 
     for (i=0; i<processedTimeResult[0].length; i++){
         const newsUniqueId = processedTimeResult[0][i];

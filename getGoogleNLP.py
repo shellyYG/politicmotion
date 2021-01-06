@@ -40,14 +40,15 @@ with engine.begin() as conn:
 
     for i in rows:
         FBid = i['id']
-        print(FBid)
         FBcontent = i['content']
         document = language_v1.Document(content=FBcontent, type_=language_v1.Document.Type.PLAIN_TEXT)
         sentiment = client.analyze_sentiment(request={'document': document}).document_sentiment
 
         updates = conn.execute(f'UPDATE fb_rawdata SET sentiment_score = {sentiment.score}, magnitude_score = {sentiment.magnitude} WHERE id = {FBid}')
 
-    print('Done inserting sentiment scores.')    
+    print('Done inserting sentiment scores.')
+
+print('Done getGoogleNLP')
 
 
             

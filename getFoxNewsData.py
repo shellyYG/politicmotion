@@ -46,12 +46,11 @@ def findArticles(n, topic1, topic2):
     topicString = listToString(topics)
 
     url=f'https://www.foxnews.com/search-results/search?q={topic1}, {topic2}&submit=Search'
-    print("entry url is: "+url)
+    
     driver.get(url)
     time.sleep(3)
 
     for i in range(n): # load n times
-        print(i)
         try:
             driver.execute_script('window.scrollTo(0, document.body.scrollHeight);') #scroll down
             time.sleep(3)
@@ -100,7 +99,6 @@ postLinks = []
 
 def getLatestNews(n):
     url='https://www.foxnews.com/politics'
-    print("url is: "+url)
     
     driver.get(url)
     time.sleep(3)
@@ -110,27 +108,25 @@ def getLatestNews(n):
     for i in range(n): # load n times
         try: #try to scroll down
             driver.execute_script('window.scrollTo(0, document.body.scrollHeight);') #scroll down
-            print('No interstitial, can scroll down.')
         except:
-            print('Has interstitial. Need to close interstitial first.')
-        
+            pass
+                   
         try: #click on interstital close button
             interstitials = soup.findAll('div',{'class':'fc-dialog-container'})
             for i in interstitials:
                 i.find('button',{'class':'fc-close'}).click()
-            print('Closed interstitial blocker.')
+            
         except:
-            print('No interstitial blocker.')
-
+            pass
+            
         try: #try to scroll down again
             driver.execute_script('window.scrollTo(0, document.body.scrollHeight);') #scroll down
             time.sleep(3)
             driver.find_element_by_class_name('load-more').click()  #click on loadmore
             time.sleep(3)
-            print("Clicked load more button")
+            
         except:
-            print("No load button")
-
+            pass
     
     postTitles = []
     postTimes = []
@@ -145,8 +141,7 @@ def getLatestNews(n):
         
         if(rawLink[0:9]=='/politics'):
             fullLink = "https://www.foxnews.com"+rawLink
-            print("fullLink is:")
-            print(fullLink)
+            
         else:
             fullLink = rawLink
 
@@ -171,7 +166,6 @@ def getLatestNews(n):
     Foxdf["news_source"] = "Fox News"
     Foxdf["topics"] = "To be defined"
     Foxdf['SavedDate'] = date.today()
-    print(Foxdf)
 
 
     print("Start saving to sql")
@@ -198,11 +192,8 @@ with engine.begin() as conn:
     results = conn.execute('SELECT n.post_link FROM politicmotion.news_rawdata n LEFT JOIN politicmotion.fox_details f ON n.post_link = f.post_link WHERE f.paragraph IS NULL AND n.news_source = "fox news";')
     rows = results.fetchall()
     for i in rows:
-        print(i)
         linksToFill = i['post_link']
         allLinksToFill.append(linksToFill)
-print("allLinksToFill: ")
-print(allLinksToFill)
 
 
 print("Start getting detailed news: ")
@@ -210,8 +201,7 @@ print("Start getting detailed news: ")
 allArticleDetails = []
 def getDetailedNews():
     
-    for i in allLinksToFill: # or postLinks in the future??
-        print(i)
+    for i in allLinksToFill: # or postLinks in the future
         try:
             driver = webdriver.Chrome(options = option)  #need to declare driver again
             time.sleep(3)
@@ -224,42 +214,31 @@ def getDetailedNews():
                 interstitialsFullArticle = soupFullArticle.findAll('div',{'class':'fc-dialog-container'})
                 for i in interstitialsFullArticle:
                     i.find('button',{'class':'fc-close'}).click()
-                print('Closed interstitial blocker.')
+                
             except:
-                print('No interstitial blocker.')
+                pass
+                
 
             try:
-                print("try: ")
                 paragraphs = soupFullArticle.findAll('p', {'class':'speakable'})
                 
                 concateP=""
                 for paragraph in paragraphs:
                     concateP = concateP + " " + paragraph.text
 
-                print("NOW len(allArticleDetails): ")
-                print(len(allArticleDetails))
                 allArticleDetails.append(concateP)
+            
             except:
-                print("exception: ")
-                print(len(allArticleDetails))
                 allArticleDetails.append('No Paragraph Found')
 
-            print(len(allArticleDetails))
             driver.close()
         except:
-            print("link is blank")
             allArticleDetails.append("No Content Found")
-
-    print("print(len(allLinksToFill)): ")
-    print(len(allLinksToFill))
-    print("print(len(allArticleDetails)): ")
-    print(len(allArticleDetails))
 
     FoxDetaildf = pd.DataFrame({'post_link': allLinksToFill,
                           'paragraph':allArticleDetails,
                           })
     FoxDetaildf['SavedDate'] = date.today()
-    print(FoxDetaildf)
 
     print("Start saving news details to sql")
     FoxDetaildf.columns = ['post_link','paragraph','saved_date']
@@ -273,3 +252,4 @@ def getDetailedNews():
 
 
 getDetailedNews()
+print("Done getFoxNewsData")

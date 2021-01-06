@@ -23,7 +23,6 @@ async function getLeadParagraph(){
 async function addNYTDetails(allDetails){
     sql = "INSERT INTO nyt_details (headline, abstract, lead_paragraph, saved_date) VALUES ?";
     let sqlquery = await query(sql, [allDetails]);
-    console.log("done inserting lead-paragraph");
     return sqlquery;
 
 }

@@ -135,7 +135,7 @@ def PostContent(soup, source):
 print("start getting new NYT News")
 driver = webdriver.Chrome(options = option)
 AllPost =[]
-NYTimeLinks = FindLinks(url='https://www.facebook.com/nytimes/', n = 10)
+NYTimeLinks = FindLinks(url='https://www.facebook.com/nytimes/', n = 1)
 for Link in NYTimeLinks:
     driver.get(Link) #expand link for soup below to catch
     soup = BeautifulSoup(driver.page_source, "html.parser")
@@ -158,7 +158,7 @@ driver.close()
 print("start getting new Fox News")
 driver = webdriver.Chrome(options = option)
 AllPost =[]
-FoxNewsLinks = FindLinks(url='https://www.facebook.com/FoxNews/', n = 10)
+FoxNewsLinks = FindLinks(url='https://www.facebook.com/FoxNews/', n = 1)
 for Link in FoxNewsLinks:
     driver.get(Link) #expand link for soup below to catch
     soup = BeautifulSoup(driver.page_source, "html.parser")
@@ -175,4 +175,5 @@ Foxnewsdf.to_sql(
 )
 
 driver.close()
+print("Done getting data from FB")
 
