@@ -132,30 +132,45 @@ def PostContent(soup, source):
 
 #==============================================================================================================================================================  ADD new news
 #---------------------------------------------------------------------------------------------------------------------------- Get new New York Time Post
-print("start getting new NYT News")
 driver = webdriver.Chrome(options = option)
 AllPost =[]
 NYTimeLinks = FindLinks(url='https://www.facebook.com/nytimes/', n = 1)
 for Link in NYTimeLinks:
     driver.get(Link) #expand link for soup below to catch
     soup = BeautifulSoup(driver.page_source, "html.parser")
-    
     PostContent(soup, "nytimes")
 
-# transform list of dict to dataframe
+# check if title exists
 Facebookdf = pd.DataFrame(AllPost)
 Facebookdf.columns = ['post_link','post_time','content','reaction','post_source', 'saved_date', 'title', 'small_title']
+print(f"Facebookdf len before: {len(Facebookdf)}")
+
+existingTitles = []
+with engine.begin() as conn:
+    results = conn.execute('SELECT DISTINCT title FROM politicmotion.fb_rawdata;')
+    rows = results.fetchall()
+    
+    for i in rows:
+        try:
+            existingTitles.append(''.join(i)) #add tuples
+        except:
+            pass
+
+# start delete df rows
+RowsToDelete = Facebookdf['title'].isin(existingTitles)
+Facebookdf = Facebookdf[~RowsToDelete]
+print(f"Facebookdf len after removing existing titles: {len(Facebookdf)}")
+
 Facebookdf.to_sql(
     'fb_rawdata',
     con=engine,
     index=False,
-    if_exists = 'append'  #if table exist, then append the rows rather than fail (default is fail)
+    if_exists = 'append'
 )
 
 driver.close()
 
 #---------------------------------------------------------------------------------------------------------------------------- Get new Fox Post
-print("start getting new Fox News")
 driver = webdriver.Chrome(options = option)
 AllPost =[]
 FoxNewsLinks = FindLinks(url='https://www.facebook.com/FoxNews/', n = 1)
@@ -164,16 +179,58 @@ for Link in FoxNewsLinks:
     soup = BeautifulSoup(driver.page_source, "html.parser")
     PostContent(soup, "foxnews")
 
-# transform list of dict to dataframe
+# check if title exists
 Foxnewsdf = pd.DataFrame(AllPost)
 Foxnewsdf.columns = ['post_link','post_time','content','reaction','post_source', 'saved_date', 'title', 'small_title']
+print(f"len before: {len(Foxnewsdf)}")
+
+existingTitles = []
+with engine.begin() as conn:
+    results = conn.execute('SELECT DISTINCT title FROM politicmotion.fb_rawdata;')
+    rows = results.fetchall()
+    
+    for i in rows:
+        try:
+            existingTitles.append(''.join(i)) #add tuples
+        except:
+            pass
+
+# start delete df rows
+RowsToDelete = Foxnewsdf['title'].isin(existingTitles)
+Foxnewsdf = Foxnewsdf[~RowsToDelete]
+print(f"Foxnewsdf len after removing existing titles: {len(Foxnewsdf)}")
+
 Foxnewsdf.to_sql(
     'fb_rawdata',
     con=engine,
     index=False,
-    if_exists = 'append'  #if table exist, then append the rows rather than fail (default is fail)
+    if_exists = 'append'
 )
 
 driver.close()
+
+# #---------------------------------------------------------------------------------------------------------------------------- Get new Fox Post (OLD)
+# print("start getting new Fox News")
+# driver = webdriver.Chrome(options = option)
+# AllPost =[]
+# FoxNewsLinks = FindLinks(url='https://www.facebook.com/FoxNews/', n = 1)
+# for Link in FoxNewsLinks:
+#     driver.get(Link) #expand link for soup below to catch
+#     soup = BeautifulSoup(driver.page_source, "html.parser")
+#     PostContent(soup, "foxnews")
+
+# # transform list of dict to dataframe
+# Foxnewsdf = pd.DataFrame(AllPost)
+# Foxnewsdf.columns = ['post_link','post_time','content','reaction','post_source', 'saved_date', 'title', 'small_title']
+# Foxnewsdf.to_sql(
+#     'fb_rawdata',
+#     con=engine,
+#     index=False,
+#     if_exists = 'append'  #if table exist, then append the rows rather than fail (default is fail)
+# )
+
+# driver.close()
+
+
 print("Done getting data from FB")
 

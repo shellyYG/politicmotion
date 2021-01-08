@@ -6,7 +6,6 @@ const { generateAccessToken } = require("../../../util/util");
 
 const signUp = async (req, res) => {    
     const data = req.body;
-    console.log("data: ", data);
     
     //-----encrypt password
     crypto.randomBytes(16, (err, buf)=> {});
@@ -23,8 +22,6 @@ const signUp = async (req, res) => {
     encryptedpass += cipher.final("hex"); 
     
     //-----decrypt password
-    let ivBack = Buffer.from(ivString, "base64");
-
     let decipher = crypto.createDecipheriv("aes-256-cbc", key, iv);
     let decryptedpass = decipher.update(encryptedpass, "hex", "utf-8");
     decryptedpass += decipher.final("utf-8");
