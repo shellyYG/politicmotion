@@ -6,6 +6,13 @@ An interactive news-search website that enables users to search news, compare re
 
 ## Features
 ### Register / Login
+![](https://github.com/shellyYG/public_assets/blob/main/login.gif)
+
+### Search News / Select News
+![](https://github.com/shellyYG/public_assets/blob/main/SearchAndSelect.gif)
+
+### Read News / Click Emotion
 ![](https://github.com/shellyYG/public_assets/blob/main/clickEmotion.gif)
 
-### Register / Login
+### Select Chat Partner / Join Other Room
+![](https://github.com/shellyYG/public_assets/blob/main/findChatpartner.gif)
