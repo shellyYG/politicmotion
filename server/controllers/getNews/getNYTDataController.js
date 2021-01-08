@@ -5,6 +5,7 @@ const getNYTDataModel = require("../../models/getNews/getNYTDataModel");
 
 let link = `https://api.nytimes.com/svc/mostpopular/v2/shared/1/facebook.json?api-key=${NYTimesToken}`; //get last 1 day data from facebook
 async function getNYTimesWebData(){
+    console.log("start getNYTData");
     try {
         let NYTimeResponse = await axios.get(link);
         console.log("Successfully get NYT Web data!");
@@ -45,7 +46,6 @@ async function getNYTimesWebData(){
             console.log("titles.length: ", titles.length);
             
             for (i=0; i<titles.length; i++){
-                console.log("i:",i);
                 try{
                     var encodedComponent = encodeURIComponent(titles[i].title);
                     var detailLink = `https://api.nytimes.com/svc/search/v2/articlesearch.json?q="${encodedComponent}"&api-key=${NYTimesToken}`;
@@ -61,7 +61,7 @@ async function getNYTimesWebData(){
                     // build allNews array
                     allDetails.push(singleDetails);
                 }catch(err){
-                    console.log("sorry, no lead paragraph found");
+                    allDetails;
                 }
             }
 
@@ -75,8 +75,8 @@ async function getNYTimesWebData(){
             
         }
 
-        matchLeadParagraph();
-        console.log("Data successfully saved.");
+        await matchLeadParagraph();
+        console.log("Done getNYTDataController");
 
     }catch(err){
         console.log("Can't get NYT Web data!, err is: ", err);

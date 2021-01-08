@@ -30,7 +30,6 @@ with engine.begin() as conn:
     
     rows = results.fetchall()
     for i in rows:
-        print(i)
         FBid = i['id']
         FBreaction = i['reaction']
         allReactions = FBreaction.split(sep="|")

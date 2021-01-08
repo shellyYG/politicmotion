@@ -21,10 +21,7 @@ async function updateNewsRawDataDate(finalsqlFormatDate, newsUniqueId){
 async function updateFBRasDataDate(FBfinalsqlFormatDate, FBnewsUniqueId){
     sql = `UPDATE fb_rawdata SET post_date='${FBfinalsqlFormatDate}' WHERE id=${FBnewsUniqueId}`;
     var sqlquery = await query(sql);
-    
-    console.log("DONE FB post_date id = ", FBnewsUniqueId);
     return sqlquery;
-
 }
 
 module.exports = {
