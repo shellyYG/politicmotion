@@ -19,7 +19,7 @@
 - NGINX
 - Socket.IO
 - Python Web Crawler
-- crontab
+- Crontab
 
 ### Front-End
 - HTML
@@ -31,7 +31,6 @@
 ### Cloud Service (AWS)
 - Elastic Compute Cloud (EC2)
 - Relational Database Service (RDS)
-- CloudFront
 
 ### Database
 - MySQL
@@ -39,17 +38,14 @@
 ### Networking
 - HTTP
 - HTTPS / SSL
-- Domain Name System
-
-### Test
-- Mocha
-- Chai
+- Domain Name System (DNS)
 
 ### Others
 - Google Natural Language API
 - Design Pattern: MVC
 - Version Control: Git, GitHub
 - Agile: Trello (Srum)
+- Test: Mocha / Chai
 
 
 ## Architecture
