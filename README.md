@@ -56,29 +56,35 @@
 ![](https://github.com/shellyYG/public_assets/blob/main/Infrastructure.png)
 
 ## Database Schema
+![](https://github.com/shellyYG/public_assets/blob/main/DB_Schema.png)
 
 ## Main Features
 ### User Authentication & Authorization
 - Register as new user
 - Login as existing user
+
 ![](https://github.com/shellyYG/public_assets/blob/main/login.gif)
 
 ### News Search & Select
 - Search latest political news
 - Select news according to natural language processing scores
 - Receive recommended news according to TF-IDF & cosine similarity
+
 ![](https://github.com/shellyYG/public_assets/blob/main/SearchAndSelect.gif)
 
 ### News Display / User Emotion Analysis
 - Read both selected & recommended news
 - Receive user emotion score and compare with general FB audience
+
 ![](https://github.com/shellyYG/public_assets/blob/main/clickEmotion.gif)
 
 ### Chat Room / Chat Partner Recommendation
 - Arrive chat room to meet people who care about the same topics
 - Receive top-recommended chat partner who has the most similar emotion score as the user
 - Change room to find friends with different interests
+
 ![](https://github.com/shellyYG/public_assets/blob/main/findChatpartner.gif)
 
 ## Author
-Name: Shelly Yang @[shellyYG](https://github.com/shellyYG)
+- Name: Shelly Yang @[shellyYG](https://github.com/shellyYG)
+- Email: chih-ching.yang@whu.edu
