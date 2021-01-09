@@ -38,65 +38,8 @@ option.add_argument('--disable-notifications')
 #Find Post Link
 driver = webdriver.Chrome(options = option)
 
-
-def findArticles(n, topic1, topic2):
-    topics = []
-    topics.append(topic1)
-    topics.append(topic2)
-    topicString = listToString(topics)
-
-    url=f'https://www.foxnews.com/search-results/search?q={topic1}, {topic2}&submit=Search'
-    
-    driver.get(url)
-    time.sleep(3)
-
-    for i in range(n): # load n times
-        try:
-            driver.execute_script('window.scrollTo(0, document.body.scrollHeight);') #scroll down
-            time.sleep(3)
-            driver.find_element_by_class_name('load-more').click()  #click on loadmore
-            time.sleep(3)
-            print("load button has shown again")
-        except:
-            print("no load button")
-
-    postLinks = []
-    postTitles = []
-    postTimes = []
-    postContent = []
-    soup = BeautifulSoup(driver.page_source, "html.parser")
-    posts = soup.findAll('article',{'class':'article'})
-
-    for i in posts:
-        postLinks.append(i.find('a').attrs['href'])
-        postTitles.append(i.find('h2',{'class':'title'}).string)
-        postTimes.append(i.find('span',{'class':'time'}).string)
-        postContent.append(i.find('p',{'class':'dek'}).find('a').string)
-
-    Foxdf = pd.DataFrame({'postlink': postLinks,
-                          'published_time':postTimes,
-                          'title':postTitles,
-                          'abstract':postContent})
-    Foxdf["news_id"] = "0"
-    Foxdf["news_source"] = "Fox News"
-    Foxdf["topics"] = topicString
-    Foxdf['SavedDate'] = date.today()
-    
-
-    print("Start saving to sql")
-    Foxdf.columns = ['post_link','published_time','title','abstract','news_id', 'news_source','topics','saved_date']
-    Foxdf.to_sql(
-    'news_rawdata',
-    con=engine,
-    index=False,
-    if_exists = 'append'  #if table exist, then append the rows rather than fail (default is fail)
-    )   
-
-    print("Finished saving to sql")
-    driver.close()
-
+# Insert into news_rawdata
 postLinks = []
-
 def getLatestNews(n):
     url='https://www.foxnews.com/politics'
     
@@ -182,8 +125,6 @@ def getLatestNews(n):
     time.sleep(3)
 
 
-# findArticles(1, "Biden", "Hong Kong") #n doesnt need to be big because its searching by topics
-
 getLatestNews(10)
 
 # get all post links that does not have paragraph yet
@@ -195,9 +136,11 @@ with engine.begin() as conn:
         linksToFill = i['post_link']
         allLinksToFill.append(linksToFill)
 
+print(f"Len of links to fill: {len(allLinksToFill)}")
+print("START getting detailed news: ")
 
-print("Start getting detailed news: ")
-# get content in postLinks
+
+# Insert into fox_details
 allArticleDetails = []
 def getDetailedNews():
     
@@ -240,7 +183,7 @@ def getDetailedNews():
                           })
     FoxDetaildf['SavedDate'] = date.today()
 
-    print("Start saving news details to sql")
+    print("START saving news details to sql")
     FoxDetaildf.columns = ['post_link','paragraph','saved_date']
     FoxDetaildf.to_sql(
     'fox_details',
@@ -248,7 +191,7 @@ def getDetailedNews():
     index=False,
     if_exists = 'append'  #if table exist, then append the rows rather than fail (default is fail)
     )   
-    print("Saved to table fox_details.")
+    print("END saved to table fox_details.")
 
 
 getDetailedNews()
