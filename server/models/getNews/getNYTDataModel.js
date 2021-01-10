@@ -9,8 +9,52 @@ async function addNYTNews(allNews){
     return sqlquery;
 }
 
+async function dropOldertable(){
+    sql = `DROP TABLE IF EXISTS politicmotion.NEWsIdsToDelete;`
+    let sqlquery = await query(sql);
+    return sqlquery;
+}
+
+async function createTmpIdTable(){
+    sql = `CREATE TABLE politicmotion.NEWsIdsToDelete AS
+    SELECT id
+    FROM politicmotion.news_rawdata t
+    WHERE t.id > (SELECT MIN(id) FROM politicmotion.news_rawdata WHERE title = t.title);`
+    let sqlquery = await query(sql);
+    return sqlquery;
+}
+
+async function dropDuplicateRecords(){
+    sql = `DELETE FROM politicmotion.news_rawdata WHERE id IN (SELECT id FROM politicmotion.NEWsIdsToDelete);`
+    let sqlquery = await query(sql);
+    return sqlquery;
+}
+
+async function dropTmpIdTable(){
+    sql = `DROP TABLE IF EXISTS politicmotion.NEWsIdsToDelete;`
+    let sqlquery = await query(sql);
+    return sqlquery;
+}
+
+
+async function makeNewsTitlleUnique(){
+    await dropOldertable;
+    await createTmpIdTable;
+    await dropDuplicateRecords;
+    await dropTmpIdTable;
+}
+
+
+async function updateNewsIdNYT(){
+    sql = `UPDATE politicmotion.news_rawdata n 
+    SET fb_id = (SELECT id FROM politicmotion.fb_rawdata WHERE title = n.title AND post_source = "nytimes")
+    WHERE fb_id IS NULL;`
+    let sqlquery = await query(sql);
+    return sqlquery;
+}
+
 async function getLeadParagraph(){
-    sql = `SELECT n.title
+    sql = `SELECT n.title, n.id
     FROM politicmotion.news_rawdata n
     LEFT JOIN politicmotion.nyt_details d ON n.title = d.headline
     WHERE n.news_source = "New York Times" AND d.headline IS NULL
@@ -21,15 +65,16 @@ async function getLeadParagraph(){
 }
 
 async function addNYTDetails(allDetails){
-    sql = "INSERT INTO nyt_details (headline, abstract, lead_paragraph, saved_date) VALUES ?";
+    sql = "INSERT INTO nyt_details (headline, abstract, lead_paragraph, saved_date, news_id) VALUES ?";
     let sqlquery = await query(sql, [allDetails]);
     return sqlquery;
-
 }
 
 
 module.exports = {
     addNYTNews,
+    makeNewsTitlleUnique,
+    updateNewsIdNYT,
     getLeadParagraph,
     addNYTDetails
 };

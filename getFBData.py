@@ -209,28 +209,5 @@ Foxnewsdf.to_sql(
 
 driver.close()
 
-# #---------------------------------------------------------------------------------------------------------------------------- Get new Fox Post (OLD)
-# print("start getting new Fox News")
-# driver = webdriver.Chrome(options = option)
-# AllPost =[]
-# FoxNewsLinks = FindLinks(url='https://www.facebook.com/FoxNews/', n = 1)
-# for Link in FoxNewsLinks:
-#     driver.get(Link) #expand link for soup below to catch
-#     soup = BeautifulSoup(driver.page_source, "html.parser")
-#     PostContent(soup, "foxnews")
-
-# # transform list of dict to dataframe
-# Foxnewsdf = pd.DataFrame(AllPost)
-# Foxnewsdf.columns = ['post_link','post_time','content','reaction','post_source', 'saved_date', 'title', 'small_title']
-# Foxnewsdf.to_sql(
-#     'fb_rawdata',
-#     con=engine,
-#     index=False,
-#     if_exists = 'append'  #if table exist, then append the rows rather than fail (default is fail)
-# )
-
-# driver.close()
-
-
 print("Done getting data from FB")
 

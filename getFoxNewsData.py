@@ -38,7 +38,7 @@ option.add_argument('--disable-notifications')
 #Find Post Link
 driver = webdriver.Chrome(options = option)
 
-# Insert into news_rawdata
+#Insert into news_rawdata
 postLinks = []
 def getLatestNews(n):
     url='https://www.foxnews.com/politics'
@@ -110,8 +110,8 @@ def getLatestNews(n):
     Foxdf["topics"] = "To be defined"
     Foxdf['SavedDate'] = date.today()
 
+    print(f"Len of foxdf to insert to news_rawdata is: {len(Foxdf)}")
 
-    print("Start saving to sql")
     Foxdf.columns = ['post_link','published_time','title','abstract','news_id', 'news_source','topics','saved_date']
     Foxdf.to_sql(
     'news_rawdata',
@@ -127,28 +127,65 @@ def getLatestNews(n):
 
 getLatestNews(10)
 
+# update fb_id after the news added
+try:
+    with engine.begin() as conn:
+        updates = conn.execute('UPDATE politicmotion.news_rawdata n \
+                                SET fb_id = (SELECT id FROM politicmotion.fb_rawdata WHERE title = n.title AND post_source = "foxnews")\
+                                WHERE fb_id IS NULL;')
+except:
+    pass
+
+# make news title unique after news added to news_rawdata
+try:
+    with engine.begin() as conn:
+        updates = conn.execute('DROP TABLE IF EXISTS politicmotion.NEWsIdsToDelete;')
+except:
+    pass
+
+try:
+    with engine.begin() as conn:
+        updates = conn.execute('CREATE TABLE politicmotion.NEWsIdsToDelete AS \
+                                SELECT id \
+                                FROM politicmotion.news_rawdata t \
+                                WHERE t.id > (SELECT MIN(id) FROM politicmotion.news_rawdata WHERE title = t.title);')
+except:
+    pass
+
+try:
+    with engine.begin() as conn:
+        updates = conn.execute('DELETE FROM politicmotion.news_rawdata WHERE id IN (SELECT id FROM politicmotion.NEWsIdsToDelete);')
+except:
+    pass
+
+try:
+    with engine.begin() as conn:
+        updates = conn.execute('DROP TABLE IF EXISTS politicmotion.NEWsIdsToDelete;')
+except:
+    pass
+
+
 # get all post links that does not have paragraph yet
 allLinksToFill = []
+allnewsIdToFill = []
 with engine.begin() as conn:
-    results = conn.execute('SELECT n.post_link FROM politicmotion.news_rawdata n LEFT JOIN politicmotion.fox_details f ON n.post_link = f.post_link WHERE f.paragraph IS NULL AND n.news_source = "fox news";')
+    results = conn.execute('SELECT n.id, n.post_link FROM politicmotion.news_rawdata n LEFT JOIN politicmotion.fox_details f ON n.post_link = f.post_link WHERE f.paragraph IS NULL AND n.news_source = "fox news";')
     rows = results.fetchall()
     for i in rows:
         linksToFill = i['post_link']
+        IdsToFill = i['id']
         allLinksToFill.append(linksToFill)
+        allnewsIdToFill.append(IdsToFill)
 
 print(f"Len of links to fill: {len(allLinksToFill)}")
-print("START getting detailed news: ")
-
 
 # Insert into fox_details
 allArticleDetails = []
 def getDetailedNews():
-    
     for i in allLinksToFill: # or postLinks in the future
         try:
             driver = webdriver.Chrome(options = option)  #need to declare driver again
             time.sleep(3)
-        
             driver.get(i)
             time.sleep(3)
             soupFullArticle = BeautifulSoup(driver.page_source, "html.parser")
@@ -160,7 +197,6 @@ def getDetailedNews():
                 
             except:
                 pass
-                
 
             try:
                 paragraphs = soupFullArticle.findAll('p', {'class':'speakable'})
@@ -179,12 +215,12 @@ def getDetailedNews():
             allArticleDetails.append("No Content Found")
 
     FoxDetaildf = pd.DataFrame({'post_link': allLinksToFill,
+                                'news_id': allnewsIdToFill,
                           'paragraph':allArticleDetails,
                           })
     FoxDetaildf['SavedDate'] = date.today()
 
-    print("START saving news details to sql")
-    FoxDetaildf.columns = ['post_link','paragraph','saved_date']
+    FoxDetaildf.columns = ['post_link','news_id','paragraph','saved_date']
     FoxDetaildf.to_sql(
     'fox_details',
     con=engine,
@@ -196,3 +232,5 @@ def getDetailedNews():
 
 getDetailedNews()
 print("Done getFoxNewsData")
+
+
