@@ -34,12 +34,15 @@ async function getNYTimesWebData(){
 
             await getNYTDataModel.addNYTNews(allNews);
         }
-        
-        
-        // ---------------------------------------------------------------------- start saving to news (details) table
-
         await saveData();
 
+        // make title unique at news_rawdata table
+        await getNYTDataModel.makeNewsTitlleUnique();
+    
+        // ---------------------------------------------------------------------- start update fb_id
+        await getNYTDataModel.updateNewsIdNYT();
+
+        // ---------------------------------------------------------------------- start saving to news (details) table
         let allDetails = [];
         async function matchLeadParagraph(){
             let titles = await getNYTDataModel.getLeadParagraph();
@@ -54,18 +57,20 @@ async function getNYTimesWebData(){
                     var abstract = NYTresponse.data.response.docs[0].abstract;
                     var headline = NYTresponse.data.response.docs[0].headline.main;
                     var savedDetailedDate = new Date();
+                    var newsId = titles[i].id;
                     var singleDetails = [];
                     
-                    singleDetails.push(headline, abstract, leadParagraph, savedDetailedDate);
+                    singleDetails.push(headline, abstract, leadParagraph, savedDetailedDate, newsId);
                     
                     // build allNews array
                     allDetails.push(singleDetails);
                 }catch(err){
+                    console.log("err 1 time!");
                     allDetails;
                 }
             }
 
-            console.log("allDetails.length: ", allDetails.length);
+            console.log("new article length to add into nyt_details: ", allDetails.length);
 
             try {
                 await getNYTDataModel.addNYTDetails(allDetails);

@@ -14,7 +14,6 @@ async function getFBData(){
 async function updateNewsRawDataDate(finalsqlFormatDate, newsUniqueId){
     sql = `UPDATE news_rawdata SET published_date='${finalsqlFormatDate}' WHERE id=${newsUniqueId}`;
     var sqlquery = await query(sql);
-    console.log("DONE Fox-Web published_date id = ", newsUniqueId);
     return sqlquery;
 }
 

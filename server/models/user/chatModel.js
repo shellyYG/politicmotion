@@ -18,6 +18,12 @@ async function searchHistory(receiver){
     return sqlquery;
 }
 
+async function findSender(sender){
+    sql = `SELECT id FROM user_basic WHERE username = '${sender}' LIMIT 1;`
+    var sqlquery = await query(sql);
+    return sqlquery;
+}
+
 async function saveMsg(msgPackage){
     sql = "INSERT INTO chat_history SET ?";
     let sqlquery = await query(sql, msgPackage);
@@ -47,6 +53,7 @@ async function findOtherPartners(firstTopic, secondTopic){
 module.exports = {
     getSignature,
     searchHistory,
+    findSender,
     saveMsg,
     findtopics,
     findOtherPartners
