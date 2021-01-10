@@ -73,39 +73,49 @@ const socketChat = async (socket) => {
         
     socket.on("userSendMsg",(data)=>{
         let dateTime = new Date();
-        let msgPackage = {};
-        msgPackage.sender = data.sender;
-        msgPackage.receiver = data.receiver;
-        msgPackage.message = data.msg;
-        msgPackage.message_time = dateTime;
+
+        async function saveAndShowMsg(){
+            senderId = await chatModel.findSender(data.sender);
+            const finalsenderId = senderId[0].id;
+
+            let msgPackage = {};
+            msgPackage.sender = data.sender;
+            msgPackage.receiver = data.receiver;
+            msgPackage.message = data.msg;
+            msgPackage.message_time = dateTime;
+            msgPackage.sender_id = finalsenderId;
+            
+            async function showMsg(){
+                await chatModel.saveMsg(msgPackage);
+                //--------get receiver's socket id
+                let receiverSocketId = userList[data.receiver];
+                if(!receiverSocketId){
+                    //------------if no receiveer, push to self's front-end only
+                    socket.emit("msgToShow",{ //emit to self
+                        msg: data.msg,
+                        sender: data.sender,
+                        receiver: data.receiver
+                    });
+                }else{
+                    //------------if yes receiveer, push to self's + receiver's front-end
+                    socket.emit("msgToShow",{ //emit to self
+                        msg: data.msg,
+                        sender: data.sender,
+                        receiver: data.receiver
+                    });
+                    socket.to(receiverSocketId).emit("msgToShow",{ //emit to receiver
+                        msg: data.msg,
+                        sender: data.sender,
+                        receiver: data.receiver
+                    });
+                }
+            }
+            showMsg();
+
+        }
+        saveAndShowMsg()
 
         
-        async function showMsg(){
-            await chatModel.saveMsg(msgPackage);
-            //--------get receiver's socket id
-            let receiverSocketId = userList[data.receiver];
-            if(!receiverSocketId){
-                //------------if no receiveer, push to self's front-end only
-                socket.emit("msgToShow",{ //emit to self
-                    msg: data.msg,
-                    sender: data.sender,
-                    receiver: data.receiver
-                });
-            }else{
-                //------------if yes receiveer, push to self's + receiver's front-end
-                socket.emit("msgToShow",{ //emit to self
-                    msg: data.msg,
-                    sender: data.sender,
-                    receiver: data.receiver
-                });
-                socket.to(receiverSocketId).emit("msgToShow",{ //emit to receiver
-                    msg: data.msg,
-                    sender: data.sender,
-                    receiver: data.receiver
-                });
-            }
-        }
-        showMsg();
     });
 
     // show other topic a user has selected
