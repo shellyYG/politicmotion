@@ -66,7 +66,7 @@
 - Select news according to natural language processing scores
 - Receive recommended news according to TF-IDF & cosine similarity
 
-![](https://github.com/shellyYG/public_assets/blob/main/SearchAndSelect.gif)
+![](https://github.com/shellyYG/public_assets/blob/main/searchNews.gif)
 
 ### News Display / User Emotion Analysis
 - Read both selected & recommended news
