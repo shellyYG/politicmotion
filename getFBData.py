@@ -34,7 +34,7 @@ def listToString(s):
 
 #Add options
 option = webdriver.ChromeOptions()
-option.add_argument('--headless')
+# option.add_argument('--headless')
 option.add_argument('--disable-notifications')
 
 #Find Post Link

@@ -147,10 +147,13 @@ const showbuddies =  async (req, res) => {
                 var buddiesInfo = await findBuddies();
                 var buddyEmails = buddiesInfo.finalBuddyEmails;
                 var formatbuddyEmails = buddyEmails.map(element=>"\""+element+"\"");
-                try{
-                    return await findBuddiesModel.getBuddyNameAndSig(formatbuddyEmails);
-                }catch(err){
-                    return [];
+                if(formatbuddyEmails.length){
+                    console.log("hihi", formatbuddyEmails);
+                    try{
+                        return await findBuddiesModel.getBuddyNameAndSig(formatbuddyEmails);
+                    }catch(err){
+                        return [];
+                    }
                 }
             }
 
@@ -158,21 +161,30 @@ const showbuddies =  async (req, res) => {
                 var buddiesInfo = await findBuddies();
                 var topBuddyEmails = buddiesInfo.firstdegreeBuddiesEmails;
                 var formatTopBuddyEmails = topBuddyEmails.map(element=>"\""+element+"\"");
-                try{
-                    return await findBuddiesModel.getTopBuddyNameAndSig(formatTopBuddyEmails);
-                }catch(err){
-                    return [];
+                if(formatTopBuddyEmails.length){
+                    try{
+                        return await findBuddiesModel.getTopBuddyNameAndSig(formatTopBuddyEmails);
+                    }catch(err){
+                        return [];
+                    }
                 }
             }
 
             async function sendBuddyNames(){
                 var buddies = await findBuddyNames();
                 var topBuddies = await findTopBuddyNames();
-                buddyNames = buddies.map(element=>element.username);
-                topBuddyNames = topBuddies.map(element=>element.username);
-                buddySignatures = buddies.map(element=>element.signature);
-                topBuddySignatures = topBuddies.map(element=>element.signature);
-
+                if(buddies){
+                    buddyNames = buddies.map(element=>element.username);
+                    topBuddyNames = topBuddies.map(element=>element.username);
+                    buddySignatures = buddies.map(element=>element.signature);
+                    topBuddySignatures = topBuddies.map(element=>element.signature);
+                }else{
+                    buddyNames = [];
+                    topBuddyNames = [];
+                    buddySignatures = [];
+                    topBuddySignatures = [];
+                }
+                
                 res.send({
                     buddyNames: buddyNames, 
                     topBuddyNames: topBuddyNames,
