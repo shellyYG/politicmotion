@@ -140,12 +140,12 @@ axios.post("/latestNews", {
                 var foxParagraph = res.data[i].paragraph;
             }
 
-            articleLink.textContent = "Read More";
+            articleLink.textContent = "Focus Read";
             if (res.data[i].post_source == "nytimes") {
-                articleContent.textContent = res.data[i].content + " " + leadParagraph;
+                articleContent.textContent = res.data[i].small_title + " " + leadParagraph;
                 articleSrcDate.textContent = "New York Times" + " " + finalBeutifiedDate;
             } else {
-                articleContent.textContent = res.data[i].content + " " + foxParagraph;
+                articleContent.textContent = res.data[i].small_title + " " + foxParagraph;
                 articleSrcDate.textContent = "Fox News" + " " + finalBeutifiedDate;
             }
 
@@ -202,10 +202,10 @@ axios.post("/latestNews", {
 
             if (res.data[i].post_source == "nytimes") {
                 articleSrcDate2.textContent = "New York Times" + " " + finalBeutifiedDate;
-                articleContent2.textContent = res.data[i].content + " " + leadParagraph;
+                articleContent2.textContent = res.data[i].small_title + " " + leadParagraph;
             } else {
                 articleSrcDate2.textContent = "Fox News" + " " + finalBeutifiedDate;
-                articleContent2.textContent = res.data[i].content + " " + foxParagraph;
+                articleContent2.textContent = res.data[i].small_title + " " + foxParagraph;
             }
 
 
