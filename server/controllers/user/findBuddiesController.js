@@ -148,7 +148,6 @@ const showbuddies =  async (req, res) => {
                 var buddyEmails = buddiesInfo.finalBuddyEmails;
                 var formatbuddyEmails = buddyEmails.map(element=>"\""+element+"\"");
                 if(formatbuddyEmails.length){
-                    console.log("hihi", formatbuddyEmails);
                     try{
                         return await findBuddiesModel.getBuddyNameAndSig(formatbuddyEmails);
                     }catch(err){

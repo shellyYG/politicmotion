@@ -34,7 +34,9 @@ def listToString(s):
 
 #Add options
 option = webdriver.ChromeOptions()
-# option.add_argument('--headless')
+option.add_argument('--no-sandbox')
+option.add_argument('--headless')
+option.add_argument('--disable-dev-shm-usage')
 option.add_argument('--disable-notifications')
 
 #Find Post Link
@@ -136,14 +138,18 @@ driver = webdriver.Chrome(options = option)
 AllPost =[]
 NYTimeLinks = FindLinks(url='https://www.facebook.com/nytimes/', n = 10)
 for Link in NYTimeLinks:
+    print(Link)
     driver.get(Link) #expand link for soup below to catch
     soup = BeautifulSoup(driver.page_source, "html.parser")
     PostContent(soup, "nytimes")
 
 # check if title exists
 Facebookdf = pd.DataFrame(AllPost)
-Facebookdf.columns = ['post_link','post_time','content','reaction','post_source', 'saved_date', 'title', 'small_title']
-print(f"Facebookdf len before: {len(Facebookdf)}")
+try:
+    Facebookdf.columns = ['post_link','post_time','content','reaction','post_source', 'saved_date', 'title', 'small_title']
+    print(f"Facebookdf len before: {len(Facebookdf)}")
+except:
+    pass
 
 existingTitles = []
 with engine.begin() as conn:
@@ -157,16 +163,19 @@ with engine.begin() as conn:
             pass
 
 # start delete df rows
-RowsToDelete = Facebookdf['title'].isin(existingTitles)
-Facebookdf = Facebookdf[~RowsToDelete]
-print(f"Facebookdf len after removing existing titles: {len(Facebookdf)}")
+try:
+    RowsToDelete = Facebookdf['title'].isin(existingTitles)
+    Facebookdf = Facebookdf[~RowsToDelete]
+    print(f"Facebookdf len after removing existing titles: {len(Facebookdf)}")
 
-Facebookdf.to_sql(
-    'fb_rawdata',
-    con=engine,
-    index=False,
-    if_exists = 'append'
-)
+    Facebookdf.to_sql(
+        'fb_rawdata',
+        con=engine,
+        index=False,
+        if_exists = 'append'
+    )
+except:
+    pass
 
 driver.close()
 
@@ -175,14 +184,18 @@ driver = webdriver.Chrome(options = option)
 AllPost =[]
 FoxNewsLinks = FindLinks(url='https://www.facebook.com/FoxNews/', n = 10)
 for Link in FoxNewsLinks:
+    print(Link)
     driver.get(Link) #expand link for soup below to catch
     soup = BeautifulSoup(driver.page_source, "html.parser")
     PostContent(soup, "foxnews")
 
 # check if title exists
 Foxnewsdf = pd.DataFrame(AllPost)
-Foxnewsdf.columns = ['post_link','post_time','content','reaction','post_source', 'saved_date', 'title', 'small_title']
-print(f"len before: {len(Foxnewsdf)}")
+try:
+    Foxnewsdf.columns = ['post_link','post_time','content','reaction','post_source', 'saved_date', 'title', 'small_title']
+    print(f"len before: {len(Foxnewsdf)}")
+except:
+    pass
 
 existingTitles = []
 with engine.begin() as conn:
@@ -196,16 +209,19 @@ with engine.begin() as conn:
             pass
 
 # start delete df rows
-RowsToDelete = Foxnewsdf['title'].isin(existingTitles)
-Foxnewsdf = Foxnewsdf[~RowsToDelete]
-print(f"Foxnewsdf len after removing existing titles: {len(Foxnewsdf)}")
+try:
+    RowsToDelete = Foxnewsdf['title'].isin(existingTitles)
+    Foxnewsdf = Foxnewsdf[~RowsToDelete]
+    print(f"Foxnewsdf len after removing existing titles: {len(Foxnewsdf)}")
 
-Foxnewsdf.to_sql(
-    'fb_rawdata',
-    con=engine,
-    index=False,
-    if_exists = 'append'
-)
+    Foxnewsdf.to_sql(
+        'fb_rawdata',
+        con=engine,
+        index=False,
+        if_exists = 'append'
+    )
+except:
+    pass
 
 driver.close()
 
