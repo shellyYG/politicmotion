@@ -10,8 +10,8 @@ for (i=0; i < keyArr.length; i++){
     localStorage.removeItem(keyArr[i]);
 }
 
-const searchButton = document.getElementById("btn-search");
-const chooseSentimentButton = document.getElementById("btn-chooseSentiment");
+const searchButton = document.getElementById("btn-search-home");
+const latestNewsBtn = document.getElementById("btn-latest-news");
 
 // change login to logout if there is token
 if(localStorage.getItem('generalToken')){
@@ -51,6 +51,10 @@ userInput2.addEventListener('keyup', function(event) {
       searchButton.click();
     }
 });
+
+latestNewsBtn.addEventListener("click",()=>{
+    window.location.href = "/latestNews.html";
+})
 
 // when click on submit button
 searchButton.addEventListener("click",()=>{

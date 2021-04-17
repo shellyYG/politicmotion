@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zxx">
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
-    <title>HOME | PoliticMotion</title>
+    <title>NEWS | PoliticMotion</title>
 
     <!-- mobile responsive meta -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -26,14 +26,13 @@
 </head>
 
 <body>
-    <header class="navigation fixed-top">
+    <header class="navigation-nonMain fixed-top">
         <nav class="navbar navbar-expand-lg navbar-dark">
             <a class="navbar-brand font-tertiary h3" href="index.html">PoliticMotion</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation"
                 aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
             <div class="collapse navbar-collapse text-center" id="navigation">
                 <ul class="navbar-nav ml-auto" id="navUl">
                     <li class="nav-item active">
@@ -60,80 +59,68 @@
                 </ul>
             </div>
         </nav>
+        <div class="row mb-5 progressBar">
+            <!-- start of new progress bar  -->
+            <!-- <div class="col-12">
+                <div id="stepProgressBar">
+                    <div class="step">
+                        <p class="step-text">Select Dots</p>
+                        <div class="bullet1 completed" id="step1">1</div>
+                    </div>
+                    <div class="step">
+                        <p class="step-text">Click Emotions</p>
+                        <div class="bullet2 justcomp" id="step2">2</div>
+                    </div>
+                    <div class="step">
+                        <p class="step-text">View Emotion Result</p>
+                        <div class="bullet3" id="step3">3</div>
+                    </div>
+                    <div class="step">
+                        <p class="step-text">Chat</p>
+                        <div class="bullet4" id="step4">4</div>
+                    </div>
+                </div>
+            </div> -->
+            <!-- end of new progress bar  -->
+        </div>
     </header>
-    <!-- hero area -->
-    <section class="hero-area bg-primary" id="parallax">
-        <div class="container" id="mainIntro">
-            <div class="row">
-                <div class="col-lg-11 mx-auto" id="textMain">
-                    <h2 class="text-white font-tertiary">SEARCH</h2>
-                    <h3 class="text-white font-tertiary">two topics to read news.</h3>
+
+    <!-- blog -->
+    <section class="hero-area-nonMain" id="main-main-content">
+        <div class="container">
+            <div id="example-here">
+                <div class="row text-center">
+                    <!-- <div class="col-lg-6 col-sm-6 mb-4">
+                        <article class="card shadow" id="selectedNewsExample_">
+                            <div class="card-body">
+                                <h4 class="card-title" id="selectedNewsSrcExample_">LATEST NEWS</h4>
+                            </div>
+                        </article>
+                    </div> -->
+                    <!-- <div class="col-lg-6 col-sm-6 mb-4">
+                        <article class="card shadow" id="matchedNewsExample_">
+                            <div class="card-body">
+                                <h4 class="card-title" id="matchedNewsSrcExample_">SIMILAR NEWS FROM OTHER SOURCE</h4>
+                            </div>
+                        </article>
+                    </div> -->
                 </div>
             </div>
-        </div>
-        <section id="main" class="container searchBox">
-            <div class="row d-flex justify-content-start">
-                <div class="col-xl-11 mx-auto mt-3" id="textMain">
-                    <div class="topic1">
-                        <label id="topic1" >Topic 1</label>
-                        <input type="text" id="userInput1" aria-describedby="inputGroup-sizing-lg" placeholder="Trump" required >
+            <div class="row" id="btnLoader">
+                <div id="loaderCol" class="col-lg-12 text-center">
+                    <div class="d-flex justify-content-center align-items-center" id="loadingBox">
+                        <div class="loader"></div>
                     </div>
                 </div>
             </div>
-            <div class="row d-flex justify-content-start">
-                <div class="col-xl-11 mx-auto mt-3" id="textMain">
-                    <div class="topic2">
-                        <label id="topic2">Topic 2</label>
-                        <input type="text" id="userInput2" aria-describedby="inputGroup-sizing-lg" placeholder="Corona" required>
-                    </div>
-                </div>
+            <div id="articles">
             </div>
-        </section>
-        <section id="button" class="container signInUpBtnDiv">
-            <div>
-                <div class="row d-flex justify-content-start">
-                    <div class="col-lg-11 mt-3">
-                        <button class="btn btn-lg btn-primary" id="btn-search-home" type="submit">Search</button>
-                        <button class="btn btn-lg btn-primary active" id="btn-latest-news" type="submit">View Latest News</button>
-                    </div>
-                </div>
+            <div id="showEmotion">
             </div>
-
-
-        </section>
-        <div class="layer-bg w-100">
-
         </div>
-        <div class="layer" id="l2">
 
-        </div>
-        <div class="layer" id="l3">
-
-        </div>
-        <div class="layer" id="l4">
-
-        </div>
-        <div class="layer" id="l5">
-
-        </div>
-        <div class="layer" id="l6">
-
-        </div>
-        <div class="layer" id="l7">
-
-        </div>
-        <div class="layer" id="l8">
-
-        </div>
-        <div class="layer" id="l9">
-
-        </div>
-        
     </section>
-    <!-- /hero area -->
-
-
-
+    <!-- /blog -->
 
     <!-- footer -->
     <footer class="bg-dark footer-section">
@@ -177,9 +164,10 @@
     <!-- <script src="plugins/shuffle/shuffle.min.js"></script> -->
 
     <!-- Main Script -->
-    <script src="js/script.js"></script>
+    <script src="js/scriptLatestNews.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="js/searchFront.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="js/showLatestNewsFront.js"></script>
 
 </body>
 

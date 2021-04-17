@@ -1,4 +1,3 @@
-const searchButton = document.getElementById("btn-search");
 const analyzeUserEmotionButton = document.getElementById("btn-analyzeUser");
 const searchTopic1 = localStorage.getItem("searchTopic1");
 const searchTopic2 = localStorage.getItem("searchTopic2");

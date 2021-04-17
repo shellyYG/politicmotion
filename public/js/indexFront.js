@@ -1,5 +1,6 @@
 const discoverBtn = document.getElementById("btn-discover");
 const logInBtn = document.getElementById("home-login");
+const latestNewsBtn = document.getElementById("btn-latest-news");
 
 logInBtn.addEventListener("click",()=>{
     window.location.href = "/signIn.html";
@@ -8,6 +9,10 @@ logInBtn.addEventListener("click",()=>{
 discoverBtn.addEventListener("click",()=>{
     window.location.href = "/search.html";
 });
+
+latestNewsBtn.addEventListener("click",()=>{
+    window.location.href = "/latestNews.html";
+})
 
 // change login to logout if there is token
 if(localStorage.getItem('generalToken')){

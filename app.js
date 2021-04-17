@@ -10,6 +10,7 @@ app.use(bodyParser.json());
 app.use([
     require('./server/routes/showNews/searchRoute'),
     require('./server/routes/showNews/showNewsContentRoute'),
+    require('./server/routes/showNews/showLatestNewsRoute'),
     require('./server/routes/user/findBuddiesRoute'),
     require('./server/routes/user/userEmotionRoute'),
     require('./server/routes/user/signUpRoute'),

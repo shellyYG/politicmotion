@@ -97,6 +97,6 @@ async function savePublishedDate(){
 savePublishedDate();
 
 // kill the process after 90 sec
-setTimeout((function() {
-    return process.kill(process.pid);
-}), 100000);
+// setTimeout((function() {
+//     return process.kill(process.pid);
+// }), 100000);
