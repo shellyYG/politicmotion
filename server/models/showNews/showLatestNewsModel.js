@@ -11,7 +11,7 @@ async function getLatestNews() {
     LEFT JOIN politicmotion.news_rawdata big ON fb.title = big.title
     LEFT JOIN politicmotion.nyt_details nyt ON big.title = nyt.headline
     LEFT JOIN politicmotion.fox_details fox ON big.post_link = fox.post_link
-    WHERE fb.small_title <> 'No Small Title'
+    WHERE fb.small_title <> 'No Small Title' AND fb.post_date IS NOT NULL
     ORDER BY fb.id DESC
     LIMIT 20;`;
     var sqlquery = await query(sql);
